@@ -12,3 +12,41 @@ Always use bun to run scripts. Example: `bun --bun next dev` instead of `npm run
 <!-- BEGIN:user-rules -->
 Always read the rules from `.agents/rules/*.md` before doing any action.
 <!-- END:user-rules -->
+
+<!-- BEGIN:project-structure -->
+use feature-based folder structure with atomic design for spesific feature
+
+example:
+src/
+├── app/
+│   ├── layout.tsx
+│   └── page.tsx
+├── shared/
+│   ├── components/ # no need atomic for shared components
+│   │   ├── ui/
+│   │   └── ...
+│   ├── hooks/
+│   ├── lib/
+│   └── ...
+├── features/
+│   ├── authentication/
+│   │   ├── components/
+│   │   │   ├── atoms/
+│   │   │   ├── molecules/
+│   │   │   ├── organisms/
+│   │   │   └── templates/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── types/
+│   │   ├── applications/ # here you can use layered architecture (controller.ts, service.ts, repository.ts)
+│   │   └── ...
+│   └── ...
+└── ...
+
+<!-- END:project-structure -->
+
+<!-- BEGIN:shadcn-rules -->
+Always use shadcn ui with tailwind css components. 
+- Avoid custom component if there is a shadcn ui component that can be used.
+- if the shadcn ui component can't fulfill the requirements, create a new component in the shared/components/ui or in the feature spesific components folder following the shadcn ui naming convention. only create atomic component for spesific feature.
+<!-- END:shadcn-rules -->
