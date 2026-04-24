@@ -1,6 +1,7 @@
 "use client";
 
-import { AuthService } from "@/features/authentication/applications/auth.service";
+
+import { signInWithGithub, signUpWithEmail } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
 import { signUpSchema, SignUpSchema } from "@/features/authentication/types/auth.schema";
@@ -8,7 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,17 +33,13 @@ export function SignUpForm() {
 
   const onSubmit = async (values: SignUpSchema) => {
     setIsLoading(true);
-
     try {
-      const { data, error } = await AuthService.signUp(values);
-
-      if (error) {
-        toast.error(error.message || "Failed to create account. Please try again.");
-      } else if (data) {
-        toast.success("Account created successfully!");
-        router.push("/dashboard");
+      const result = await signUpWithEmail(values);
+      if (!result.success) {
+        toast.error(result.error);
       }
     } catch (err) {
+      unstable_rethrow(err);
       toast.error("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
@@ -51,8 +48,12 @@ export function SignUpForm() {
 
   const handleGithubSignUp = async () => {
     try {
-      await AuthService.signInWithGithub();
+      const result = await signInWithGithub();
+      if (!result.success) {
+        toast.error(result.error);
+      }
     } catch (err) {
+      unstable_rethrow(err);
       toast.error("Failed to sign up with GitHub.");
     }
   };

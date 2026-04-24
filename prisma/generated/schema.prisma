@@ -12,62 +12,68 @@ datasource db {
   provider = "postgresql"
 }
 
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "./zod"
+}
+
 model User {
-  id            String    @id
+  id            String            @id @default(uuid())
+  /// @zod.string.min(2, { message: "Name must be at least 2 characters" })
   name          String
+  /// @zod.string.email({ message: "Invalid email address" })
   email         String
+  /// @zod.string.min(8, { message: "Password must be at least 8 characters" })
+  password      String
   emailVerified Boolean?
+  /// @zod.string.url({ message: "Invalid image URL" })
   image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  memberships   WorkspaceMember[]
 
   @@unique([email])
   @@map("user")
 }
 
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Workspace {
+  id         String            @id @default(uuid())
+  /// @zod.string.min(2, { message: "Workspace name must be at least 2 characters" })
+  name       String
+  /// @zod.string.min(2, { message: "Slug must be at least 2 characters" }).regex(/^[a-z0-9-]+$/, { message: "Slug can only contain lowercase letters, numbers, and hyphens" })
+  slug       String            @unique
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  members    WorkspaceMember[]
+  dataModels DataModel[]
 
-  @@unique([token])
-  @@map("session")
+  @@map("workspace")
 }
 
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
+model WorkspaceMember {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String
+  role        String // "OWNER" | "MEMBER"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("account")
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_member")
 }
 
-model Verification {
-  id         String    @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+model DataModel {
+  id          String   @id @default(uuid())
+  name        String
+  dbType      String // "POSTGRESQL" | "MYSQL" | etc.
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("verification")
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("data_model")
 }

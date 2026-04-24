@@ -1,4 +1,3 @@
-import { AuthProvider } from "@/features/authentication/components/auth-provider";
 import { ThemeProvider } from "@/shared/components/provider/ThemeProvider";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
@@ -40,10 +39,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
             <TooltipProvider>{children}</TooltipProvider>
-            <Toaster />
-          </AuthProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

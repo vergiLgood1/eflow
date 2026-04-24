@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthService } from "@/features/authentication/applications/auth.service";
+import { signInWithGithub, signInWithEmail } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
 import { signInSchema, SignInSchema } from "@/features/authentication/types/auth.schema";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,17 +32,13 @@ export function SignInForm() {
 
   const onSubmit = async (values: SignInSchema) => {
     setIsLoading(true);
-
     try {
-      const { data, error } = await AuthService.signIn(values);
-
-      if (error) {
-        toast.error(error.message || "Something went wrong. Please try again.");
-      } else if (data) {
-        toast.success("Welcome back!");
-        router.push("/dashboard");
+      const result = await signInWithEmail(values);
+      if (!result.success) {
+        toast.error(result.error);
       }
     } catch (err) {
+      unstable_rethrow(err);
       toast.error("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
@@ -51,8 +47,12 @@ export function SignInForm() {
 
   const handleGithubSignIn = async () => {
     try {
-      await AuthService.signInWithGithub();
+      const result = await signInWithGithub();
+      if (!result.success) {
+        toast.error(result.error);
+      }
     } catch (err) {
+      unstable_rethrow(err);
       toast.error("Failed to sign in with GitHub.");
     }
   };
