@@ -1,12 +1,20 @@
-import React from "react";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
+import { WorkspaceDashboardContentTemplate } from "./workspace-dashboard-content-template";
 
-export function WorkspaceDashboardTemplate() {
+interface WorkspaceDashboardTemplateProps {
+    hasDiagrams?: boolean;
+}
+
+export function WorkspaceDashboardTemplate({
+    hasDiagrams = true,
+}: WorkspaceDashboardTemplateProps) {
     return (
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-            {/* If we had actual diagrams, we would render them here. 
-                For now, we only have the empty state. */}
-            <WorkspaceDashboardEmptyState />
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+            {hasDiagrams ? (
+                <WorkspaceDashboardContentTemplate />
+            ) : (
+                <WorkspaceDashboardEmptyState />
+            )}
         </div>
     );
 }

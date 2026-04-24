@@ -5,6 +5,7 @@ import { Label } from "@/shared/components/ui/label";
 import { cn } from "@/shared/lib/utils";
 import { ReactNode, forwardRef } from "react";
 import { FieldError } from "react-hook-form";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/shared/components/ui/input-group";
 
 export interface WorkspaceFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -29,24 +30,30 @@ export const WorkspaceField = forwardRef<HTMLInputElement, WorkspaceFieldProps>(
           {rightElement}
         </div>
         
-        <div className="relative">
-          {leftElement && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        {leftElement ? (
+          <InputGroup className={cn(error && "border-destructive has-[[data-slot=input-group-control]:focus-visible]:border-destructive has-[[data-slot=input-group-control]:focus-visible]:ring-destructive/20")}>
+            <InputGroupAddon className="bg-muted/50 border-r px-3 text-xs font-semibold text-muted-foreground">
               {leftElement}
-            </div>
-          )}
+            </InputGroupAddon>
+            <InputGroupInput
+              id={id}
+              ref={ref}
+              className={cn("h-10", className)}
+              {...props}
+            />
+          </InputGroup>
+        ) : (
           <Input
             id={id}
             ref={ref}
             className={cn(
               "h-10 transition-all",
-              leftElement && "pl-20",
-              error && "border-destructive focus-visible:ring-destructive",
+              error && "border-destructive focus-visible:ring-destructive/20 focus-visible:border-destructive",
               className
             )}
             {...props}
           />
-        </div>
+        )}
 
         {description && !error && (
           <p className="text-xs text-muted-foreground animate-in fade-in duration-200">
