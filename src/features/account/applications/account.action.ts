@@ -2,11 +2,10 @@
 
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
+import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-import { ActionResponse, handleActionError, AppError } from "@/shared/lib/error";
 import { CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema } from "../types/account.schema";
 
 export async function updateProfile(data: UpdateUserSchema): Promise<ActionResponse> {
@@ -73,6 +72,7 @@ export async function registerUser(data: CreateUserSchema): Promise<ActionRespon
 
     const user = await db.user.create({
       data: {
+        id: validatedData.id,
         name: validatedData.name,
         email: validatedData.email,
         password: hashedPassword,

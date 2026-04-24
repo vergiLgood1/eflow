@@ -139,6 +139,11 @@ exports.Prisma.WorkspaceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WorkspaceSlugScalarFieldEnum = {
+  base: 'base',
+  count: 'count'
+};
+
 exports.Prisma.WorkspaceMemberScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -176,6 +181,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   User: 'User',
   Workspace: 'Workspace',
+  WorkspaceSlug: 'WorkspaceSlug',
   WorkspaceMember: 'WorkspaceMember',
   DataModel: 'DataModel'
 };

@@ -12,4 +12,9 @@ export const signUpSchema = z.object({
 });
 
 export type SignInSchema = z.infer<typeof signInSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email format"),
+});
+export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 export type SignUpSchema = z.infer<typeof signUpSchema>;

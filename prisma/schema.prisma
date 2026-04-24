@@ -13,14 +13,14 @@ datasource db {
 }
 
 model User {
-  id            String            @id @default(uuid())
+  id            String            @id @unique
   name          String
   email         String
   password      String
   emailVerified Boolean?
   image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   memberships   WorkspaceMember[]
 
   @@unique([email])
@@ -37,6 +37,11 @@ model Workspace {
   dataModels DataModel[]
 
   @@map("workspace")
+}
+
+model WorkspaceSlug {
+  base  String @id
+  count Int
 }
 
 model WorkspaceMember {

@@ -1,16 +1,15 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createWorkspaceSchema, CreateWorkspaceSchema } from "../../types/workspace.schema";
 import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
-import { toast } from "sonner";
-import { createWorkspace } from "../../applications/workspace.action";
-import { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { createWorkspace } from "../../applications/workspace.action";
+import { createWorkspaceSchema, CreateWorkspaceSchema } from "../../types/workspace.schema";
+import { WorkspaceField } from "../molecules/workspace-field";
 
 /**
  * Organism that provides a form for creating a new workspace.
@@ -45,16 +44,18 @@ export function CreateWorkspaceForm() {
     setIsLoading(true);
     try {
       const result = await createWorkspace(data);
-      if (result.success) {
-        toast.success("Workspace created successfully!");
-        // Redirect to the newly created workspace or list
-        router.push("/workspaces");
-      } else {
-        toast.error(result.error || "Failed to create workspace. Please try again.");
+
+      if (!result.success) {
+        toast.error(result.error);
+        setIsLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error("[CreateWorkspaceForm]", error);
-      toast.error("An unexpected error occurred while creating the workspace.");
+
+      toast.success("Workspace created successfully!");
+      router.push(`/workspaces/${result.data?.slug || data.slug}`);
+    } catch (err) {
+      console.error("CREATE WORKSPACE ERROR:", err);
+      toast.error("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -62,41 +63,25 @@ export function CreateWorkspaceForm() {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="name" className="text-sm font-medium">Workspace Name</Label>
-        <Input
-          id="name"
-          placeholder="e.g. My Awesome Team"
-          {...form.register("name")}
-          disabled={isLoading}
-          className="h-10"
-        />
-        {form.formState.errors.name && (
-          <p className="text-sm text-destructive font-medium">{form.formState.errors.name.message}</p>
-        )}
-      </div>
+      <WorkspaceField
+        id="name"
+        label="Workspace Name"
+        placeholder="e.g. My Awesome Team"
+        disabled={isLoading}
+        error={form.formState.errors.name}
+        {...form.register("name")}
+      />
       
-      <div className="space-y-2">
-        <Label htmlFor="slug" className="text-sm font-medium">Workspace URL</Label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <span className="text-muted-foreground text-sm">eflow.io/</span>
-          </div>
-          <Input
-            id="slug"
-            placeholder="my-awesome-team"
-            {...form.register("slug")}
-            disabled={isLoading}
-            className="pl-20 h-10"
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          This is your unique workspace address.
-        </p>
-        {form.formState.errors.slug && (
-          <p className="text-sm text-destructive font-medium">{form.formState.errors.slug.message}</p>
-        )}
-      </div>
+      <WorkspaceField
+        id="slug"
+        label="Workspace URL"
+        placeholder="my-awesome-team"
+        disabled={isLoading}
+        error={form.formState.errors.slug}
+        description="This is your unique workspace address."
+        leftElement={<span className="text-muted-foreground text-sm">eflow.io/</span>}
+        {...form.register("slug")}
+      />
 
       <Button type="submit" disabled={isLoading} className="w-full h-10 font-semibold transition-all">
         {isLoading ? (

@@ -12,21 +12,12 @@ datasource db {
   provider = "postgresql"
 }
 
-generator zod {
-  provider = "prisma-zod-generator"
-  output   = "./zod"
-}
-
 model User {
-  id            String            @id @default(uuid())
-  /// @zod.string.min(2, { message: "Name must be at least 2 characters" })
+  id            String            @id @unique
   name          String
-  /// @zod.string.email({ message: "Invalid email address" })
   email         String
-  /// @zod.string.min(8, { message: "Password must be at least 8 characters" })
   password      String
   emailVerified Boolean?
-  /// @zod.string.url({ message: "Invalid image URL" })
   image         String?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
@@ -38,9 +29,7 @@ model User {
 
 model Workspace {
   id         String            @id @default(uuid())
-  /// @zod.string.min(2, { message: "Workspace name must be at least 2 characters" })
   name       String
-  /// @zod.string.min(2, { message: "Slug must be at least 2 characters" }).regex(/^[a-z0-9-]+$/, { message: "Slug can only contain lowercase letters, numbers, and hyphens" })
   slug       String            @unique
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
@@ -48,6 +37,11 @@ model Workspace {
   dataModels DataModel[]
 
   @@map("workspace")
+}
+
+model WorkspaceSlug {
+  base  String @id
+  count Int
 }
 
 model WorkspaceMember {

@@ -79,7 +79,7 @@ export function SignInForm() {
             rightElement={
               <Link
                 href="/auth/forgot-password"
-                className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                className="text-xs font-medium text-primary hover:underline"
               >
                 Forgot password?
               </Link>

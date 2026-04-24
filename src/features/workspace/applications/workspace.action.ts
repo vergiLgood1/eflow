@@ -2,37 +2,79 @@
 
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
+import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
 import { revalidatePath } from "next/cache";
-import { ActionResponse, handleActionError, AppError } from "@/shared/lib/error";
+import { Workspace } from "../../../../prisma/generated";
+import { generateSlug } from "../lib/generate-slug";
 import { createWorkspaceSchema } from "../types/workspace.schema";
+
+// is workspace slug exists
+export async function isWorkspaceSlugExists(slug: string): Promise<ActionResponse<boolean>> {
+  try {
+    const workspace = await db.workspace.findUnique({
+      where: {
+        slug: slug,
+      },
+    });
+
+    return {
+      success: true,
+      data: !!workspace,
+      message: "Workspace slug exists"
+    };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
 
 export async function createWorkspace(data: { name: string; slug: string }): Promise<ActionResponse> {
   try {
     const session = await auth.getSession();
 
-    if (!session.data) {
-      throw new AppError("Unauthorized", 401);
-    }
     const validatedData = createWorkspaceSchema.parse(data);
 
-    const workspace = await db.workspace.create({
-      data: {
-        name: validatedData.name,
-        slug: validatedData.slug,
-        members: {
-          create: {
-            userId: session.data.user.id,
-            role: "OWNER",
+    const workspace = await db.$transaction(async (tx) => {
+      const record = await tx.workspaceSlug.upsert({
+        where: { base: validatedData.slug },
+        update: { count: { increment: 1 } },
+        create: { base: validatedData.slug, count: 0 },
+      });
+
+      const slug =
+        record.count === 0
+          ? validatedData.slug
+          : `${validatedData.slug}-${record.count}`;
+
+      if (!session.data) {
+        throw new AppError("Unauthorized", 401);
+      }
+
+      const workspace = await tx.workspace.create({
+        data: {
+          name: validatedData.name,
+          slug,
+          members: {
+            create: {
+              userId: session.data.user.id,
+              role: "OWNER",
+            },
           },
         },
-      },
+      });
+
+      return workspace;
     });
 
     revalidatePath("/workspaces");
 
     return {
       success: true,
-      data: workspace,
+      data: {
+        id: workspace.id,
+        name: workspace.name,
+        slug: workspace.slug,
+      },
       message: "Workspace created successfully"
     };
   } catch (error) {
@@ -44,9 +86,9 @@ export async function initializeNewUserWorkspace(userId: string, userName: strin
   try {
     const workspaceName = userName ? `${userName}'s Workspace` : "My Workspace";
 
-    const slugBase = userEmail.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "-");
-    const randomSuffix = Math.random().toString(36).substring(2, 6);
-    const slug = `${slugBase}-${randomSuffix}`;
+    const slugBase = userEmail.split("@")[0].toLowerCase()
+
+    const slug = await generateSlug(slugBase)
 
     const workspace = await db.workspace.create({
       data: {
@@ -70,3 +112,58 @@ export async function initializeNewUserWorkspace(userId: string, userName: strin
     return handleActionError(error);
   }
 }
+
+export async function getAllWorkspaces(): Promise<ActionResponse<Workspace[]>> {
+  try {
+    const session = await auth.getSession();
+
+    if (!session.data) {
+      throw new AppError("Unauthorized", 401);
+    }
+    const workspaces = await db.workspace.findMany({
+      where: {
+        members: {
+          some: {
+            userId: session.data.user.id,
+          },
+        },
+      },
+    });
+
+    revalidatePath("/workspaces");
+
+    return {
+      success: true,
+      data: workspaces,
+      message: "Workspaces fetched successfully"
+    };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+// get count workspace by userId
+export async function getWorkspaceCountByUserId(userId: string): Promise<ActionResponse<number>> {
+  try {
+    const count = await db.workspace.count({
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      data: count,
+      message: "Workspace count fetched successfully"
+    };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+
+

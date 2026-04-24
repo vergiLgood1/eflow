@@ -27,6 +27,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             src="/auth-cover.png"
             alt="Database Visualization"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover brightness-[0.4] scale-105 animate-in fade-in zoom-in duration-1000"
             priority
           />

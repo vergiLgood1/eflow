@@ -1,4 +1,4 @@
-import { describe, it, expect, mock, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 
 mock.module("next/navigation", () => ({
   unstable_rethrow: mock().mockImplementation((err) => {
@@ -20,6 +20,10 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
 const mockDb = {
   workspace: {
     create: mock(),
+    findMany: mock(),
+  },
+  workspaceSlug: {
+    upsert: mock(),
   }
 };
 mock.module("@/db/prisma", () => ({
@@ -33,6 +37,8 @@ describe("Workspace Actions", () => {
   beforeEach(() => {
     mockGetSession.mockClear();
     mockDb.workspace.create.mockClear();
+    mockDb.workspace.findMany.mockClear();
+    mockDb.workspaceSlug.upsert.mockClear();
     (revalidatePath as any).mockClear();
   });
 
@@ -52,6 +58,7 @@ describe("Workspace Actions", () => {
 
     it("should successfully create workspace", async () => {
       mockGetSession.mockResolvedValueOnce({ data: { user: { id: "user-123" } } });
+      mockDb.workspaceSlug.upsert.mockResolvedValueOnce({ base: "my-workspace", count: 0 });
       mockDb.workspace.create.mockResolvedValueOnce({ id: "ws-123", name: "My Workspace" });
 
       const res = await createWorkspace({ name: "My Workspace", slug: "my-workspace" });
@@ -76,6 +83,7 @@ describe("Workspace Actions", () => {
 
   describe("initializeNewUserWorkspace", () => {
     it("should successfully initialize a default workspace", async () => {
+      mockDb.workspaceSlug.upsert.mockResolvedValueOnce({ base: "john", count: 0 });
       mockDb.workspace.create.mockResolvedValueOnce({ id: "ws-123" });
 
       const res = await initializeNewUserWorkspace("user-123", "John", "john@example.com");
@@ -86,7 +94,7 @@ describe("Workspace Actions", () => {
       const callArgs = mockDb.workspace.create.mock.calls[0][0];
       
       expect(callArgs.data.name).toBe("John's Workspace");
-      expect(callArgs.data.slug.startsWith("john-")).toBe(true);
+      expect(callArgs.data.slug).toBe("john");
       expect(callArgs.data.members.create.userId).toBe("user-123");
       expect(callArgs.data.members.create.role).toBe("OWNER");
     });
