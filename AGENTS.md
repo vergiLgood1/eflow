@@ -38,7 +38,7 @@ src/
 │   │   ├── hooks/
 │   │   ├── lib/
 │   │   ├── types/
-│   │   ├── applications/ # here you can use layered architecture (controller.ts, service.ts, repository.ts)
+│   │   ├── applications/ # here you can use layered architecture (controller.ts, service.ts, repository.ts, model.[name].ts)
 │   │   └── ...
 │   └── ...
 └── ...
@@ -48,5 +48,9 @@ src/
 <!-- BEGIN:shadcn-rules -->
 Always use shadcn ui with tailwind css components. 
 - Avoid custom component if there is a shadcn ui component that can be used.
-- if the shadcn ui component can't fulfill the requirements, create a new component in the shared/components/ui or in the feature spesific components folder following the shadcn ui naming convention. only create atomic component for spesific feature.
+- if the shadcn ui component can't fulfill the requirements, create a new component in the shared/components/ui or in the feature spesific components folder following the shadcn ui naming convention. only create atomic component if spesific feature.
 <!-- END:shadcn-rules -->
+
+<!-- BEGIN:zod -->
+zod is the main validation library in this project. use it for form validation and data validation. if needed use @felte/zod for form integration. create zod schema for each feature or use zod-prisma to generate zod schema from prisma schema.
+<!-- END:zod -->    
