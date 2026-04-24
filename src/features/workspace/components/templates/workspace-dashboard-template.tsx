@@ -9,7 +9,7 @@ export function WorkspaceDashboardTemplate({
     hasDiagrams = true,
 }: WorkspaceDashboardTemplateProps) {
     return (
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+        <div className="flex-1 flex flex-col min-w-0 bg-background">
             {hasDiagrams ? (
                 <WorkspaceDashboardContentTemplate />
             ) : (

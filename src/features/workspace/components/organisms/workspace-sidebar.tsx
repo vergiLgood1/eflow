@@ -1,24 +1,23 @@
 "use client"
 
-import React from "react";
-import { 
-    Database, 
-    Clock, 
-    Link2, 
-    Settings, 
-    Users, 
-    Layers, 
+import { Button } from "@/shared/components/ui/button";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import {
+    Clock,
+    Database,
     FileText,
-    Plus
+    Layers,
+    Link2,
+    Plus,
+    Settings,
+    Users
 } from "lucide-react";
 import { WorkspaceSidebarItem } from "../molecules/workspace-sidebar-item";
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { Button } from "@/shared/components/ui/button";
 
 export function WorkspaceSidebar() {
     return (
-        <aside className="w-[260px] shrink-0 border-r border-border bg-card/20 backdrop-blur-sm flex flex-col h-full">
-            <ScrollArea className="flex-1">
+        <aside className="w-[260px] shrink-0 border-r border-border bg-card/20 backdrop-blur-sm flex flex-col sticky top-12 h-[calc(100vh-48px)]">
+            <ScrollArea className="flex-1 ">
                 <div className="p-4 flex flex-col gap-8">
                     {/* Primary Navigation */}
                     <div className="space-y-3">
