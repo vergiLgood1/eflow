@@ -9,6 +9,6 @@ export const config = {
     matcher: [
         // Protected routes requiring authentication
         '/account/:path*',
-        // '/workspaces/:path*',
+        '/workspaces/:path*',
     ],
 };
