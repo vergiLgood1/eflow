@@ -14,7 +14,7 @@ export function WorkspaceModelSidebarColumn({
     return (
         <div className="group flex items-center gap-1">
             <button
-                className="min-w-0 flex-1 truncate text-left hover:text-foreground"
+                className="min-w-0 flex-1 truncate text-left hover:text-foreground cursor-pointer"
                 id={id}
             >
                 {name} <span className="text-muted-foreground/50">{type}</span>

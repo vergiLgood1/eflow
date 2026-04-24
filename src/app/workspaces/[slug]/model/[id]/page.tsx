@@ -1,7 +1,9 @@
+import { WorkspaceModelCanvas } from "@/features/workspace/components/organisms/workspace-model-canvas";
+
 export default async function ModelPage({ params }: { params: { id: string } }) {
     return (
-        <div>
-            <h1>Model {params.id}</h1>
+        <div className="w-full h-full">
+            <WorkspaceModelCanvas />
         </div>
     );
 }

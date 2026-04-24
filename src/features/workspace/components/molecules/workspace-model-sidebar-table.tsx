@@ -40,7 +40,7 @@ export function WorkspaceModelSidebarTable({
                     <button className="opacity-40 cursor-not-allowed" disabled>
                         <Plus className="h-3.5 w-3.5 text-muted-foreground/40" />
                     </button>
-                    <button>
+                    <button className="cursor-pointer hover:text-sky-400 transition-colors">
                         <Eye className="h-3.5 w-3.5 text-sky-500" />
                     </button>
                 </div>

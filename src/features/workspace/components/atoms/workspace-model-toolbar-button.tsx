@@ -1,12 +1,13 @@
-import React from "react";
+"use client";
+
 import { Button, type ButtonProps } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/utils";
 import {
     Tooltip,
     TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+    TooltipTrigger
 } from "@/shared/components/ui/tooltip";
+import { cn } from "@/shared/lib/utils";
+import React from "react";
 
 interface WorkspaceModelToolbarButtonProps extends ButtonProps {
     tooltip?: string;
@@ -46,14 +47,12 @@ export function WorkspaceModelToolbarButton({
 
     if (tooltip) {
         return (
-            <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>{button}</TooltipTrigger>
                     <TooltipContent side="bottom" className="text-[10px] py-1 px-2">
                         {tooltip}
                     </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            </Tooltip>
         );
     }
 
