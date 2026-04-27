@@ -1,7 +1,7 @@
-import React from "react";
-import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
+import React from "react";
 
 interface WorkspaceSidebarItemProps {
     icon: React.ReactNode;

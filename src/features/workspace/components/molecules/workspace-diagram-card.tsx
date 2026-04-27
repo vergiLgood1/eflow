@@ -1,5 +1,4 @@
 import { togglePinDataModel } from "@/features/workspace/applications/workspace.action";
-import { useWorkspaceStore } from "@/features/workspace/store/use-workspace-store";
 import { Button } from "@/shared/components/ui/button";
 import {
     DropdownMenu,
@@ -39,7 +38,6 @@ export function WorkspaceDiagramCard({
     className,
 }: WorkspaceDiagramCardProps) {
     const router = useRouter();
-    const { togglePin } = useWorkspaceStore();
 
     const handleClick = () => {
         router.push(`/workspaces/${workspaceSlug}/model/${id}`);
@@ -48,15 +46,10 @@ export function WorkspaceDiagramCard({
     const handleStar = async (e: React.MouseEvent) => {
         e.stopPropagation();
 
-        // Optimistic UI update
-        togglePin({ id, name: title, slug: workspaceSlug });
-
         const response = await togglePinDataModel(id);
         if (response.success) {
             router.refresh();
         } else {
-            // Revert on failure
-            togglePin({ id, name: title, slug: workspaceSlug });
             toast.error("Failed to update pin status");
         }
     };

@@ -12,7 +12,6 @@ import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { EmptyDiagramState } from "../molecules/empty-diagram-state";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { ShareDiagramDialog } from "./share-diagram-dialog";
-import { useWorkspaceStore } from "../../store/use-workspace-store";
 
 interface WorkspaceDiagramListProps {
     models: DataModel[];
@@ -107,7 +106,6 @@ function DiagramListItem({
     workspaceSlug: string
 }) {
     const router = useRouter();
-    const { togglePin } = useWorkspaceStore();
 
     const handleClick = () => {
         router.push(`/workspaces/${workspaceSlug}/model/${model.id}`);
@@ -120,15 +118,10 @@ function DiagramListItem({
     const handleStar = async (e: React.MouseEvent) => {
         e.stopPropagation();
         
-        // Optimistic UI for sidebar
-        togglePin({ id: model.id, name: model.name, slug: workspaceSlug });
-        
         const response = await togglePinDataModel(model.id);
         if (response.success) {
             router.refresh();
         } else {
-            // Revert on failure
-            togglePin({ id: model.id, name: model.name, slug: workspaceSlug });
             toast.error("Failed to update pin status");
         }
     };

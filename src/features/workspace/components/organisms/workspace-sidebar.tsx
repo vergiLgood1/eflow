@@ -1,19 +1,14 @@
 "use client"
 
-import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import {
     Clock,
     Database,
     FileText,
     Layers,
-    Link2,
-    Plus,
-    Settings,
-    Users
+    Link2
 } from "lucide-react";
-import { useWorkspaceStore } from "@/features/workspace/store/use-workspace-store";
-import { useEffect, useState } from "react";
 import { WorkspaceSidebarItem } from "../molecules/workspace-sidebar-item";
 
 import { useParams } from "next/navigation";
@@ -22,25 +17,11 @@ import type { DataModel } from "../../../../../prisma/generated";
 export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
     const params = useParams();
     const slug = params?.slug as string;
-    
-    const { pinnedDiagrams, togglePin } = useWorkspaceStore();
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     // Pinned models from the current workspace (server-side truth)
-    const serverPinnedModels = models.filter(m => m.isPinned);
+    const pinnedModels = models.filter(m => m.isPinned);
     
-    // Combine with other pinned items from zustand that are NOT in this workspace
-    // (to keep global pins visible even if they are not in the current models list)
-    const otherPinnedModels = pinnedDiagrams.filter(pd => !models.some(m => m.id === pd.id));
-    
-    const allPinned = [
-        ...serverPinnedModels.map(m => ({ id: m.id, name: m.name, slug: slug })),
-        ...otherPinnedModels
-    ];
+    const allPinned = pinnedModels.map(m => ({ id: m.id, name: m.name, slug: slug }));
 
     return (
         <aside className="w-[260px] shrink-0 border-r border-border bg-card/20 backdrop-blur-sm flex flex-col sticky top-12 h-[calc(100vh-48px)]">
@@ -62,10 +43,12 @@ export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
                             <WorkspaceSidebarItem 
                                 icon={<Clock className="h-4 w-4" />} 
                                 label="Activity" 
+                                href={`/workspaces/${slug}/activity`}
                             />
                             <WorkspaceSidebarItem 
                                 icon={<Link2 className="h-4 w-4" />} 
                                 label="Explore" 
+                                href={`/workspaces/${slug}/explore`}
                             />
                         </nav>
                     </div>
@@ -76,13 +59,13 @@ export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
                             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
                                 Pinned
                             </span>
-                            <Button variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground">
-                                <Plus className="h-3 w-3" />
-                            </Button>
+                            <Badge variant="secondary" className="h-5 px-1.5 rounded-md font-bold text-[10px] bg-muted/40 text-muted-foreground border-border/40">
+                                {allPinned.length}
+                            </Badge>
                         </div>
                         
                         <div className="space-y-1">
-                            {isMounted && allPinned.length > 0 ? (
+                            {allPinned.length > 0 ? (
                                 allPinned.map((diagram) => (
                                     <WorkspaceSidebarItem 
                                         key={diagram.id}
