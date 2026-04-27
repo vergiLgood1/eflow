@@ -23,12 +23,13 @@ interface DataModel {
 }
 
 interface ModelListProps {
-    promise: Promise<DataModel[]>;
+    promise?: Promise<DataModel[]>;
     selectedId?: string;
     onSelect: (model: DataModel) => void;
 }
 
 function ModelList({ promise, selectedId, onSelect }: ModelListProps) {
+    if (!promise) return null;
     const models = use(promise);
 
     return (
@@ -105,9 +106,16 @@ export function WorkspaceDataModelSelector({
     const [debouncedSearch] = useDebounceValue(searchQuery, 300);
     const [selectedModel, setSelectedModel] = React.useState<DataModel | null>(null);
 
-    const modelsPromise = useMemo(() => {
-        if (!debouncedSearch && initialPromise) return initialPromise;
-        return getDataModelsBySlug(slug, debouncedSearch);
+    const [modelsPromise, setModelsPromise] = React.useState(initialPromise);
+
+    React.useEffect(() => {
+        if (!debouncedSearch) {
+            setModelsPromise(initialPromise);
+            return;
+        }
+
+        const newPromise = getDataModelsBySlug(slug, debouncedSearch);
+        setModelsPromise(newPromise);
     }, [slug, debouncedSearch, initialPromise]);
 
     return (

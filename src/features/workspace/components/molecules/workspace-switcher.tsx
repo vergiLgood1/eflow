@@ -12,7 +12,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
 import { Check, ChevronsUpDown, Plus, Search } from "lucide-react";
-import React, { Suspense, use, useMemo } from "react";
+import React, { Suspense, use } from "react";
 import { getWorkspaces } from "../../applications/workspace.action";
 
 const WORKSPACE_COLORS = [
@@ -31,12 +31,13 @@ interface Workspace {
 }
 
 interface WorkspaceListProps {
-    promise: Promise<Workspace[]>;
+    promise?: Promise<Workspace[]>;
     selectedId?: string;
     onSelect: (workspace: Workspace) => void;
 }
 
 function WorkspaceList({ promise, selectedId, onSelect }: WorkspaceListProps) {
+    if (!promise) return null;
     const workspaces = use(promise);
 
     return (
@@ -104,9 +105,16 @@ export function WorkspaceSwitcher({
     // Initial display name
     const [displayName, setDisplayName] = React.useState(initialWorkspaceName);
 
-    const workspacesPromise = useMemo(() => {
-        if (!debouncedSearch && initialPromise) return initialPromise;
-        return getWorkspaces(debouncedSearch);
+    const [workspacesPromise, setWorkspacesPromise] = React.useState(initialPromise);
+
+    React.useEffect(() => {
+        if (!debouncedSearch) {
+            setWorkspacesPromise(initialPromise);
+            return;
+        }
+
+        const newPromise = getWorkspaces(debouncedSearch);
+        setWorkspacesPromise(newPromise);
     }, [debouncedSearch, initialPromise]);
 
     return (

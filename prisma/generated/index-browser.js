@@ -158,12 +158,24 @@ exports.Prisma.DataModelScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  tags: 'tags',
   isPinned: 'isPinned',
   dbType: 'dbType',
   workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DataModelTagScalarFieldEnum = {
+  dataModelId: 'dataModelId',
+  tagId: 'tagId'
 };
 
 exports.Prisma.TableScalarFieldEnum = {
@@ -338,7 +350,18 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.WorkspaceRole = exports.$Enums.WorkspaceRole = {
+  OWNER: 'OWNER',
+  MEMBER: 'MEMBER'
+};
 
+exports.DatabaseType = exports.$Enums.DatabaseType = {
+  POSTGRESQL: 'POSTGRESQL',
+  MYSQL: 'MYSQL',
+  ORACLE: 'ORACLE',
+  SQLSERVER: 'SQLSERVER',
+  SQLITE: 'SQLITE'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -346,6 +369,8 @@ exports.Prisma.ModelName = {
   WorkspaceSlug: 'WorkspaceSlug',
   WorkspaceMember: 'WorkspaceMember',
   DataModel: 'DataModel',
+  Tag: 'Tag',
+  DataModelTag: 'DataModelTag',
   Table: 'Table',
   Column: 'Column',
   Relationship: 'Relationship',

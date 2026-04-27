@@ -10,7 +10,7 @@ interface WorkspaceDashboardContentTemplateProps {
 
 export function WorkspaceDashboardContentTemplate({ modelsPromise }: WorkspaceDashboardContentTemplateProps) {
     return (
-        <div className="max-w-[1600px] mx-auto p-6 md:p-10 pb-20">
+        <div className="w-full mx-auto p-6 md:p-10 pb-20">
             <WorkspaceDashboardHeader 
                 title="workspace" 
                 path="workspace/my-workspace12" 

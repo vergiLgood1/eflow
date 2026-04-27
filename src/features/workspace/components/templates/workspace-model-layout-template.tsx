@@ -3,21 +3,30 @@ import { WorkspaceHeader } from "../organisms/workspace-header";
 import { WorkspaceModelSidebar } from "../organisms/workspace-model-sidebar";
 import { WorkspaceModelToolbar } from "../organisms/workspace-model-toolbar";
 
+import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
 
-interface WorkspaceLayoutTemplateProps {
+interface WorkspaceModelLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
+    workspacesPromise: Promise<Workspace[]>;
+    modelsPromise: Promise<DataModel[]>;
 }
 
 export function WorkspaceModelLayoutTemplate({
     children,
     userName,
-}: WorkspaceLayoutTemplateProps) {
+    workspacesPromise,
+    modelsPromise,
+}: WorkspaceModelLayoutTemplateProps) {
     return (
         <div className="h-screen flex flex-col min-w-0 overflow-hidden bg-background">
             {/* Main Application Header */}
-            <WorkspaceHeader userName={userName} />
+            <WorkspaceHeader
+                workspacesPromise={workspacesPromise}
+                modelsPromise={modelsPromise}
+                userName={userName}
+            />
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Model Navigation Sidebar */}

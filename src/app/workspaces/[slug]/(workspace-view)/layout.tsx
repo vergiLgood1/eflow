@@ -1,5 +1,5 @@
 import { auth } from "@/features/authentication/lib/auth-server";
-import { getDataModelsBySlug, getWorkspaces } from "@/features/workspace/applications/workspace.action";
+import { getDataModelsBySlug, getWorkspacesByCurrentUser } from "@/features/workspace/applications/workspace.action";
 import { WorkspaceLayoutTemplate } from "@/features/workspace/components/templates/workspace-layout-template";
 import { redirect } from "next/navigation";
 
@@ -8,15 +8,14 @@ export default async function Layout({
     params,
 }: {
     children: React.ReactNode;
-        params: { slug: string };
+        params: Promise<{ slug: string }>;
 }) {
-    const { slug } = params;
+    const { slug } = await params;
 
     // Prefetch data for the header components
-    const workspacesPromise = getWorkspaces();
+    const workspacesPromise = getWorkspacesByCurrentUser();
     const modelsPromise = getDataModelsBySlug(slug);
 
-    // In a real app, we would fetch user data here.
     const session = await auth.getSession()
 
     if (!session || !session.data) {
@@ -24,7 +23,6 @@ export default async function Layout({
     }
 
     const userName = session.data.user.name;
-
 
     return (
         <WorkspaceLayoutTemplate

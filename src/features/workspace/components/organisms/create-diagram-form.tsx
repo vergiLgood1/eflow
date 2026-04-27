@@ -1,6 +1,8 @@
 "use client";
 
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import {
   Select,
@@ -10,7 +12,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,26 +27,72 @@ interface CreateDiagramFormProps {
 }
 
 export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
 
-  const form = useForm<CreateDataModelSchema>({
+  const [tagInput, setTagInput] = useState("");
+
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    getValues,
+    watch,
+    formState: { isSubmitting, errors },
+  } = useForm<CreateDataModelSchema>({
     resolver: zodResolver(createDataModelSchema),
     defaultValues: {
       name: "",
+      description: "",
+      tags: [],
       dbType: "POSTGRESQL",
     },
   });
 
+  const tags = watch("tags") || [];
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newTag = tagInput.trim().toLowerCase();
+
+      if (!newTag) return;
+
+      if (tags.length >= 10) {
+        toast.error("Maksimal 10 tag");
+        return;
+      }
+
+      if (tags.includes(newTag)) {
+        toast.error("Tag sudah ada");
+        return;
+      }
+
+      if (newTag.length > 30) {
+        toast.error("Tag maksimal 30 karakter");
+        return;
+      }
+
+      setValue("tags", [...tags, newTag], { shouldValidate: true });
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setValue(
+      "tags",
+      tags.filter((t) => t !== tagToRemove),
+      { shouldValidate: true }
+    );
+  };
+
   const onSubmit = async (data: CreateDataModelSchema) => {
     if (!slug) {
-        toast.error("Workspace slug not found");
-        return;
+      toast.error("Workspace slug not found");
+      return;
     }
 
-    setIsLoading(true);
     try {
       const result = await createDataModel(slug, data);
 
@@ -55,72 +103,109 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
 
       toast.success("Diagram created successfully!");
       onSuccess?.();
-      // In a real app, we might redirect to the new diagram editor
-      // router.push(`/workspaces/${slug}/diagrams/${result.data.id}`);
-      router.refresh();
+      router.push(`/workspaces/${slug}/model/${result.data.id}`);
     } catch (err) {
       console.error("CREATE DIAGRAM ERROR:", err);
       toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <WorkspaceField
         id="name"
         label="Diagram Name"
         placeholder="e.g. User Management System"
-        disabled={isLoading}
-        error={form.formState.errors.name}
-        {...form.register("name")}
+        disabled={isSubmitting}
+        error={errors.name}
+        {...register("name")}
       />
-      
+
       <WorkspaceTextareaField
         id="description"
         label="Description"
         placeholder="Brief description of your diagram..."
-        disabled={isLoading}
+        disabled={isSubmitting}
         rows={2}
-        error={form.formState.errors.description}
-        {...form.register("description")}
+        error={errors.description}
+        {...register("description")}
       />
 
-      <WorkspaceField
-        id="tags"
-        label="Tags"
-        placeholder="e.g. SasS, Auth, Next (Comma separated)"
-        disabled={isLoading}
-        error={form.formState.errors.tags}
-        {...form.register("tags")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="tags">Tags</Label>
+        <Input
+          id="tags"
+          placeholder="Type a tag and press Enter..."
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyDown={handleAddTag}
+          disabled={isSubmitting}
+          className="h-10"
+        />
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {tags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                size="lg"
+                className="flex items-center gap-1 bg-secondary/50 hover:bg-secondary pr-1"
+              >
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="rounded-full p-0.5 hover:bg-muted-foreground/20 transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                  <span className="sr-only">Remove {tag}</span>
+                </button>
+              </Badge>
+            ))}
+          </div>
+        )}
+        {errors.tags && (
+          <p className="text-xs font-medium text-destructive">
+            {errors.tags.message}
+          </p>
+        )}
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="dbType">Database Type</Label>
         <Select
-          disabled={isLoading}
-          onValueChange={(value) => form.setValue("dbType", value as CreateDataModelSchema["dbType"], { shouldValidate: true })}
-          defaultValue={form.getValues("dbType")}
+          disabled={isSubmitting}
+          onValueChange={(value) =>
+            setValue("dbType", value as CreateDataModelSchema["dbType"], {
+              shouldValidate: true,
+            })
+          }
+          defaultValue={getValues("dbType")}
         >
-          <SelectTrigger id="dbType">
+          <SelectTrigger id="dbType" className="flex w-full h-10">
             <SelectValue placeholder="Select a database type" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="POSTGRESQL">PostgreSQL</SelectItem>
             <SelectItem value="MYSQL">MySQL</SelectItem>
-            <SelectItem value="SQLITE">SQLite</SelectItem>
+            <SelectItem value="ORACLE">Oracle</SelectItem>
             <SelectItem value="SQLSERVER">SQL Server</SelectItem>
-            <SelectItem value="MONGODB">MongoDB</SelectItem>
+            <SelectItem value="SQLITE">SQLite</SelectItem>
           </SelectContent>
         </Select>
-        {form.formState.errors.dbType && (
-          <p className="text-xs font-medium text-destructive">{form.formState.errors.dbType.message}</p>
+        {errors.dbType && (
+          <p className="text-xs font-medium text-destructive">
+            {errors.dbType.message}
+          </p>
         )}
       </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full h-10 font-semibold transition-all">
-        {isLoading ? (
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full h-10 font-semibold transition-all"
+      >
+        {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Creating Diagram...

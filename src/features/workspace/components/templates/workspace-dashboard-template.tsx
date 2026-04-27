@@ -1,5 +1,6 @@
 "use client";
 
+import { Center } from "@/shared/components/layout/Center";
 import { Loader2 } from "lucide-react";
 import { Suspense, use } from "react";
 import type { DataModel } from "../../../../../prisma/generated";
@@ -22,12 +23,12 @@ function DashboardContent({ modelsPromise }: { modelsPromise: Promise<DataModel[
 
 function DashboardLoading() {
     return (
-        <div className="flex-1 flex items-center justify-center">
+        <Center className="h-screen">
             <div className="flex flex-col items-center gap-2">
                 <Loader2 className="h-8 w-8 animate-spin text-primary/50" />
                 <p className="text-sm text-muted-foreground animate-pulse">Loading workspace...</p>
             </div>
-        </div>
+        </Center>
     );
 }
 

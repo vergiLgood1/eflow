@@ -9,8 +9,8 @@ import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
 interface WorkspaceLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
-    workspacesPromise?: Promise<Workspace[]>;
-    modelsPromise?: Promise<DataModel[]>;
+    workspacesPromise: Promise<Workspace[]>;
+    modelsPromise: Promise<DataModel[]>;
 }
 
 export function WorkspaceLayoutTemplate({

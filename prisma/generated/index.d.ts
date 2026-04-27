@@ -39,6 +39,16 @@ export type WorkspaceMember = $Result.DefaultSelection<Prisma.$WorkspaceMemberPa
  */
 export type DataModel = $Result.DefaultSelection<Prisma.$DataModelPayload>
 /**
+ * Model Tag
+ * 
+ */
+export type Tag = $Result.DefaultSelection<Prisma.$TagPayload>
+/**
+ * Model DataModelTag
+ * 
+ */
+export type DataModelTag = $Result.DefaultSelection<Prisma.$DataModelTagPayload>
+/**
  * Model Table
  * 
  */
@@ -108,6 +118,38 @@ export type ActivityLog = $Result.DefaultSelection<Prisma.$ActivityLogPayload>
  * 
  */
 export type VersionHistory = $Result.DefaultSelection<Prisma.$VersionHistoryPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const WorkspaceRole: {
+  OWNER: 'OWNER',
+  MEMBER: 'MEMBER'
+};
+
+export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
+
+
+export const DatabaseType: {
+  POSTGRESQL: 'POSTGRESQL',
+  MYSQL: 'MYSQL',
+  ORACLE: 'ORACLE',
+  SQLSERVER: 'SQLSERVER',
+  SQLITE: 'SQLITE'
+};
+
+export type DatabaseType = (typeof DatabaseType)[keyof typeof DatabaseType]
+
+}
+
+export type WorkspaceRole = $Enums.WorkspaceRole
+
+export const WorkspaceRole: typeof $Enums.WorkspaceRole
+
+export type DatabaseType = $Enums.DatabaseType
+
+export const DatabaseType: typeof $Enums.DatabaseType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -279,6 +321,26 @@ export class PrismaClient<
     * ```
     */
   get dataModel(): Prisma.DataModelDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tag`: Exposes CRUD operations for the **Tag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tags
+    * const tags = await prisma.tag.findMany()
+    * ```
+    */
+  get tag(): Prisma.TagDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dataModelTag`: Exposes CRUD operations for the **DataModelTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DataModelTags
+    * const dataModelTags = await prisma.dataModelTag.findMany()
+    * ```
+    */
+  get dataModelTag(): Prisma.DataModelTagDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.table`: Exposes CRUD operations for the **Table** model.
@@ -858,6 +920,8 @@ export namespace Prisma {
     WorkspaceSlug: 'WorkspaceSlug',
     WorkspaceMember: 'WorkspaceMember',
     DataModel: 'DataModel',
+    Tag: 'Tag',
+    DataModelTag: 'DataModelTag',
     Table: 'Table',
     Column: 'Column',
     Relationship: 'Relationship',
@@ -887,7 +951,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "workspace" | "workspaceSlug" | "workspaceMember" | "dataModel" | "table" | "column" | "relationship" | "index" | "view" | "trigger" | "procedure" | "diagram" | "tableNode" | "group" | "note" | "checkpoint" | "activityLog" | "versionHistory"
+      modelProps: "user" | "workspace" | "workspaceSlug" | "workspaceMember" | "dataModel" | "tag" | "dataModelTag" | "table" | "column" | "relationship" | "index" | "view" | "trigger" | "procedure" | "diagram" | "tableNode" | "group" | "note" | "checkpoint" | "activityLog" | "versionHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1258,6 +1322,154 @@ export namespace Prisma {
           count: {
             args: Prisma.DataModelCountArgs<ExtArgs>
             result: $Utils.Optional<DataModelCountAggregateOutputType> | number
+          }
+        }
+      }
+      Tag: {
+        payload: Prisma.$TagPayload<ExtArgs>
+        fields: Prisma.TagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findFirst: {
+            args: Prisma.TagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findMany: {
+            args: Prisma.TagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          create: {
+            args: Prisma.TagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          createMany: {
+            args: Prisma.TagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          delete: {
+            args: Prisma.TagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          update: {
+            args: Prisma.TagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          deleteMany: {
+            args: Prisma.TagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          upsert: {
+            args: Prisma.TagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          aggregate: {
+            args: Prisma.TagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTag>
+          }
+          groupBy: {
+            args: Prisma.TagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TagCountArgs<ExtArgs>
+            result: $Utils.Optional<TagCountAggregateOutputType> | number
+          }
+        }
+      }
+      DataModelTag: {
+        payload: Prisma.$DataModelTagPayload<ExtArgs>
+        fields: Prisma.DataModelTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DataModelTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DataModelTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          findFirst: {
+            args: Prisma.DataModelTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DataModelTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          findMany: {
+            args: Prisma.DataModelTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>[]
+          }
+          create: {
+            args: Prisma.DataModelTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          createMany: {
+            args: Prisma.DataModelTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DataModelTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>[]
+          }
+          delete: {
+            args: Prisma.DataModelTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          update: {
+            args: Prisma.DataModelTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.DataModelTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DataModelTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DataModelTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.DataModelTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataModelTagPayload>
+          }
+          aggregate: {
+            args: Prisma.DataModelTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDataModelTag>
+          }
+          groupBy: {
+            args: Prisma.DataModelTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DataModelTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DataModelTagCountArgs<ExtArgs>
+            result: $Utils.Optional<DataModelTagCountAggregateOutputType> | number
           }
         }
       }
@@ -2410,6 +2622,8 @@ export namespace Prisma {
     workspaceSlug?: WorkspaceSlugOmit
     workspaceMember?: WorkspaceMemberOmit
     dataModel?: DataModelOmit
+    tag?: TagOmit
+    dataModelTag?: DataModelTagOmit
     table?: TableOmit
     column?: ColumnOmit
     relationship?: RelationshipOmit
@@ -2505,10 +2719,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     memberships: number
+    activities: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
+    activities?: boolean | UserCountOutputTypeCountActivitiesArgs
   }
 
   // Custom InputTypes
@@ -2527,6 +2743,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMembershipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountActivitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityLogWhereInput
   }
 
 
@@ -2575,6 +2798,7 @@ export namespace Prisma {
    */
 
   export type DataModelCountOutputType = {
+    tags: number
     tables: number
     relationships: number
     views: number
@@ -2585,6 +2809,7 @@ export namespace Prisma {
   }
 
   export type DataModelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tags?: boolean | DataModelCountOutputTypeCountTagsArgs
     tables?: boolean | DataModelCountOutputTypeCountTablesArgs
     relationships?: boolean | DataModelCountOutputTypeCountRelationshipsArgs
     views?: boolean | DataModelCountOutputTypeCountViewsArgs
@@ -2603,6 +2828,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the DataModelCountOutputType
      */
     select?: DataModelCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DataModelCountOutputType without action
+   */
+  export type DataModelCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DataModelTagWhereInput
   }
 
   /**
@@ -2652,6 +2884,37 @@ export namespace Prisma {
    */
   export type DataModelCountOutputTypeCountActivitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ActivityLogWhereInput
+  }
+
+
+  /**
+   * Count Type TagCountOutputType
+   */
+
+  export type TagCountOutputType = {
+    dataModels: number
+  }
+
+  export type TagCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dataModels?: boolean | TagCountOutputTypeCountDataModelsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TagCountOutputType
+     */
+    select?: TagCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeCountDataModelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DataModelTagWhereInput
   }
 
 
@@ -3096,6 +3359,7 @@ export namespace Prisma {
     updatedAt?: boolean
     hasCompleteOnboarding?: boolean
     memberships?: boolean | User$membershipsArgs<ExtArgs>
+    activities?: boolean | User$activitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3138,6 +3402,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "hasCompleteOnboarding", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | User$membershipsArgs<ExtArgs>
+    activities?: boolean | User$activitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3147,6 +3412,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       memberships: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+      activities: Prisma.$ActivityLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3553,6 +3819,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     memberships<T extends User$membershipsArgs<ExtArgs> = {}>(args?: Subset<T, User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activities<T extends User$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4005,6 +4272,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * User.activities
+   */
+  export type User$activitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    where?: ActivityLogWhereInput
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    cursor?: ActivityLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ActivityLogScalarFieldEnum | ActivityLogScalarFieldEnum[]
   }
 
   /**
@@ -6138,7 +6429,7 @@ export namespace Prisma {
     id: string | null
     workspaceId: string | null
     userId: string | null
-    role: string | null
+    role: $Enums.WorkspaceRole | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6147,7 +6438,7 @@ export namespace Prisma {
     id: string | null
     workspaceId: string | null
     userId: string | null
-    role: string | null
+    role: $Enums.WorkspaceRole | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6267,7 +6558,7 @@ export namespace Prisma {
     id: string
     workspaceId: string
     userId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt: Date
     updatedAt: Date
     _count: WorkspaceMemberCountAggregateOutputType | null
@@ -6355,7 +6646,7 @@ export namespace Prisma {
       id: string
       workspaceId: string
       userId: string
-      role: string
+      role: $Enums.WorkspaceRole
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["workspaceMember"]>
@@ -6786,7 +7077,7 @@ export namespace Prisma {
     readonly id: FieldRef<"WorkspaceMember", 'String'>
     readonly workspaceId: FieldRef<"WorkspaceMember", 'String'>
     readonly userId: FieldRef<"WorkspaceMember", 'String'>
-    readonly role: FieldRef<"WorkspaceMember", 'String'>
+    readonly role: FieldRef<"WorkspaceMember", 'WorkspaceRole'>
     readonly createdAt: FieldRef<"WorkspaceMember", 'DateTime'>
     readonly updatedAt: FieldRef<"WorkspaceMember", 'DateTime'>
   }
@@ -7223,7 +7514,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isPinned: boolean | null
-    dbType: string | null
+    dbType: $Enums.DatabaseType | null
     workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7234,7 +7525,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isPinned: boolean | null
-    dbType: string | null
+    dbType: $Enums.DatabaseType | null
     workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7244,7 +7535,6 @@ export namespace Prisma {
     id: number
     name: number
     description: number
-    tags: number
     isPinned: number
     dbType: number
     workspaceId: number
@@ -7280,7 +7570,6 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    tags?: true
     isPinned?: true
     dbType?: true
     workspaceId?: true
@@ -7365,9 +7654,8 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
-    tags: string[]
     isPinned: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt: Date
     updatedAt: Date
@@ -7394,13 +7682,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    tags?: boolean
     isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    tags?: boolean | DataModel$tagsArgs<ExtArgs>
     tables?: boolean | DataModel$tablesArgs<ExtArgs>
     relationships?: boolean | DataModel$relationshipsArgs<ExtArgs>
     views?: boolean | DataModel$viewsArgs<ExtArgs>
@@ -7415,7 +7703,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    tags?: boolean
     isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
@@ -7428,7 +7715,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    tags?: boolean
     isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
@@ -7441,7 +7727,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    tags?: boolean
     isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
@@ -7449,9 +7734,10 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "tags" | "isPinned" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
+  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isPinned" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
   export type DataModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    tags?: boolean | DataModel$tagsArgs<ExtArgs>
     tables?: boolean | DataModel$tablesArgs<ExtArgs>
     relationships?: boolean | DataModel$relationshipsArgs<ExtArgs>
     views?: boolean | DataModel$viewsArgs<ExtArgs>
@@ -7472,6 +7758,7 @@ export namespace Prisma {
     name: "DataModel"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
+      tags: Prisma.$DataModelTagPayload<ExtArgs>[]
       tables: Prisma.$TablePayload<ExtArgs>[]
       relationships: Prisma.$RelationshipPayload<ExtArgs>[]
       views: Prisma.$ViewPayload<ExtArgs>[]
@@ -7484,9 +7771,8 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
-      tags: string[]
       isPinned: boolean
-      dbType: string
+      dbType: $Enums.DatabaseType
       workspaceId: string
       createdAt: Date
       updatedAt: Date
@@ -7885,6 +8171,7 @@ export namespace Prisma {
   export interface Prisma__DataModelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tags<T extends DataModel$tagsArgs<ExtArgs> = {}>(args?: Subset<T, DataModel$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tables<T extends DataModel$tablesArgs<ExtArgs> = {}>(args?: Subset<T, DataModel$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     relationships<T extends DataModel$relationshipsArgs<ExtArgs> = {}>(args?: Subset<T, DataModel$relationshipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     views<T extends DataModel$viewsArgs<ExtArgs> = {}>(args?: Subset<T, DataModel$viewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7924,9 +8211,8 @@ export namespace Prisma {
     readonly id: FieldRef<"DataModel", 'String'>
     readonly name: FieldRef<"DataModel", 'String'>
     readonly description: FieldRef<"DataModel", 'String'>
-    readonly tags: FieldRef<"DataModel", 'String[]'>
     readonly isPinned: FieldRef<"DataModel", 'Boolean'>
-    readonly dbType: FieldRef<"DataModel", 'String'>
+    readonly dbType: FieldRef<"DataModel", 'DatabaseType'>
     readonly workspaceId: FieldRef<"DataModel", 'String'>
     readonly createdAt: FieldRef<"DataModel", 'DateTime'>
     readonly updatedAt: FieldRef<"DataModel", 'DateTime'>
@@ -8331,6 +8617,30 @@ export namespace Prisma {
   }
 
   /**
+   * DataModel.tags
+   */
+  export type DataModel$tagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    where?: DataModelTagWhereInput
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    cursor?: DataModelTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DataModelTagScalarFieldEnum | DataModelTagScalarFieldEnum[]
+  }
+
+  /**
    * DataModel.tables
    */
   export type DataModel$tablesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8514,6 +8824,2113 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DataModelInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Tag
+   */
+
+  export type AggregateTag = {
+    _count: TagCountAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  export type TagMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TagMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TagCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TagMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TagMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TagCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tag to aggregate.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Tags
+    **/
+    _count?: true | TagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type GetTagAggregateType<T extends TagAggregateArgs> = {
+        [P in keyof T & keyof AggregateTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTag[P]>
+      : GetScalarType<T[P], AggregateTag[P]>
+  }
+
+
+
+
+  export type TagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagWhereInput
+    orderBy?: TagOrderByWithAggregationInput | TagOrderByWithAggregationInput[]
+    by: TagScalarFieldEnum[] | TagScalarFieldEnum
+    having?: TagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TagCountAggregateInputType | true
+    _min?: TagMinAggregateInputType
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type TagGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TagCountAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  type GetTagGroupByPayload<T extends TagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TagGroupByOutputType[P]>
+            : GetScalarType<T[P], TagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    dataModels?: boolean | Tag$dataModelsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["tag"]>
+  export type TagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dataModels?: boolean | Tag$dataModelsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $TagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Tag"
+    objects: {
+      dataModels: Prisma.$DataModelTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tag"]>
+    composites: {}
+  }
+
+  type TagGetPayload<S extends boolean | null | undefined | TagDefaultArgs> = $Result.GetResult<Prisma.$TagPayload, S>
+
+  type TagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TagCountAggregateInputType | true
+    }
+
+  export interface TagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Tag'], meta: { name: 'Tag' } }
+    /**
+     * Find zero or one Tag that matches the filter.
+     * @param {TagFindUniqueArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TagFindUniqueArgs>(args: SelectSubset<T, TagFindUniqueArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TagFindUniqueOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TagFindUniqueOrThrowArgs>(args: SelectSubset<T, TagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TagFindFirstArgs>(args?: SelectSubset<T, TagFindFirstArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TagFindFirstOrThrowArgs>(args?: SelectSubset<T, TagFindFirstOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tags
+     * const tags = await prisma.tag.findMany()
+     * 
+     * // Get first 10 Tags
+     * const tags = await prisma.tag.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tagWithIdOnly = await prisma.tag.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TagFindManyArgs>(args?: SelectSubset<T, TagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tag.
+     * @param {TagCreateArgs} args - Arguments to create a Tag.
+     * @example
+     * // Create one Tag
+     * const Tag = await prisma.tag.create({
+     *   data: {
+     *     // ... data to create a Tag
+     *   }
+     * })
+     * 
+     */
+    create<T extends TagCreateArgs>(args: SelectSubset<T, TagCreateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tags.
+     * @param {TagCreateManyArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TagCreateManyArgs>(args?: SelectSubset<T, TagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tags and returns the data saved in the database.
+     * @param {TagCreateManyAndReturnArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TagCreateManyAndReturnArgs>(args?: SelectSubset<T, TagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tag.
+     * @param {TagDeleteArgs} args - Arguments to delete one Tag.
+     * @example
+     * // Delete one Tag
+     * const Tag = await prisma.tag.delete({
+     *   where: {
+     *     // ... filter to delete one Tag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TagDeleteArgs>(args: SelectSubset<T, TagDeleteArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tag.
+     * @param {TagUpdateArgs} args - Arguments to update one Tag.
+     * @example
+     * // Update one Tag
+     * const tag = await prisma.tag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TagUpdateArgs>(args: SelectSubset<T, TagUpdateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tags.
+     * @param {TagDeleteManyArgs} args - Arguments to filter Tags to delete.
+     * @example
+     * // Delete a few Tags
+     * const { count } = await prisma.tag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TagDeleteManyArgs>(args?: SelectSubset<T, TagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TagUpdateManyArgs>(args: SelectSubset<T, TagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags and returns the data updated in the database.
+     * @param {TagUpdateManyAndReturnArgs} args - Arguments to update many Tags.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TagUpdateManyAndReturnArgs>(args: SelectSubset<T, TagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tag.
+     * @param {TagUpsertArgs} args - Arguments to update or create a Tag.
+     * @example
+     * // Update or create a Tag
+     * const tag = await prisma.tag.upsert({
+     *   create: {
+     *     // ... data to create a Tag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TagUpsertArgs>(args: SelectSubset<T, TagUpsertArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagCountArgs} args - Arguments to filter Tags to count.
+     * @example
+     * // Count the number of Tags
+     * const count = await prisma.tag.count({
+     *   where: {
+     *     // ... the filter for the Tags we want to count
+     *   }
+     * })
+    **/
+    count<T extends TagCountArgs>(
+      args?: Subset<T, TagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TagAggregateArgs>(args: Subset<T, TagAggregateArgs>): Prisma.PrismaPromise<GetTagAggregateType<T>>
+
+    /**
+     * Group by Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TagGroupByArgs['orderBy'] }
+        : { orderBy?: TagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Tag model
+   */
+  readonly fields: TagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Tag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    dataModels<T extends Tag$dataModelsArgs<ExtArgs> = {}>(args?: Subset<T, Tag$dataModelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Tag model
+   */
+  interface TagFieldRefs {
+    readonly id: FieldRef<"Tag", 'String'>
+    readonly name: FieldRef<"Tag", 'String'>
+    readonly description: FieldRef<"Tag", 'String'>
+    readonly createdAt: FieldRef<"Tag", 'DateTime'>
+    readonly updatedAt: FieldRef<"Tag", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Tag findUnique
+   */
+  export type TagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findUniqueOrThrow
+   */
+  export type TagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findFirst
+   */
+  export type TagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findFirstOrThrow
+   */
+  export type TagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findMany
+   */
+  export type TagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tags to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag create
+   */
+  export type TagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Tag.
+     */
+    data: XOR<TagCreateInput, TagUncheckedCreateInput>
+  }
+
+  /**
+   * Tag createMany
+   */
+  export type TagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tag createManyAndReturn
+   */
+  export type TagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tag update
+   */
+  export type TagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Tag.
+     */
+    data: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+    /**
+     * Choose, which Tag to update.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag updateMany
+   */
+  export type TagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag updateManyAndReturn
+   */
+  export type TagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag upsert
+   */
+  export type TagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Tag to update in case it exists.
+     */
+    where: TagWhereUniqueInput
+    /**
+     * In case the Tag found by the `where` argument doesn't exist, create a new Tag with this data.
+     */
+    create: XOR<TagCreateInput, TagUncheckedCreateInput>
+    /**
+     * In case the Tag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+  }
+
+  /**
+   * Tag delete
+   */
+  export type TagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter which Tag to delete.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag deleteMany
+   */
+  export type TagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tags to delete
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag.dataModels
+   */
+  export type Tag$dataModelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    where?: DataModelTagWhereInput
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    cursor?: DataModelTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DataModelTagScalarFieldEnum | DataModelTagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag without action
+   */
+  export type TagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DataModelTag
+   */
+
+  export type AggregateDataModelTag = {
+    _count: DataModelTagCountAggregateOutputType | null
+    _min: DataModelTagMinAggregateOutputType | null
+    _max: DataModelTagMaxAggregateOutputType | null
+  }
+
+  export type DataModelTagMinAggregateOutputType = {
+    dataModelId: string | null
+    tagId: string | null
+  }
+
+  export type DataModelTagMaxAggregateOutputType = {
+    dataModelId: string | null
+    tagId: string | null
+  }
+
+  export type DataModelTagCountAggregateOutputType = {
+    dataModelId: number
+    tagId: number
+    _all: number
+  }
+
+
+  export type DataModelTagMinAggregateInputType = {
+    dataModelId?: true
+    tagId?: true
+  }
+
+  export type DataModelTagMaxAggregateInputType = {
+    dataModelId?: true
+    tagId?: true
+  }
+
+  export type DataModelTagCountAggregateInputType = {
+    dataModelId?: true
+    tagId?: true
+    _all?: true
+  }
+
+  export type DataModelTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DataModelTag to aggregate.
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataModelTags to fetch.
+     */
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DataModelTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataModelTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataModelTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DataModelTags
+    **/
+    _count?: true | DataModelTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DataModelTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DataModelTagMaxAggregateInputType
+  }
+
+  export type GetDataModelTagAggregateType<T extends DataModelTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateDataModelTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDataModelTag[P]>
+      : GetScalarType<T[P], AggregateDataModelTag[P]>
+  }
+
+
+
+
+  export type DataModelTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DataModelTagWhereInput
+    orderBy?: DataModelTagOrderByWithAggregationInput | DataModelTagOrderByWithAggregationInput[]
+    by: DataModelTagScalarFieldEnum[] | DataModelTagScalarFieldEnum
+    having?: DataModelTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DataModelTagCountAggregateInputType | true
+    _min?: DataModelTagMinAggregateInputType
+    _max?: DataModelTagMaxAggregateInputType
+  }
+
+  export type DataModelTagGroupByOutputType = {
+    dataModelId: string
+    tagId: string
+    _count: DataModelTagCountAggregateOutputType | null
+    _min: DataModelTagMinAggregateOutputType | null
+    _max: DataModelTagMaxAggregateOutputType | null
+  }
+
+  type GetDataModelTagGroupByPayload<T extends DataModelTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DataModelTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DataModelTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DataModelTagGroupByOutputType[P]>
+            : GetScalarType<T[P], DataModelTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DataModelTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    dataModelId?: boolean
+    tagId?: boolean
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataModelTag"]>
+
+  export type DataModelTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    dataModelId?: boolean
+    tagId?: boolean
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataModelTag"]>
+
+  export type DataModelTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    dataModelId?: boolean
+    tagId?: boolean
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataModelTag"]>
+
+  export type DataModelTagSelectScalar = {
+    dataModelId?: boolean
+    tagId?: boolean
+  }
+
+  export type DataModelTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"dataModelId" | "tagId", ExtArgs["result"]["dataModelTag"]>
+  export type DataModelTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type DataModelTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type DataModelTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+
+  export type $DataModelTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DataModelTag"
+    objects: {
+      dataModel: Prisma.$DataModelPayload<ExtArgs>
+      tag: Prisma.$TagPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      dataModelId: string
+      tagId: string
+    }, ExtArgs["result"]["dataModelTag"]>
+    composites: {}
+  }
+
+  type DataModelTagGetPayload<S extends boolean | null | undefined | DataModelTagDefaultArgs> = $Result.GetResult<Prisma.$DataModelTagPayload, S>
+
+  type DataModelTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DataModelTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DataModelTagCountAggregateInputType | true
+    }
+
+  export interface DataModelTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DataModelTag'], meta: { name: 'DataModelTag' } }
+    /**
+     * Find zero or one DataModelTag that matches the filter.
+     * @param {DataModelTagFindUniqueArgs} args - Arguments to find a DataModelTag
+     * @example
+     * // Get one DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DataModelTagFindUniqueArgs>(args: SelectSubset<T, DataModelTagFindUniqueArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DataModelTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DataModelTagFindUniqueOrThrowArgs} args - Arguments to find a DataModelTag
+     * @example
+     * // Get one DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DataModelTagFindUniqueOrThrowArgs>(args: SelectSubset<T, DataModelTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DataModelTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagFindFirstArgs} args - Arguments to find a DataModelTag
+     * @example
+     * // Get one DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DataModelTagFindFirstArgs>(args?: SelectSubset<T, DataModelTagFindFirstArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DataModelTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagFindFirstOrThrowArgs} args - Arguments to find a DataModelTag
+     * @example
+     * // Get one DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DataModelTagFindFirstOrThrowArgs>(args?: SelectSubset<T, DataModelTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DataModelTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DataModelTags
+     * const dataModelTags = await prisma.dataModelTag.findMany()
+     * 
+     * // Get first 10 DataModelTags
+     * const dataModelTags = await prisma.dataModelTag.findMany({ take: 10 })
+     * 
+     * // Only select the `dataModelId`
+     * const dataModelTagWithDataModelIdOnly = await prisma.dataModelTag.findMany({ select: { dataModelId: true } })
+     * 
+     */
+    findMany<T extends DataModelTagFindManyArgs>(args?: SelectSubset<T, DataModelTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DataModelTag.
+     * @param {DataModelTagCreateArgs} args - Arguments to create a DataModelTag.
+     * @example
+     * // Create one DataModelTag
+     * const DataModelTag = await prisma.dataModelTag.create({
+     *   data: {
+     *     // ... data to create a DataModelTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends DataModelTagCreateArgs>(args: SelectSubset<T, DataModelTagCreateArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DataModelTags.
+     * @param {DataModelTagCreateManyArgs} args - Arguments to create many DataModelTags.
+     * @example
+     * // Create many DataModelTags
+     * const dataModelTag = await prisma.dataModelTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DataModelTagCreateManyArgs>(args?: SelectSubset<T, DataModelTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DataModelTags and returns the data saved in the database.
+     * @param {DataModelTagCreateManyAndReturnArgs} args - Arguments to create many DataModelTags.
+     * @example
+     * // Create many DataModelTags
+     * const dataModelTag = await prisma.dataModelTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DataModelTags and only return the `dataModelId`
+     * const dataModelTagWithDataModelIdOnly = await prisma.dataModelTag.createManyAndReturn({
+     *   select: { dataModelId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DataModelTagCreateManyAndReturnArgs>(args?: SelectSubset<T, DataModelTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DataModelTag.
+     * @param {DataModelTagDeleteArgs} args - Arguments to delete one DataModelTag.
+     * @example
+     * // Delete one DataModelTag
+     * const DataModelTag = await prisma.dataModelTag.delete({
+     *   where: {
+     *     // ... filter to delete one DataModelTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DataModelTagDeleteArgs>(args: SelectSubset<T, DataModelTagDeleteArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DataModelTag.
+     * @param {DataModelTagUpdateArgs} args - Arguments to update one DataModelTag.
+     * @example
+     * // Update one DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DataModelTagUpdateArgs>(args: SelectSubset<T, DataModelTagUpdateArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DataModelTags.
+     * @param {DataModelTagDeleteManyArgs} args - Arguments to filter DataModelTags to delete.
+     * @example
+     * // Delete a few DataModelTags
+     * const { count } = await prisma.dataModelTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DataModelTagDeleteManyArgs>(args?: SelectSubset<T, DataModelTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DataModelTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DataModelTags
+     * const dataModelTag = await prisma.dataModelTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DataModelTagUpdateManyArgs>(args: SelectSubset<T, DataModelTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DataModelTags and returns the data updated in the database.
+     * @param {DataModelTagUpdateManyAndReturnArgs} args - Arguments to update many DataModelTags.
+     * @example
+     * // Update many DataModelTags
+     * const dataModelTag = await prisma.dataModelTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DataModelTags and only return the `dataModelId`
+     * const dataModelTagWithDataModelIdOnly = await prisma.dataModelTag.updateManyAndReturn({
+     *   select: { dataModelId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DataModelTagUpdateManyAndReturnArgs>(args: SelectSubset<T, DataModelTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DataModelTag.
+     * @param {DataModelTagUpsertArgs} args - Arguments to update or create a DataModelTag.
+     * @example
+     * // Update or create a DataModelTag
+     * const dataModelTag = await prisma.dataModelTag.upsert({
+     *   create: {
+     *     // ... data to create a DataModelTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DataModelTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DataModelTagUpsertArgs>(args: SelectSubset<T, DataModelTagUpsertArgs<ExtArgs>>): Prisma__DataModelTagClient<$Result.GetResult<Prisma.$DataModelTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DataModelTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagCountArgs} args - Arguments to filter DataModelTags to count.
+     * @example
+     * // Count the number of DataModelTags
+     * const count = await prisma.dataModelTag.count({
+     *   where: {
+     *     // ... the filter for the DataModelTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends DataModelTagCountArgs>(
+      args?: Subset<T, DataModelTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DataModelTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DataModelTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DataModelTagAggregateArgs>(args: Subset<T, DataModelTagAggregateArgs>): Prisma.PrismaPromise<GetDataModelTagAggregateType<T>>
+
+    /**
+     * Group by DataModelTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataModelTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DataModelTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DataModelTagGroupByArgs['orderBy'] }
+        : { orderBy?: DataModelTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DataModelTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDataModelTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DataModelTag model
+   */
+  readonly fields: DataModelTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DataModelTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DataModelTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    dataModel<T extends DataModelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DataModelDefaultArgs<ExtArgs>>): Prisma__DataModelClient<$Result.GetResult<Prisma.$DataModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tag<T extends TagDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TagDefaultArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DataModelTag model
+   */
+  interface DataModelTagFieldRefs {
+    readonly dataModelId: FieldRef<"DataModelTag", 'String'>
+    readonly tagId: FieldRef<"DataModelTag", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DataModelTag findUnique
+   */
+  export type DataModelTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter, which DataModelTag to fetch.
+     */
+    where: DataModelTagWhereUniqueInput
+  }
+
+  /**
+   * DataModelTag findUniqueOrThrow
+   */
+  export type DataModelTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter, which DataModelTag to fetch.
+     */
+    where: DataModelTagWhereUniqueInput
+  }
+
+  /**
+   * DataModelTag findFirst
+   */
+  export type DataModelTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter, which DataModelTag to fetch.
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataModelTags to fetch.
+     */
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DataModelTags.
+     */
+    cursor?: DataModelTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataModelTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataModelTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DataModelTags.
+     */
+    distinct?: DataModelTagScalarFieldEnum | DataModelTagScalarFieldEnum[]
+  }
+
+  /**
+   * DataModelTag findFirstOrThrow
+   */
+  export type DataModelTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter, which DataModelTag to fetch.
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataModelTags to fetch.
+     */
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DataModelTags.
+     */
+    cursor?: DataModelTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataModelTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataModelTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DataModelTags.
+     */
+    distinct?: DataModelTagScalarFieldEnum | DataModelTagScalarFieldEnum[]
+  }
+
+  /**
+   * DataModelTag findMany
+   */
+  export type DataModelTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter, which DataModelTags to fetch.
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataModelTags to fetch.
+     */
+    orderBy?: DataModelTagOrderByWithRelationInput | DataModelTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DataModelTags.
+     */
+    cursor?: DataModelTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataModelTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataModelTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DataModelTags.
+     */
+    distinct?: DataModelTagScalarFieldEnum | DataModelTagScalarFieldEnum[]
+  }
+
+  /**
+   * DataModelTag create
+   */
+  export type DataModelTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DataModelTag.
+     */
+    data: XOR<DataModelTagCreateInput, DataModelTagUncheckedCreateInput>
+  }
+
+  /**
+   * DataModelTag createMany
+   */
+  export type DataModelTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DataModelTags.
+     */
+    data: DataModelTagCreateManyInput | DataModelTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DataModelTag createManyAndReturn
+   */
+  export type DataModelTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many DataModelTags.
+     */
+    data: DataModelTagCreateManyInput | DataModelTagCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DataModelTag update
+   */
+  export type DataModelTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DataModelTag.
+     */
+    data: XOR<DataModelTagUpdateInput, DataModelTagUncheckedUpdateInput>
+    /**
+     * Choose, which DataModelTag to update.
+     */
+    where: DataModelTagWhereUniqueInput
+  }
+
+  /**
+   * DataModelTag updateMany
+   */
+  export type DataModelTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DataModelTags.
+     */
+    data: XOR<DataModelTagUpdateManyMutationInput, DataModelTagUncheckedUpdateManyInput>
+    /**
+     * Filter which DataModelTags to update
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * Limit how many DataModelTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DataModelTag updateManyAndReturn
+   */
+  export type DataModelTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * The data used to update DataModelTags.
+     */
+    data: XOR<DataModelTagUpdateManyMutationInput, DataModelTagUncheckedUpdateManyInput>
+    /**
+     * Filter which DataModelTags to update
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * Limit how many DataModelTags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DataModelTag upsert
+   */
+  export type DataModelTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DataModelTag to update in case it exists.
+     */
+    where: DataModelTagWhereUniqueInput
+    /**
+     * In case the DataModelTag found by the `where` argument doesn't exist, create a new DataModelTag with this data.
+     */
+    create: XOR<DataModelTagCreateInput, DataModelTagUncheckedCreateInput>
+    /**
+     * In case the DataModelTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DataModelTagUpdateInput, DataModelTagUncheckedUpdateInput>
+  }
+
+  /**
+   * DataModelTag delete
+   */
+  export type DataModelTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
+    /**
+     * Filter which DataModelTag to delete.
+     */
+    where: DataModelTagWhereUniqueInput
+  }
+
+  /**
+   * DataModelTag deleteMany
+   */
+  export type DataModelTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DataModelTags to delete
+     */
+    where?: DataModelTagWhereInput
+    /**
+     * Limit how many DataModelTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DataModelTag without action
+   */
+  export type DataModelTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataModelTag
+     */
+    select?: DataModelTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataModelTag
+     */
+    omit?: DataModelTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataModelTagInclude<ExtArgs> | null
   }
 
 
@@ -22317,6 +24734,7 @@ export namespace Prisma {
     details?: boolean
     createdAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityLog"]>
 
   export type ActivityLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -22327,6 +24745,7 @@ export namespace Prisma {
     details?: boolean
     createdAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityLog"]>
 
   export type ActivityLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -22337,6 +24756,7 @@ export namespace Prisma {
     details?: boolean
     createdAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activityLog"]>
 
   export type ActivityLogSelectScalar = {
@@ -22351,18 +24771,22 @@ export namespace Prisma {
   export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "userId" | "action" | "details" | "createdAt", ExtArgs["result"]["activityLog"]>
   export type ActivityLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ActivityLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ActivityLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActivityLog"
     objects: {
       dataModel: Prisma.$DataModelPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22766,6 +25190,7 @@ export namespace Prisma {
   export interface Prisma__ActivityLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     dataModel<T extends DataModelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DataModelDefaultArgs<ExtArgs>>): Prisma__DataModelClient<$Result.GetResult<Prisma.$DataModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24489,7 +26914,6 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    tags: 'tags',
     isPinned: 'isPinned',
     dbType: 'dbType',
     workspaceId: 'workspaceId',
@@ -24498,6 +26922,25 @@ export namespace Prisma {
   };
 
   export type DataModelScalarFieldEnum = (typeof DataModelScalarFieldEnum)[keyof typeof DataModelScalarFieldEnum]
+
+
+  export const TagScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+  export const DataModelTagScalarFieldEnum: {
+    dataModelId: 'dataModelId',
+    tagId: 'tagId'
+  };
+
+  export type DataModelTagScalarFieldEnum = (typeof DataModelTagScalarFieldEnum)[keyof typeof DataModelTagScalarFieldEnum]
 
 
   export const TableScalarFieldEnum: {
@@ -24788,6 +27231,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'WorkspaceRole'
+   */
+  export type EnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceRole[]'
+   */
+  export type ListEnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceRole[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DatabaseType'
+   */
+  export type EnumDatabaseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DatabaseType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DatabaseType[]'
+   */
+  export type ListEnumDatabaseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DatabaseType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -24832,6 +27303,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     hasCompleteOnboarding?: BoolFilter<"User"> | boolean
     memberships?: WorkspaceMemberListRelationFilter
+    activities?: ActivityLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -24845,6 +27317,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     hasCompleteOnboarding?: SortOrder
     memberships?: WorkspaceMemberOrderByRelationAggregateInput
+    activities?: ActivityLogOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -24861,6 +27334,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     hasCompleteOnboarding?: BoolFilter<"User"> | boolean
     memberships?: WorkspaceMemberListRelationFilter
+    activities?: ActivityLogListRelationFilter
   }, "id" | "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -24997,7 +27471,7 @@ export namespace Prisma {
     id?: StringFilter<"WorkspaceMember"> | string
     workspaceId?: StringFilter<"WorkspaceMember"> | string
     userId?: StringFilter<"WorkspaceMember"> | string
-    role?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
     createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -25023,7 +27497,7 @@ export namespace Prisma {
     NOT?: WorkspaceMemberWhereInput | WorkspaceMemberWhereInput[]
     workspaceId?: StringFilter<"WorkspaceMember"> | string
     userId?: StringFilter<"WorkspaceMember"> | string
-    role?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
     createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -25049,7 +27523,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"WorkspaceMember"> | string
     workspaceId?: StringWithAggregatesFilter<"WorkspaceMember"> | string
     userId?: StringWithAggregatesFilter<"WorkspaceMember"> | string
-    role?: StringWithAggregatesFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleWithAggregatesFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
     createdAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
   }
@@ -25061,13 +27535,13 @@ export namespace Prisma {
     id?: StringFilter<"DataModel"> | string
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
-    tags?: StringNullableListFilter<"DataModel">
     isPinned?: BoolFilter<"DataModel"> | boolean
-    dbType?: StringFilter<"DataModel"> | string
+    dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
     updatedAt?: DateTimeFilter<"DataModel"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    tags?: DataModelTagListRelationFilter
     tables?: TableListRelationFilter
     relationships?: RelationshipListRelationFilter
     views?: ViewListRelationFilter
@@ -25081,13 +27555,13 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    tags?: SortOrder
     isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
+    tags?: DataModelTagOrderByRelationAggregateInput
     tables?: TableOrderByRelationAggregateInput
     relationships?: RelationshipOrderByRelationAggregateInput
     views?: ViewOrderByRelationAggregateInput
@@ -25104,13 +27578,13 @@ export namespace Prisma {
     NOT?: DataModelWhereInput | DataModelWhereInput[]
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
-    tags?: StringNullableListFilter<"DataModel">
     isPinned?: BoolFilter<"DataModel"> | boolean
-    dbType?: StringFilter<"DataModel"> | string
+    dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
     updatedAt?: DateTimeFilter<"DataModel"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    tags?: DataModelTagListRelationFilter
     tables?: TableListRelationFilter
     relationships?: RelationshipListRelationFilter
     views?: ViewListRelationFilter
@@ -25124,7 +27598,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    tags?: SortOrder
     isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
@@ -25142,12 +27615,110 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DataModel"> | string
     name?: StringWithAggregatesFilter<"DataModel"> | string
     description?: StringNullableWithAggregatesFilter<"DataModel"> | string | null
-    tags?: StringNullableListFilter<"DataModel">
     isPinned?: BoolWithAggregatesFilter<"DataModel"> | boolean
-    dbType?: StringWithAggregatesFilter<"DataModel"> | string
+    dbType?: EnumDatabaseTypeWithAggregatesFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringWithAggregatesFilter<"DataModel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DataModel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DataModel"> | Date | string
+  }
+
+  export type TagWhereInput = {
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    id?: StringFilter<"Tag"> | string
+    name?: StringFilter<"Tag"> | string
+    description?: StringNullableFilter<"Tag"> | string | null
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+    updatedAt?: DateTimeFilter<"Tag"> | Date | string
+    dataModels?: DataModelTagListRelationFilter
+  }
+
+  export type TagOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dataModels?: DataModelTagOrderByRelationAggregateInput
+  }
+
+  export type TagWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    description?: StringNullableFilter<"Tag"> | string | null
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+    updatedAt?: DateTimeFilter<"Tag"> | Date | string
+    dataModels?: DataModelTagListRelationFilter
+  }, "id" | "name">
+
+  export type TagOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TagCountOrderByAggregateInput
+    _max?: TagMaxOrderByAggregateInput
+    _min?: TagMinOrderByAggregateInput
+  }
+
+  export type TagScalarWhereWithAggregatesInput = {
+    AND?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    OR?: TagScalarWhereWithAggregatesInput[]
+    NOT?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Tag"> | string
+    name?: StringWithAggregatesFilter<"Tag"> | string
+    description?: StringNullableWithAggregatesFilter<"Tag"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Tag"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Tag"> | Date | string
+  }
+
+  export type DataModelTagWhereInput = {
+    AND?: DataModelTagWhereInput | DataModelTagWhereInput[]
+    OR?: DataModelTagWhereInput[]
+    NOT?: DataModelTagWhereInput | DataModelTagWhereInput[]
+    dataModelId?: StringFilter<"DataModelTag"> | string
+    tagId?: StringFilter<"DataModelTag"> | string
+    dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }
+
+  export type DataModelTagOrderByWithRelationInput = {
+    dataModelId?: SortOrder
+    tagId?: SortOrder
+    dataModel?: DataModelOrderByWithRelationInput
+    tag?: TagOrderByWithRelationInput
+  }
+
+  export type DataModelTagWhereUniqueInput = Prisma.AtLeast<{
+    dataModelId_tagId?: DataModelTagDataModelIdTagIdCompoundUniqueInput
+    AND?: DataModelTagWhereInput | DataModelTagWhereInput[]
+    OR?: DataModelTagWhereInput[]
+    NOT?: DataModelTagWhereInput | DataModelTagWhereInput[]
+    dataModelId?: StringFilter<"DataModelTag"> | string
+    tagId?: StringFilter<"DataModelTag"> | string
+    dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }, "dataModelId_tagId">
+
+  export type DataModelTagOrderByWithAggregationInput = {
+    dataModelId?: SortOrder
+    tagId?: SortOrder
+    _count?: DataModelTagCountOrderByAggregateInput
+    _max?: DataModelTagMaxOrderByAggregateInput
+    _min?: DataModelTagMinOrderByAggregateInput
+  }
+
+  export type DataModelTagScalarWhereWithAggregatesInput = {
+    AND?: DataModelTagScalarWhereWithAggregatesInput | DataModelTagScalarWhereWithAggregatesInput[]
+    OR?: DataModelTagScalarWhereWithAggregatesInput[]
+    NOT?: DataModelTagScalarWhereWithAggregatesInput | DataModelTagScalarWhereWithAggregatesInput[]
+    dataModelId?: StringWithAggregatesFilter<"DataModelTag"> | string
+    tagId?: StringWithAggregatesFilter<"DataModelTag"> | string
   }
 
   export type TableWhereInput = {
@@ -26010,6 +28581,7 @@ export namespace Prisma {
     details?: JsonNullableFilter<"ActivityLog">
     createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ActivityLogOrderByWithRelationInput = {
@@ -26020,6 +28592,7 @@ export namespace Prisma {
     details?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     dataModel?: DataModelOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ActivityLogWhereUniqueInput = Prisma.AtLeast<{
@@ -26033,6 +28606,7 @@ export namespace Prisma {
     details?: JsonNullableFilter<"ActivityLog">
     createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type ActivityLogOrderByWithAggregationInput = {
@@ -26148,6 +28722,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hasCompleteOnboarding?: boolean
     memberships?: WorkspaceMemberCreateNestedManyWithoutUserInput
+    activities?: ActivityLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -26161,6 +28736,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hasCompleteOnboarding?: boolean
     memberships?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+    activities?: ActivityLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -26174,6 +28750,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
     memberships?: WorkspaceMemberUpdateManyWithoutUserNestedInput
+    activities?: ActivityLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -26187,6 +28764,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
     memberships?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+    activities?: ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -26326,7 +28904,7 @@ export namespace Prisma {
 
   export type WorkspaceMemberCreateInput = {
     id?: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -26337,14 +28915,14 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     userId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type WorkspaceMemberUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -26355,7 +28933,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26364,14 +28942,14 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     userId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type WorkspaceMemberUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26380,7 +28958,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26389,12 +28967,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -26408,12 +28986,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -26427,12 +29005,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -26446,12 +29024,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
@@ -26465,9 +29043,8 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26477,9 +29054,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26488,12 +29064,105 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dataModels?: DataModelTagCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dataModels?: DataModelTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataModels?: DataModelTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataModels?: DataModelTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TagUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DataModelTagCreateInput = {
+    dataModel: DataModelCreateNestedOneWithoutTagsInput
+    tag: TagCreateNestedOneWithoutDataModelsInput
+  }
+
+  export type DataModelTagUncheckedCreateInput = {
+    dataModelId: string
+    tagId: string
+  }
+
+  export type DataModelTagUpdateInput = {
+    dataModel?: DataModelUpdateOneRequiredWithoutTagsNestedInput
+    tag?: TagUpdateOneRequiredWithoutDataModelsNestedInput
+  }
+
+  export type DataModelTagUncheckedUpdateInput = {
+    dataModelId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DataModelTagCreateManyInput = {
+    dataModelId: string
+    tagId: string
+  }
+
+  export type DataModelTagUpdateManyMutationInput = {
+
+  }
+
+  export type DataModelTagUncheckedUpdateManyInput = {
+    dataModelId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TableCreateInput = {
@@ -27392,11 +30061,11 @@ export namespace Prisma {
 
   export type ActivityLogCreateInput = {
     id?: string
-    userId: string
     action: string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutActivitiesInput
+    user: UserCreateNestedOneWithoutActivitiesInput
   }
 
   export type ActivityLogUncheckedCreateInput = {
@@ -27410,11 +30079,11 @@ export namespace Prisma {
 
   export type ActivityLogUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutActivitiesNestedInput
+    user?: UserUpdateOneRequiredWithoutActivitiesNestedInput
   }
 
   export type ActivityLogUncheckedUpdateInput = {
@@ -27437,7 +30106,6 @@ export namespace Prisma {
 
   export type ActivityLogUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27583,12 +30251,22 @@ export namespace Prisma {
     none?: WorkspaceMemberWhereInput
   }
 
+  export type ActivityLogListRelationFilter = {
+    every?: ActivityLogWhereInput
+    some?: ActivityLogWhereInput
+    none?: ActivityLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type WorkspaceMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ActivityLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -27778,6 +30456,13 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type EnumWorkspaceRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+  }
+
   export type WorkspaceScalarRelationFilter = {
     is?: WorkspaceWhereInput
     isNot?: WorkspaceWhereInput
@@ -27820,12 +30505,27 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
+  export type EnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+  }
+
+  export type EnumDatabaseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DatabaseType | EnumDatabaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDatabaseTypeFilter<$PrismaModel> | $Enums.DatabaseType
+  }
+
+  export type DataModelTagListRelationFilter = {
+    every?: DataModelTagWhereInput
+    some?: DataModelTagWhereInput
+    none?: DataModelTagWhereInput
   }
 
   export type TableListRelationFilter = {
@@ -27864,10 +30564,8 @@ export namespace Prisma {
     none?: CheckpointWhereInput
   }
 
-  export type ActivityLogListRelationFilter = {
-    every?: ActivityLogWhereInput
-    some?: ActivityLogWhereInput
-    none?: ActivityLogWhereInput
+  export type DataModelTagOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type TableOrderByRelationAggregateInput = {
@@ -27894,15 +30592,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ActivityLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type DataModelCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    tags?: SortOrder
     isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
@@ -27932,9 +30625,68 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumDatabaseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DatabaseType | EnumDatabaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDatabaseTypeWithAggregatesFilter<$PrismaModel> | $Enums.DatabaseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDatabaseTypeFilter<$PrismaModel>
+    _max?: NestedEnumDatabaseTypeFilter<$PrismaModel>
+  }
+
+  export type TagCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TagMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TagMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type DataModelScalarRelationFilter = {
     is?: DataModelWhereInput
     isNot?: DataModelWhereInput
+  }
+
+  export type TagScalarRelationFilter = {
+    is?: TagWhereInput
+    isNot?: TagWhereInput
+  }
+
+  export type DataModelTagDataModelIdTagIdCompoundUniqueInput = {
+    dataModelId: string
+    tagId: string
+  }
+
+  export type DataModelTagCountOrderByAggregateInput = {
+    dataModelId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type DataModelTagMaxOrderByAggregateInput = {
+    dataModelId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type DataModelTagMinOrderByAggregateInput = {
+    dataModelId?: SortOrder
+    tagId?: SortOrder
   }
 
   export type ColumnListRelationFilter = {
@@ -28126,6 +30878,14 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type IndexCountOrderByAggregateInput = {
@@ -28674,11 +31434,25 @@ export namespace Prisma {
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
   }
 
+  export type ActivityLogCreateNestedManyWithoutUserInput = {
+    create?: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput> | ActivityLogCreateWithoutUserInput[] | ActivityLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutUserInput | ActivityLogCreateOrConnectWithoutUserInput[]
+    createMany?: ActivityLogCreateManyUserInputEnvelope
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+  }
+
   export type WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
     createMany?: WorkspaceMemberCreateManyUserInputEnvelope
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type ActivityLogUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput> | ActivityLogCreateWithoutUserInput[] | ActivityLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutUserInput | ActivityLogCreateOrConnectWithoutUserInput[]
+    createMany?: ActivityLogCreateManyUserInputEnvelope
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -28715,6 +31489,20 @@ export namespace Prisma {
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
   }
 
+  export type ActivityLogUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput> | ActivityLogCreateWithoutUserInput[] | ActivityLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutUserInput | ActivityLogCreateOrConnectWithoutUserInput[]
+    upsert?: ActivityLogUpsertWithWhereUniqueWithoutUserInput | ActivityLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ActivityLogCreateManyUserInputEnvelope
+    set?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    disconnect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    delete?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    update?: ActivityLogUpdateWithWhereUniqueWithoutUserInput | ActivityLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ActivityLogUpdateManyWithWhereWithoutUserInput | ActivityLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+  }
+
   export type WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
@@ -28727,6 +31515,20 @@ export namespace Prisma {
     update?: WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput | WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutUserInput | WorkspaceMemberUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type ActivityLogUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput> | ActivityLogCreateWithoutUserInput[] | ActivityLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutUserInput | ActivityLogCreateOrConnectWithoutUserInput[]
+    upsert?: ActivityLogUpsertWithWhereUniqueWithoutUserInput | ActivityLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ActivityLogCreateManyUserInputEnvelope
+    set?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    disconnect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    delete?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    update?: ActivityLogUpdateWithWhereUniqueWithoutUserInput | ActivityLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ActivityLogUpdateManyWithWhereWithoutUserInput | ActivityLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
   }
 
   export type WorkspaceMemberCreateNestedManyWithoutWorkspaceInput = {
@@ -28833,6 +31635,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type EnumWorkspaceRoleFieldUpdateOperationsInput = {
+    set?: $Enums.WorkspaceRole
+  }
+
   export type WorkspaceUpdateOneRequiredWithoutMembersNestedInput = {
     create?: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutMembersInput
@@ -28849,14 +31655,17 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMembershipsInput, UserUpdateWithoutMembershipsInput>, UserUncheckedUpdateWithoutMembershipsInput>
   }
 
-  export type DataModelCreatetagsInput = {
-    set: string[]
-  }
-
   export type WorkspaceCreateNestedOneWithoutDataModelsInput = {
     create?: XOR<WorkspaceCreateWithoutDataModelsInput, WorkspaceUncheckedCreateWithoutDataModelsInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutDataModelsInput
     connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type DataModelTagCreateNestedManyWithoutDataModelInput = {
+    create?: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput> | DataModelTagCreateWithoutDataModelInput[] | DataModelTagUncheckedCreateWithoutDataModelInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutDataModelInput | DataModelTagCreateOrConnectWithoutDataModelInput[]
+    createMany?: DataModelTagCreateManyDataModelInputEnvelope
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
   }
 
   export type TableCreateNestedManyWithoutDataModelInput = {
@@ -28908,6 +31717,13 @@ export namespace Prisma {
     connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
   }
 
+  export type DataModelTagUncheckedCreateNestedManyWithoutDataModelInput = {
+    create?: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput> | DataModelTagCreateWithoutDataModelInput[] | DataModelTagUncheckedCreateWithoutDataModelInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutDataModelInput | DataModelTagCreateOrConnectWithoutDataModelInput[]
+    createMany?: DataModelTagCreateManyDataModelInputEnvelope
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+  }
+
   export type TableUncheckedCreateNestedManyWithoutDataModelInput = {
     create?: XOR<TableCreateWithoutDataModelInput, TableUncheckedCreateWithoutDataModelInput> | TableCreateWithoutDataModelInput[] | TableUncheckedCreateWithoutDataModelInput[]
     connectOrCreate?: TableCreateOrConnectWithoutDataModelInput | TableCreateOrConnectWithoutDataModelInput[]
@@ -28957,9 +31773,8 @@ export namespace Prisma {
     connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
   }
 
-  export type DataModelUpdatetagsInput = {
-    set?: string[]
-    push?: string | string[]
+  export type EnumDatabaseTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DatabaseType
   }
 
   export type WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput = {
@@ -28968,6 +31783,20 @@ export namespace Prisma {
     upsert?: WorkspaceUpsertWithoutDataModelsInput
     connect?: WorkspaceWhereUniqueInput
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutDataModelsInput, WorkspaceUpdateWithoutDataModelsInput>, WorkspaceUncheckedUpdateWithoutDataModelsInput>
+  }
+
+  export type DataModelTagUpdateManyWithoutDataModelNestedInput = {
+    create?: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput> | DataModelTagCreateWithoutDataModelInput[] | DataModelTagUncheckedCreateWithoutDataModelInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutDataModelInput | DataModelTagCreateOrConnectWithoutDataModelInput[]
+    upsert?: DataModelTagUpsertWithWhereUniqueWithoutDataModelInput | DataModelTagUpsertWithWhereUniqueWithoutDataModelInput[]
+    createMany?: DataModelTagCreateManyDataModelInputEnvelope
+    set?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    disconnect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    delete?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    update?: DataModelTagUpdateWithWhereUniqueWithoutDataModelInput | DataModelTagUpdateWithWhereUniqueWithoutDataModelInput[]
+    updateMany?: DataModelTagUpdateManyWithWhereWithoutDataModelInput | DataModelTagUpdateManyWithWhereWithoutDataModelInput[]
+    deleteMany?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
   }
 
   export type TableUpdateManyWithoutDataModelNestedInput = {
@@ -29068,6 +31897,20 @@ export namespace Prisma {
     deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
   }
 
+  export type DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput = {
+    create?: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput> | DataModelTagCreateWithoutDataModelInput[] | DataModelTagUncheckedCreateWithoutDataModelInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutDataModelInput | DataModelTagCreateOrConnectWithoutDataModelInput[]
+    upsert?: DataModelTagUpsertWithWhereUniqueWithoutDataModelInput | DataModelTagUpsertWithWhereUniqueWithoutDataModelInput[]
+    createMany?: DataModelTagCreateManyDataModelInputEnvelope
+    set?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    disconnect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    delete?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    update?: DataModelTagUpdateWithWhereUniqueWithoutDataModelInput | DataModelTagUpdateWithWhereUniqueWithoutDataModelInput[]
+    updateMany?: DataModelTagUpdateManyWithWhereWithoutDataModelInput | DataModelTagUpdateManyWithWhereWithoutDataModelInput[]
+    deleteMany?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
+  }
+
   export type TableUncheckedUpdateManyWithoutDataModelNestedInput = {
     create?: XOR<TableCreateWithoutDataModelInput, TableUncheckedCreateWithoutDataModelInput> | TableCreateWithoutDataModelInput[] | TableUncheckedCreateWithoutDataModelInput[]
     connectOrCreate?: TableCreateOrConnectWithoutDataModelInput | TableCreateOrConnectWithoutDataModelInput[]
@@ -29164,6 +32007,76 @@ export namespace Prisma {
     update?: ActivityLogUpdateWithWhereUniqueWithoutDataModelInput | ActivityLogUpdateWithWhereUniqueWithoutDataModelInput[]
     updateMany?: ActivityLogUpdateManyWithWhereWithoutDataModelInput | ActivityLogUpdateManyWithWhereWithoutDataModelInput[]
     deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+  }
+
+  export type DataModelTagCreateNestedManyWithoutTagInput = {
+    create?: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput> | DataModelTagCreateWithoutTagInput[] | DataModelTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutTagInput | DataModelTagCreateOrConnectWithoutTagInput[]
+    createMany?: DataModelTagCreateManyTagInputEnvelope
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+  }
+
+  export type DataModelTagUncheckedCreateNestedManyWithoutTagInput = {
+    create?: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput> | DataModelTagCreateWithoutTagInput[] | DataModelTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutTagInput | DataModelTagCreateOrConnectWithoutTagInput[]
+    createMany?: DataModelTagCreateManyTagInputEnvelope
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+  }
+
+  export type DataModelTagUpdateManyWithoutTagNestedInput = {
+    create?: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput> | DataModelTagCreateWithoutTagInput[] | DataModelTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutTagInput | DataModelTagCreateOrConnectWithoutTagInput[]
+    upsert?: DataModelTagUpsertWithWhereUniqueWithoutTagInput | DataModelTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: DataModelTagCreateManyTagInputEnvelope
+    set?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    disconnect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    delete?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    update?: DataModelTagUpdateWithWhereUniqueWithoutTagInput | DataModelTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: DataModelTagUpdateManyWithWhereWithoutTagInput | DataModelTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
+  }
+
+  export type DataModelTagUncheckedUpdateManyWithoutTagNestedInput = {
+    create?: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput> | DataModelTagCreateWithoutTagInput[] | DataModelTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: DataModelTagCreateOrConnectWithoutTagInput | DataModelTagCreateOrConnectWithoutTagInput[]
+    upsert?: DataModelTagUpsertWithWhereUniqueWithoutTagInput | DataModelTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: DataModelTagCreateManyTagInputEnvelope
+    set?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    disconnect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    delete?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    connect?: DataModelTagWhereUniqueInput | DataModelTagWhereUniqueInput[]
+    update?: DataModelTagUpdateWithWhereUniqueWithoutTagInput | DataModelTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: DataModelTagUpdateManyWithWhereWithoutTagInput | DataModelTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
+  }
+
+  export type DataModelCreateNestedOneWithoutTagsInput = {
+    create?: XOR<DataModelCreateWithoutTagsInput, DataModelUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: DataModelCreateOrConnectWithoutTagsInput
+    connect?: DataModelWhereUniqueInput
+  }
+
+  export type TagCreateNestedOneWithoutDataModelsInput = {
+    create?: XOR<TagCreateWithoutDataModelsInput, TagUncheckedCreateWithoutDataModelsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutDataModelsInput
+    connect?: TagWhereUniqueInput
+  }
+
+  export type DataModelUpdateOneRequiredWithoutTagsNestedInput = {
+    create?: XOR<DataModelCreateWithoutTagsInput, DataModelUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: DataModelCreateOrConnectWithoutTagsInput
+    upsert?: DataModelUpsertWithoutTagsInput
+    connect?: DataModelWhereUniqueInput
+    update?: XOR<XOR<DataModelUpdateToOneWithWhereWithoutTagsInput, DataModelUpdateWithoutTagsInput>, DataModelUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type TagUpdateOneRequiredWithoutDataModelsNestedInput = {
+    create?: XOR<TagCreateWithoutDataModelsInput, TagUncheckedCreateWithoutDataModelsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutDataModelsInput
+    upsert?: TagUpsertWithoutDataModelsInput
+    connect?: TagWhereUniqueInput
+    update?: XOR<XOR<TagUpdateToOneWithWhereWithoutDataModelsInput, TagUpdateWithoutDataModelsInput>, TagUncheckedUpdateWithoutDataModelsInput>
   }
 
   export type DataModelCreateNestedOneWithoutTablesInput = {
@@ -29911,12 +32824,26 @@ export namespace Prisma {
     connect?: DataModelWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutActivitiesInput = {
+    create?: XOR<UserCreateWithoutActivitiesInput, UserUncheckedCreateWithoutActivitiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivitiesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type DataModelUpdateOneRequiredWithoutActivitiesNestedInput = {
     create?: XOR<DataModelCreateWithoutActivitiesInput, DataModelUncheckedCreateWithoutActivitiesInput>
     connectOrCreate?: DataModelCreateOrConnectWithoutActivitiesInput
     upsert?: DataModelUpsertWithoutActivitiesInput
     connect?: DataModelWhereUniqueInput
     update?: XOR<XOR<DataModelUpdateToOneWithWhereWithoutActivitiesInput, DataModelUpdateWithoutActivitiesInput>, DataModelUncheckedUpdateWithoutActivitiesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutActivitiesNestedInput = {
+    create?: XOR<UserCreateWithoutActivitiesInput, UserUncheckedCreateWithoutActivitiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivitiesInput
+    upsert?: UserUpsertWithoutActivitiesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivitiesInput, UserUpdateWithoutActivitiesInput>, UserUncheckedUpdateWithoutActivitiesInput>
   }
 
   export type ViewCreateNestedOneWithoutVersionsInput = {
@@ -30129,6 +33056,40 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumWorkspaceRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+  }
+
+  export type NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDatabaseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DatabaseType | EnumDatabaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDatabaseTypeFilter<$PrismaModel> | $Enums.DatabaseType
+  }
+
+  export type NestedEnumDatabaseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DatabaseType | EnumDatabaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DatabaseType[] | ListEnumDatabaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDatabaseTypeWithAggregatesFilter<$PrismaModel> | $Enums.DatabaseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDatabaseTypeFilter<$PrismaModel>
+    _max?: NestedEnumDatabaseTypeFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -30220,7 +33181,7 @@ export namespace Prisma {
 
   export type WorkspaceMemberCreateWithoutUserInput = {
     id?: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -30229,7 +33190,7 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedCreateWithoutUserInput = {
     id?: string
     workspaceId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30241,6 +33202,32 @@ export namespace Prisma {
 
   export type WorkspaceMemberCreateManyUserInputEnvelope = {
     data: WorkspaceMemberCreateManyUserInput | WorkspaceMemberCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ActivityLogCreateWithoutUserInput = {
+    id?: string
+    action: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    dataModel: DataModelCreateNestedOneWithoutActivitiesInput
+  }
+
+  export type ActivityLogUncheckedCreateWithoutUserInput = {
+    id?: string
+    dataModelId: string
+    action: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type ActivityLogCreateOrConnectWithoutUserInput = {
+    where: ActivityLogWhereUniqueInput
+    create: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type ActivityLogCreateManyUserInputEnvelope = {
+    data: ActivityLogCreateManyUserInput | ActivityLogCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -30267,14 +33254,42 @@ export namespace Prisma {
     id?: StringFilter<"WorkspaceMember"> | string
     workspaceId?: StringFilter<"WorkspaceMember"> | string
     userId?: StringFilter<"WorkspaceMember"> | string
-    role?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
     createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
   }
 
+  export type ActivityLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: ActivityLogWhereUniqueInput
+    update: XOR<ActivityLogUpdateWithoutUserInput, ActivityLogUncheckedUpdateWithoutUserInput>
+    create: XOR<ActivityLogCreateWithoutUserInput, ActivityLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type ActivityLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: ActivityLogWhereUniqueInput
+    data: XOR<ActivityLogUpdateWithoutUserInput, ActivityLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ActivityLogUpdateManyWithWhereWithoutUserInput = {
+    where: ActivityLogScalarWhereInput
+    data: XOR<ActivityLogUpdateManyMutationInput, ActivityLogUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ActivityLogScalarWhereInput = {
+    AND?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+    OR?: ActivityLogScalarWhereInput[]
+    NOT?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+    id?: StringFilter<"ActivityLog"> | string
+    dataModelId?: StringFilter<"ActivityLog"> | string
+    userId?: StringFilter<"ActivityLog"> | string
+    action?: StringFilter<"ActivityLog"> | string
+    details?: JsonNullableFilter<"ActivityLog">
+    createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
+  }
+
   export type WorkspaceMemberCreateWithoutWorkspaceInput = {
     id?: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutMembershipsInput
@@ -30283,7 +33298,7 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedCreateWithoutWorkspaceInput = {
     id?: string
     userId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30302,11 +33317,11 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -30320,11 +33335,11 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -30383,9 +33398,8 @@ export namespace Prisma {
     id?: StringFilter<"DataModel"> | string
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
-    tags?: StringNullableListFilter<"DataModel">
     isPinned?: BoolFilter<"DataModel"> | boolean
-    dbType?: StringFilter<"DataModel"> | string
+    dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
     updatedAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -30424,6 +33438,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     hasCompleteOnboarding?: boolean
+    activities?: ActivityLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -30436,6 +33451,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     hasCompleteOnboarding?: boolean
+    activities?: ActivityLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -30493,6 +33509,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    activities?: ActivityLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -30505,6 +33522,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    activities?: ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WorkspaceCreateWithoutDataModelsInput = {
@@ -30528,6 +33546,24 @@ export namespace Prisma {
   export type WorkspaceCreateOrConnectWithoutDataModelsInput = {
     where: WorkspaceWhereUniqueInput
     create: XOR<WorkspaceCreateWithoutDataModelsInput, WorkspaceUncheckedCreateWithoutDataModelsInput>
+  }
+
+  export type DataModelTagCreateWithoutDataModelInput = {
+    tag: TagCreateNestedOneWithoutDataModelsInput
+  }
+
+  export type DataModelTagUncheckedCreateWithoutDataModelInput = {
+    tagId: string
+  }
+
+  export type DataModelTagCreateOrConnectWithoutDataModelInput = {
+    where: DataModelTagWhereUniqueInput
+    create: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput>
+  }
+
+  export type DataModelTagCreateManyDataModelInputEnvelope = {
+    data: DataModelTagCreateManyDataModelInput | DataModelTagCreateManyDataModelInput[]
+    skipDuplicates?: boolean
   }
 
   export type TableCreateWithoutDataModelInput = {
@@ -30716,10 +33752,10 @@ export namespace Prisma {
 
   export type ActivityLogCreateWithoutDataModelInput = {
     id?: string
-    userId: string
     action: string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    user: UserCreateNestedOneWithoutActivitiesInput
   }
 
   export type ActivityLogUncheckedCreateWithoutDataModelInput = {
@@ -30767,6 +33803,30 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type DataModelTagUpsertWithWhereUniqueWithoutDataModelInput = {
+    where: DataModelTagWhereUniqueInput
+    update: XOR<DataModelTagUpdateWithoutDataModelInput, DataModelTagUncheckedUpdateWithoutDataModelInput>
+    create: XOR<DataModelTagCreateWithoutDataModelInput, DataModelTagUncheckedCreateWithoutDataModelInput>
+  }
+
+  export type DataModelTagUpdateWithWhereUniqueWithoutDataModelInput = {
+    where: DataModelTagWhereUniqueInput
+    data: XOR<DataModelTagUpdateWithoutDataModelInput, DataModelTagUncheckedUpdateWithoutDataModelInput>
+  }
+
+  export type DataModelTagUpdateManyWithWhereWithoutDataModelInput = {
+    where: DataModelTagScalarWhereInput
+    data: XOR<DataModelTagUpdateManyMutationInput, DataModelTagUncheckedUpdateManyWithoutDataModelInput>
+  }
+
+  export type DataModelTagScalarWhereInput = {
+    AND?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
+    OR?: DataModelTagScalarWhereInput[]
+    NOT?: DataModelTagScalarWhereInput | DataModelTagScalarWhereInput[]
+    dataModelId?: StringFilter<"DataModelTag"> | string
+    tagId?: StringFilter<"DataModelTag"> | string
   }
 
   export type TableUpsertWithWhereUniqueWithoutDataModelInput = {
@@ -30958,28 +34018,186 @@ export namespace Prisma {
     data: XOR<ActivityLogUpdateManyMutationInput, ActivityLogUncheckedUpdateManyWithoutDataModelInput>
   }
 
-  export type ActivityLogScalarWhereInput = {
-    AND?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
-    OR?: ActivityLogScalarWhereInput[]
-    NOT?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
-    id?: StringFilter<"ActivityLog"> | string
-    dataModelId?: StringFilter<"ActivityLog"> | string
-    userId?: StringFilter<"ActivityLog"> | string
-    action?: StringFilter<"ActivityLog"> | string
-    details?: JsonNullableFilter<"ActivityLog">
-    createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
+  export type DataModelTagCreateWithoutTagInput = {
+    dataModel: DataModelCreateNestedOneWithoutTagsInput
+  }
+
+  export type DataModelTagUncheckedCreateWithoutTagInput = {
+    dataModelId: string
+  }
+
+  export type DataModelTagCreateOrConnectWithoutTagInput = {
+    where: DataModelTagWhereUniqueInput
+    create: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type DataModelTagCreateManyTagInputEnvelope = {
+    data: DataModelTagCreateManyTagInput | DataModelTagCreateManyTagInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DataModelTagUpsertWithWhereUniqueWithoutTagInput = {
+    where: DataModelTagWhereUniqueInput
+    update: XOR<DataModelTagUpdateWithoutTagInput, DataModelTagUncheckedUpdateWithoutTagInput>
+    create: XOR<DataModelTagCreateWithoutTagInput, DataModelTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type DataModelTagUpdateWithWhereUniqueWithoutTagInput = {
+    where: DataModelTagWhereUniqueInput
+    data: XOR<DataModelTagUpdateWithoutTagInput, DataModelTagUncheckedUpdateWithoutTagInput>
+  }
+
+  export type DataModelTagUpdateManyWithWhereWithoutTagInput = {
+    where: DataModelTagScalarWhereInput
+    data: XOR<DataModelTagUpdateManyMutationInput, DataModelTagUncheckedUpdateManyWithoutTagInput>
+  }
+
+  export type DataModelCreateWithoutTagsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isPinned?: boolean
+    dbType: $Enums.DatabaseType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tables?: TableCreateNestedManyWithoutDataModelInput
+    relationships?: RelationshipCreateNestedManyWithoutDataModelInput
+    views?: ViewCreateNestedManyWithoutDataModelInput
+    procedures?: ProcedureCreateNestedManyWithoutDataModelInput
+    diagrams?: DiagramCreateNestedManyWithoutDataModelInput
+    checkpoints?: CheckpointCreateNestedManyWithoutDataModelInput
+    activities?: ActivityLogCreateNestedManyWithoutDataModelInput
+  }
+
+  export type DataModelUncheckedCreateWithoutTagsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isPinned?: boolean
+    dbType: $Enums.DatabaseType
+    workspaceId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
+    relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
+    views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
+    procedures?: ProcedureUncheckedCreateNestedManyWithoutDataModelInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutDataModelInput
+    checkpoints?: CheckpointUncheckedCreateNestedManyWithoutDataModelInput
+    activities?: ActivityLogUncheckedCreateNestedManyWithoutDataModelInput
+  }
+
+  export type DataModelCreateOrConnectWithoutTagsInput = {
+    where: DataModelWhereUniqueInput
+    create: XOR<DataModelCreateWithoutTagsInput, DataModelUncheckedCreateWithoutTagsInput>
+  }
+
+  export type TagCreateWithoutDataModelsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TagUncheckedCreateWithoutDataModelsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TagCreateOrConnectWithoutDataModelsInput = {
+    where: TagWhereUniqueInput
+    create: XOR<TagCreateWithoutDataModelsInput, TagUncheckedCreateWithoutDataModelsInput>
+  }
+
+  export type DataModelUpsertWithoutTagsInput = {
+    update: XOR<DataModelUpdateWithoutTagsInput, DataModelUncheckedUpdateWithoutTagsInput>
+    create: XOR<DataModelCreateWithoutTagsInput, DataModelUncheckedCreateWithoutTagsInput>
+    where?: DataModelWhereInput
+  }
+
+  export type DataModelUpdateToOneWithWhereWithoutTagsInput = {
+    where?: DataModelWhereInput
+    data: XOR<DataModelUpdateWithoutTagsInput, DataModelUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type DataModelUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tables?: TableUpdateManyWithoutDataModelNestedInput
+    relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
+    views?: ViewUpdateManyWithoutDataModelNestedInput
+    procedures?: ProcedureUpdateManyWithoutDataModelNestedInput
+    diagrams?: DiagramUpdateManyWithoutDataModelNestedInput
+    checkpoints?: CheckpointUpdateManyWithoutDataModelNestedInput
+    activities?: ActivityLogUpdateManyWithoutDataModelNestedInput
+  }
+
+  export type DataModelUncheckedUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
+    relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
+    views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
+    procedures?: ProcedureUncheckedUpdateManyWithoutDataModelNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutDataModelNestedInput
+    checkpoints?: CheckpointUncheckedUpdateManyWithoutDataModelNestedInput
+    activities?: ActivityLogUncheckedUpdateManyWithoutDataModelNestedInput
+  }
+
+  export type TagUpsertWithoutDataModelsInput = {
+    update: XOR<TagUpdateWithoutDataModelsInput, TagUncheckedUpdateWithoutDataModelsInput>
+    create: XOR<TagCreateWithoutDataModelsInput, TagUncheckedCreateWithoutDataModelsInput>
+    where?: TagWhereInput
+  }
+
+  export type TagUpdateToOneWithWhereWithoutDataModelsInput = {
+    where?: TagWhereInput
+    data: XOR<TagUpdateWithoutDataModelsInput, TagUncheckedUpdateWithoutDataModelsInput>
+  }
+
+  export type TagUpdateWithoutDataModelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagUncheckedUpdateWithoutDataModelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DataModelCreateWithoutTablesInput = {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureCreateNestedManyWithoutDataModelInput
@@ -30992,12 +34210,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureUncheckedCreateNestedManyWithoutDataModelInput
@@ -31154,12 +34372,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUpdateManyWithoutDataModelNestedInput
@@ -31172,12 +34390,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUncheckedUpdateManyWithoutDataModelNestedInput
@@ -31455,12 +34673,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureCreateNestedManyWithoutDataModelInput
@@ -31473,12 +34691,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureUncheckedCreateNestedManyWithoutDataModelInput
@@ -31589,12 +34807,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUpdateManyWithoutDataModelNestedInput
@@ -31607,12 +34825,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUncheckedUpdateManyWithoutDataModelNestedInput
@@ -31779,12 +34997,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureCreateNestedManyWithoutDataModelInput
@@ -31797,12 +35015,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     procedures?: ProcedureUncheckedCreateNestedManyWithoutDataModelInput
@@ -31861,12 +35079,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUpdateManyWithoutDataModelNestedInput
@@ -31879,12 +35097,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUncheckedUpdateManyWithoutDataModelNestedInput
@@ -32033,12 +35251,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -32051,12 +35269,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -32115,12 +35333,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -32133,12 +35351,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
@@ -32167,12 +35385,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -32185,12 +35403,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -32297,12 +35515,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -32315,12 +35533,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
@@ -32646,12 +35864,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -32664,12 +35882,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -32698,12 +35916,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -32716,12 +35934,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
@@ -32734,12 +35952,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutDataModelsInput
+    tags?: DataModelTagCreateNestedManyWithoutDataModelInput
     tables?: TableCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipCreateNestedManyWithoutDataModelInput
     views?: ViewCreateNestedManyWithoutDataModelInput
@@ -32752,12 +35970,12 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    tags?: DataModelTagUncheckedCreateNestedManyWithoutDataModelInput
     tables?: TableUncheckedCreateNestedManyWithoutDataModelInput
     relationships?: RelationshipUncheckedCreateNestedManyWithoutDataModelInput
     views?: ViewUncheckedCreateNestedManyWithoutDataModelInput
@@ -32769,6 +35987,37 @@ export namespace Prisma {
   export type DataModelCreateOrConnectWithoutActivitiesInput = {
     where: DataModelWhereUniqueInput
     create: XOR<DataModelCreateWithoutActivitiesInput, DataModelUncheckedCreateWithoutActivitiesInput>
+  }
+
+  export type UserCreateWithoutActivitiesInput = {
+    id: string
+    name: string
+    email: string
+    password: string
+    emailVerified?: boolean | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
+    memberships?: WorkspaceMemberCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutActivitiesInput = {
+    id: string
+    name: string
+    email: string
+    password: string
+    emailVerified?: boolean | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
+    memberships?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActivitiesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActivitiesInput, UserUncheckedCreateWithoutActivitiesInput>
   }
 
   export type DataModelUpsertWithoutActivitiesInput = {
@@ -32786,12 +36035,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -32804,18 +36053,55 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
     procedures?: ProcedureUncheckedUpdateManyWithoutDataModelNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutDataModelNestedInput
     checkpoints?: CheckpointUncheckedUpdateManyWithoutDataModelNestedInput
+  }
+
+  export type UserUpsertWithoutActivitiesInput = {
+    update: XOR<UserUpdateWithoutActivitiesInput, UserUncheckedUpdateWithoutActivitiesInput>
+    create: XOR<UserCreateWithoutActivitiesInput, UserUncheckedCreateWithoutActivitiesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutActivitiesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActivitiesInput, UserUncheckedUpdateWithoutActivitiesInput>
+  }
+
+  export type UserUpdateWithoutActivitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    memberships?: WorkspaceMemberUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActivitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    memberships?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ViewCreateWithoutVersionsInput = {
@@ -33017,14 +36303,22 @@ export namespace Prisma {
   export type WorkspaceMemberCreateManyUserInput = {
     id?: string
     workspaceId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
+  export type ActivityLogCreateManyUserInput = {
+    id?: string
+    dataModelId: string
+    action: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
   export type WorkspaceMemberUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -33033,7 +36327,7 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33041,15 +36335,39 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataModel?: DataModelUpdateOneRequiredWithoutActivitiesNestedInput
+  }
+
+  export type ActivityLogUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dataModelId?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dataModelId?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkspaceMemberCreateManyWorkspaceInput = {
     id?: string
     userId: string
-    role: string
+    role: $Enums.WorkspaceRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33058,16 +36376,15 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    tags?: DataModelCreatetagsInput | string[]
     isPinned?: boolean
-    dbType: string
+    dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type WorkspaceMemberUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutMembershipsNestedInput
@@ -33076,7 +36393,7 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33084,7 +36401,7 @@ export namespace Prisma {
   export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33093,11 +36410,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUpdateManyWithoutDataModelNestedInput
     tables?: TableUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUpdateManyWithoutDataModelNestedInput
     views?: ViewUpdateManyWithoutDataModelNestedInput
@@ -33111,11 +36428,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: DataModelTagUncheckedUpdateManyWithoutDataModelNestedInput
     tables?: TableUncheckedUpdateManyWithoutDataModelNestedInput
     relationships?: RelationshipUncheckedUpdateManyWithoutDataModelNestedInput
     views?: ViewUncheckedUpdateManyWithoutDataModelNestedInput
@@ -33129,11 +36446,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: DataModelUpdatetagsInput | string[]
     isPinned?: BoolFieldUpdateOperationsInput | boolean
-    dbType?: StringFieldUpdateOperationsInput | string
+    dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DataModelTagCreateManyDataModelInput = {
+    tagId: string
   }
 
   export type TableCreateManyDataModelInput = {
@@ -33195,6 +36515,18 @@ export namespace Prisma {
     action: string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+  }
+
+  export type DataModelTagUpdateWithoutDataModelInput = {
+    tag?: TagUpdateOneRequiredWithoutDataModelsNestedInput
+  }
+
+  export type DataModelTagUncheckedUpdateWithoutDataModelInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DataModelTagUncheckedUpdateManyWithoutDataModelInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TableUpdateWithoutDataModelInput = {
@@ -33376,10 +36708,10 @@ export namespace Prisma {
 
   export type ActivityLogUpdateWithoutDataModelInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutActivitiesNestedInput
   }
 
   export type ActivityLogUncheckedUpdateWithoutDataModelInput = {
@@ -33396,6 +36728,22 @@ export namespace Prisma {
     action?: StringFieldUpdateOperationsInput | string
     details?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DataModelTagCreateManyTagInput = {
+    dataModelId: string
+  }
+
+  export type DataModelTagUpdateWithoutTagInput = {
+    dataModel?: DataModelUpdateOneRequiredWithoutTagsNestedInput
+  }
+
+  export type DataModelTagUncheckedUpdateWithoutTagInput = {
+    dataModelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DataModelTagUncheckedUpdateManyWithoutTagInput = {
+    dataModelId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ColumnCreateManyTableInput = {

@@ -3,7 +3,8 @@
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
-import { createWorkspaceSchema, createDataModelSchema } from "../types/workspace.schema";
+import { Prisma } from "../../../../prisma/generated";
+import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
 
 
 export async function isWorkspaceSlugExists(slug: string): Promise<ActionResponse<boolean>> {
@@ -42,6 +43,43 @@ export async function getWorkspaces(query?: string) {
         },
         orderBy: {
             updatedAt: 'desc'
+        }
+    });
+}
+
+export async function getWorkspacesByCurrentUser(query?: string) {
+    const session = await auth.getSession();
+
+    if (!session.data?.user) return [];
+
+    return await db.workspace.findMany({
+        where: {
+            members: {
+                some: {
+                    userId: session.data.user.id
+                }
+            },
+            name: {
+                contains: query,
+                mode: 'insensitive'
+            }
+        },
+        orderBy: {
+            updatedAt: 'desc'
+        }
+    });
+}
+
+
+export async function getWorkspaceBySlug(slug: string) {
+    return await db.workspace.findUnique({
+        where: { slug },
+        include: {
+            members: {
+                include: {
+                    user: true
+                }
+            }
         }
     });
 }
@@ -220,7 +258,7 @@ export async function initWorkspace(data: { name: string; slug: string }): Promi
     }
 }
 
-export async function createDataModel(workspaceSlug: string, data: { name: string; dbType: string }): Promise<ActionResponse> {
+export async function createDataModel(workspaceSlug: string, data: CreateDataModelSchema): Promise<ActionResponse> {
     try {
         const validatedData = createDataModelSchema.parse(data);
 
@@ -233,12 +271,23 @@ export async function createDataModel(workspaceSlug: string, data: { name: strin
             throw new AppError("Workspace not found", 404);
         }
 
-        const dataModel = await db.dataModel.create({
-            data: {
-                name: validatedData.name,
-                dbType: validatedData.dbType,
-                workspaceId: workspace.id,
-            },
+        const dataModel = await db.$transaction(async (tx) => {
+            const model = await tx.dataModel.create({
+                data: {
+                    name: validatedData.name,
+                    description: validatedData.description,
+                    dbType: validatedData.dbType,
+                    workspace: {
+                        connect: { id: workspace.id }
+                    }
+                },
+            });
+
+            if (validatedData.tags?.length) {
+                await handleTags(tx, model.id, validatedData.tags);
+            }
+
+            return model;
         });
 
         return {
@@ -249,4 +298,68 @@ export async function createDataModel(workspaceSlug: string, data: { name: strin
     } catch (error) {
         return handleActionError(error);
     }
+}
+
+
+async function handleTags(tx: Prisma.TransactionClient, modelId: string, tags: string[]) {
+    const upserted = await Promise.all(
+        tags.map((name) =>
+            tx.tag.upsert({
+                where: { name },
+                update: {},
+                create: { name },
+            })
+        )
+    );
+
+    await tx.dataModelTag.createMany({
+        data: upserted.map((tag) => ({
+            dataModelId: modelId,
+            tagId: tag.id,
+        })),
+        skipDuplicates: true,
+    });
+}
+
+async function handleDeleteTags(
+    tx: Prisma.TransactionClient,
+    modelId: string,
+    tagNames: string[]
+) {
+    if (!tagNames.length) return;
+
+    const tags = await tx.tag.findMany({
+        where: {
+            name: { in: tagNames },
+        },
+        select: { id: true },
+    });
+
+    await tx.dataModelTag.deleteMany({
+        where: {
+            dataModelId: modelId,
+            tagId: {
+                in: tags.map((t) => t.id),
+            },
+        },
+    });
+}
+
+async function handleUpdateTags(
+    tx: Prisma.TransactionClient,
+    modelId: string,
+    newTagNames: string[]
+) {
+    const existing = await tx.dataModelTag.findMany({
+        where: { dataModelId: modelId },
+        include: { tag: true },
+    });
+
+    const existingNames = existing.map((t) => t.tag.name);
+
+    const toAdd = newTagNames.filter((t) => !existingNames.includes(t));
+    const toRemove = existingNames.filter((t) => !newTagNames.includes(t));
+
+    await handleDeleteTags(tx, modelId, toRemove);
+    await handleTags(tx, modelId, toAdd);
 }
