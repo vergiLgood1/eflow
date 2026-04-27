@@ -7,18 +7,15 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function ForgotPasswordForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitted },
   } = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -27,19 +24,15 @@ export function ForgotPasswordForm() {
   });
 
   const onSubmit = async (values: ForgotPasswordSchema) => {
-    setIsLoading(true);
     try {
       const result = await forgotPassword(values);
       if (!result.success) {
         toast.error(result.error);
       } else {
         toast.success(result.message || "Reset link sent!");
-        setIsSubmitted(true);
       }
     } catch (err) {
       toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -65,12 +58,12 @@ export function ForgotPasswordForm() {
             label="Email"
             placeholder="name@example.com"
             type="email"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.email}
             {...register("email")}
           />
-          <Button type="submit" disabled={isLoading} className="w-full mt-2">
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Send Reset Link
           </Button>
         </div>

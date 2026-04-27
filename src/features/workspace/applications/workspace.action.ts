@@ -3,7 +3,7 @@
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
-import { createWorkspaceSchema } from "../types/workspace.schema";
+import { createWorkspaceSchema, createDataModelSchema } from "../types/workspace.schema";
 
 
 export async function isWorkspaceSlugExists(slug: string): Promise<ActionResponse<boolean>> {
@@ -214,6 +214,37 @@ export async function initWorkspace(data: { name: string; slug: string }): Promi
                 slug: workspace.slug,
             },
             message: "Workspace created successfully"
+        };
+    } catch (error) {
+        return handleActionError(error);
+    }
+}
+
+export async function createDataModel(workspaceSlug: string, data: { name: string; dbType: string }): Promise<ActionResponse> {
+    try {
+        const validatedData = createDataModelSchema.parse(data);
+
+        const workspace = await db.workspace.findUnique({
+            where: { slug: workspaceSlug },
+            select: { id: true }
+        });
+
+        if (!workspace) {
+            throw new AppError("Workspace not found", 404);
+        }
+
+        const dataModel = await db.dataModel.create({
+            data: {
+                name: validatedData.name,
+                dbType: validatedData.dbType,
+                workspaceId: workspace.id,
+            },
+        });
+
+        return {
+            success: true,
+            data: dataModel,
+            message: "Data model created successfully"
         };
     } catch (error) {
         return handleActionError(error);

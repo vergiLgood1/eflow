@@ -16,7 +16,7 @@ export function SignUpForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -57,7 +57,7 @@ export function SignUpForm() {
             label="Full Name"
             placeholder="John Doe"
             type="text"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.name}
             {...register("name")}
           />
@@ -66,7 +66,7 @@ export function SignUpForm() {
             label="Email"
             placeholder="name@example.com"
             type="email"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.email}
             {...register("email")}
           />
@@ -74,12 +74,12 @@ export function SignUpForm() {
             id="password"
             label="Password"
             type="password"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.password}
             {...register("password")}
           />
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create Account
           </Button>
         </div>
@@ -95,7 +95,7 @@ export function SignUpForm() {
         </div>
       </div>
       <SocialButton
-        disabled={isLoading}
+        disabled={isSubmitting}
         onClick={handleGithubSignUp}
       >
         <GitHubIcon />

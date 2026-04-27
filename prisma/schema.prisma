@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated"
@@ -13,19 +11,18 @@ datasource db {
 }
 
 model User {
-  id            String            @id @unique
-  name          String
-  email         String
-  password      String
-  emailVerified Boolean?
-  image         String?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  id                    String            @id @unique
+  name                  String
+  email                 String            @unique
+  password              String
+  emailVerified         Boolean?
+  image                 String?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
   hasCompleteOnboarding Boolean           @default(false)
   memberships           WorkspaceMember[]
 
-  @@unique([email])
-  @@map("user")
+  @@map("users")
 }
 
 model Workspace {
@@ -37,12 +34,14 @@ model Workspace {
   members    WorkspaceMember[]
   dataModels DataModel[]
 
-  @@map("workspace")
+  @@map("workspaces")
 }
 
 model WorkspaceSlug {
   base  String @id
   count Int
+
+  @@map("workspace_slugs")
 }
 
 model WorkspaceMember {
@@ -57,18 +56,242 @@ model WorkspaceMember {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([workspaceId, userId])
-  @@map("workspace_member")
+  @@map("workspace_members")
 }
 
 model DataModel {
   id          String   @id @default(uuid())
   name        String
-  dbType      String // "POSTGRESQL" | "MYSQL" | etc.
+  dbType      String // "POSTGRESQL" | "MYSQL" | "ORACLE" | "SQLSERVER" | "SQLITE"
   workspaceId String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  tables        Table[]
+  relationships Relationship[]
+  views         View[]
+  procedures    Procedure[]
+  diagrams      Diagram[]
+  checkpoints   Checkpoint[]
+  activities    ActivityLog[]
 
-  @@map("data_model")
+  @@map("data_models")
+}
+
+model Table {
+  id          String   @id @default(uuid())
+  name        String
+  dataModelId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dataModel DataModel   @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  columns   Column[]
+  indexes   Index[]
+  triggers  Trigger[]
+  nodes     TableNode[]
+
+  @@map("tables")
+}
+
+model Column {
+  id              String  @id @default(uuid())
+  tableId         String
+  name            String
+  type            String
+  length          Int?
+  precision       Int?
+  scale           Int?
+  isNullable      Boolean @default(true)
+  default         String?
+  isUnique        Boolean @default(false)
+  isPrimaryKey    Boolean @default(false)
+  isAutoIncrement Boolean @default(false)
+  isUnsigned      Boolean @default(false)
+  customType      String?
+
+  table           Table          @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  sourceRelations Relationship[] @relation("SourceColumn")
+  targetRelations Relationship[] @relation("TargetColumn")
+
+  @@map("columns")
+}
+
+model Relationship {
+  id             String @id @default(uuid())
+  dataModelId    String
+  sourceColumnId String
+  targetColumnId String
+  onDelete       String // "CASCADE" | "SET NULL" | "SET DEFAULT" | "RESTRICT" | "NO ACTION"
+  onUpdate       String
+
+  dataModel    DataModel @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  sourceColumn Column    @relation("SourceColumn", fields: [sourceColumnId], references: [id], onDelete: Cascade)
+  targetColumn Column    @relation("TargetColumn", fields: [targetColumnId], references: [id], onDelete: Cascade)
+
+  @@map("relationships")
+}
+
+model Index {
+  id      String   @id @default(uuid())
+  tableId String
+  name    String
+  type    String // "BTREE" | "HASH" | etc.
+  columns String[] // Array of column names
+
+  table Table @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@map("indexes")
+}
+
+model View {
+  id                String   @id @default(uuid())
+  dataModelId       String
+  name              String
+  sql               String
+  primaryIdentifier String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  dataModel DataModel        @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  versions  VersionHistory[]
+
+  @@map("views")
+}
+
+model Trigger {
+  id        String   @id @default(uuid())
+  tableId   String
+  name      String
+  event     String // "INSERT" | "UPDATE" | "DELETE"
+  timing    String // "BEFORE" | "AFTER"
+  body      String
+  level     String // "ROW" | "STATEMENT"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  table    Table            @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  versions VersionHistory[]
+
+  @@map("triggers")
+}
+
+model Procedure {
+  id             String   @id @default(uuid())
+  dataModelId    String
+  name           String
+  description    String?
+  language       String
+  securityType   String // "DEFINER" | "INVOKER"
+  dataAccess     String // "CONTAINS SQL" | etc.
+  isDeterministic Boolean @default(false)
+  body           String
+  parameters     Json? // Stores parameters as JSON array
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  dataModel DataModel        @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  versions  VersionHistory[]
+
+  @@map("procedures")
+}
+
+model Diagram {
+  id          String   @id @default(uuid())
+  dataModelId String
+  name        String
+  isDraft     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dataModel DataModel   @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  nodes     TableNode[]
+  groups    Group[]
+  notes     Note[]
+
+  @@map("diagrams")
+}
+
+model TableNode {
+  id        String @id @default(uuid())
+  diagramId String
+  tableId   String
+  x         Float
+  y         Float
+
+  diagram Diagram @relation(fields: [diagramId], references: [id], onDelete: Cascade)
+  table   Table   @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@unique([diagramId, tableId])
+  @@map("table_nodes")
+}
+
+model Group {
+  id        String @id @default(uuid())
+  diagramId String
+  name      String
+  color     String
+  x         Float
+  y         Float
+  width     Float
+  height    Float
+
+  diagram Diagram @relation(fields: [diagramId], references: [id], onDelete: Cascade)
+
+  @@map("groups")
+}
+
+model Note {
+  id        String @id @default(uuid())
+  diagramId String
+  content   String
+  x         Float
+  y         Float
+
+  diagram Diagram @relation(fields: [diagramId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
+
+model Checkpoint {
+  id          String   @id @default(uuid())
+  dataModelId String
+  name        String
+  snapshot    Json // Full schema snapshot
+  createdAt   DateTime @default(now())
+
+  dataModel DataModel @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+
+  @@map("checkpoints")
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  dataModelId String
+  userId      String
+  action      String // e.g., "table.create"
+  details     Json?
+  createdAt   DateTime @default(now())
+
+  dataModel DataModel @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+model VersionHistory {
+  id          String   @id @default(uuid())
+  viewId      String?
+  triggerId   String?
+  procedureId String?
+  version     Int
+  snapshot    Json
+  userId      String
+  createdAt   DateTime @default(now())
+
+  view      View?      @relation(fields: [viewId], references: [id], onDelete: Cascade)
+  trigger   Trigger?   @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  procedure Procedure? @relation(fields: [procedureId], references: [id], onDelete: Cascade)
+
+  @@map("version_histories")
 }

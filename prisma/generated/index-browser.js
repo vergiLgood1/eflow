@@ -163,9 +163,161 @@ exports.Prisma.DataModelScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TableScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  dataModelId: 'dataModelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ColumnScalarFieldEnum = {
+  id: 'id',
+  tableId: 'tableId',
+  name: 'name',
+  type: 'type',
+  length: 'length',
+  precision: 'precision',
+  scale: 'scale',
+  isNullable: 'isNullable',
+  default: 'default',
+  isUnique: 'isUnique',
+  isPrimaryKey: 'isPrimaryKey',
+  isAutoIncrement: 'isAutoIncrement',
+  isUnsigned: 'isUnsigned',
+  customType: 'customType'
+};
+
+exports.Prisma.RelationshipScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  sourceColumnId: 'sourceColumnId',
+  targetColumnId: 'targetColumnId',
+  onDelete: 'onDelete',
+  onUpdate: 'onUpdate'
+};
+
+exports.Prisma.IndexScalarFieldEnum = {
+  id: 'id',
+  tableId: 'tableId',
+  name: 'name',
+  type: 'type',
+  columns: 'columns'
+};
+
+exports.Prisma.ViewScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  name: 'name',
+  sql: 'sql',
+  primaryIdentifier: 'primaryIdentifier',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TriggerScalarFieldEnum = {
+  id: 'id',
+  tableId: 'tableId',
+  name: 'name',
+  event: 'event',
+  timing: 'timing',
+  body: 'body',
+  level: 'level',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProcedureScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  name: 'name',
+  description: 'description',
+  language: 'language',
+  securityType: 'securityType',
+  dataAccess: 'dataAccess',
+  isDeterministic: 'isDeterministic',
+  body: 'body',
+  parameters: 'parameters',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DiagramScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  name: 'name',
+  isDraft: 'isDraft',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TableNodeScalarFieldEnum = {
+  id: 'id',
+  diagramId: 'diagramId',
+  tableId: 'tableId',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.GroupScalarFieldEnum = {
+  id: 'id',
+  diagramId: 'diagramId',
+  name: 'name',
+  color: 'color',
+  x: 'x',
+  y: 'y',
+  width: 'width',
+  height: 'height'
+};
+
+exports.Prisma.NoteScalarFieldEnum = {
+  id: 'id',
+  diagramId: 'diagramId',
+  content: 'content',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.CheckpointScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  name: 'name',
+  snapshot: 'snapshot',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  dataModelId: 'dataModelId',
+  userId: 'userId',
+  action: 'action',
+  details: 'details',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.VersionHistoryScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  triggerId: 'triggerId',
+  procedureId: 'procedureId',
+  version: 'version',
+  snapshot: 'snapshot',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -178,13 +330,33 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
   Workspace: 'Workspace',
   WorkspaceSlug: 'WorkspaceSlug',
   WorkspaceMember: 'WorkspaceMember',
-  DataModel: 'DataModel'
+  DataModel: 'DataModel',
+  Table: 'Table',
+  Column: 'Column',
+  Relationship: 'Relationship',
+  Index: 'Index',
+  View: 'View',
+  Trigger: 'Trigger',
+  Procedure: 'Procedure',
+  Diagram: 'Diagram',
+  TableNode: 'TableNode',
+  Group: 'Group',
+  Note: 'Note',
+  Checkpoint: 'Checkpoint',
+  ActivityLog: 'ActivityLog',
+  VersionHistory: 'VersionHistory'
 };
 
 /**

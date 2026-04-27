@@ -17,7 +17,7 @@ export function SignInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors, isSubmitting },
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -57,7 +57,7 @@ export function SignInForm() {
             label="Email"
             placeholder="name@example.com"
             type="email"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.email}
             {...register("email")}
           />
@@ -65,7 +65,7 @@ export function SignInForm() {
             id="password"
             label="Password"
             type="password"
-            disabled={isLoading}
+            disabled={isSubmitting}
             error={errors.password}
             rightElement={
               <Link
@@ -77,8 +77,8 @@ export function SignInForm() {
             }
             {...register("password")}
           />
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In with Email
           </Button>
         </div>
@@ -94,7 +94,7 @@ export function SignInForm() {
         </div>
       </div>
       <SocialButton
-        disabled={isLoading}
+        disabled={isSubmitting}
         onClick={handleGithubSignIn}
       >
         <GitHubIcon />

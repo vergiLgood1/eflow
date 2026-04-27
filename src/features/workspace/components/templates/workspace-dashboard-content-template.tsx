@@ -1,9 +1,8 @@
-import React from "react";
-import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-header";
-import { WorkspaceUpgradeBanner } from "../molecules/workspace-upgrade-banner";
-import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
-import { WorkspaceProUpsellCard } from "../molecules/workspace-pro-upsell-card";
 import type { DataModel } from "../../../../../prisma/generated";
+import { WorkspaceProUpsellCard } from "../molecules/workspace-pro-upsell-card";
+import { WorkspaceUpgradeBanner } from "../molecules/workspace-upgrade-banner";
+import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-header";
+import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
 
 interface WorkspaceDashboardContentTemplateProps {
     modelsPromise: Promise<DataModel[]>;
