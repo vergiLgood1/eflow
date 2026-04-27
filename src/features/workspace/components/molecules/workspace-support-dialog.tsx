@@ -95,7 +95,7 @@ export function WorkspaceSupportDialog({ children }: WorkspaceSupportDialogProps
                             name="type"
                             render={({ field }) => (
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className={cn(errors.type && "border-destructive focus:ring-destructive/20")}>
+                                    <SelectTrigger className={cn("w-full", errors.type && "border-destructive focus:ring-destructive/20")}>
                                         <SelectValue placeholder="Select request type" />
                                     </SelectTrigger>
                                     <SelectContent>
