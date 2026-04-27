@@ -14,8 +14,10 @@ import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { Box, Check, ChevronsUpDown, MoreVertical, Plus, Search } from "lucide-react";
-import React, { Suspense, use } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { getDataModelsBySlug } from "../../applications/workspace.action";
+import { CreateDiagramDialog } from "../organisms/create-diagram-dialog";
 
 interface DataModel {
     id: string;
@@ -95,22 +97,28 @@ function ModelListSkeleton() {
 
 interface WorkspaceDataModelSelectorProps {
     slug: string;
+    modelId?: string;
     className?: string;
     initialData: DataModel[];
 }
 
 export function WorkspaceDataModelSelector({
     slug,
+    modelId,
     className,
     initialData,
 }: WorkspaceDataModelSelectorProps) {
     const [open, setOpen] = React.useState(false);
     const [searchQuery, setSearchQuery] = React.useState("");
     const [debouncedSearch] = useDebounceValue(searchQuery, 300);
-    const [selectedModel, setSelectedModel] = React.useState<DataModel | null>(null);
 
     const [models, setModels] = React.useState<DataModel[]>(initialData);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
+
+    const router = useRouter();
+
+    const selectedModel = models.find((m) => m.id === modelId);
 
     React.useEffect(() => {
         const fetchModels = async () => {
@@ -132,61 +140,65 @@ export function WorkspaceDataModelSelector({
     }, [slug, debouncedSearch, initialData]);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                        "gap-2.5 px-3 text-xs h-9 min-w-[180px] max-w-[260px] justify-between border border-transparent hover:border-border/50 font-medium hover:bg-accent/50 transition-all",
-                        className
-                    )}
-                >
-                    <span className="truncate flex items-center gap-2 text-foreground">
-                        <Box className={cn("h-3.5 w-3.5", selectedModel ? "text-primary" : "text-muted-foreground")} />
-                        {selectedModel ? selectedModel.name : "Select a data model"}
-                    </span>
-                    <ChevronsUpDown className="h-3.5 w-3.5 ml-2 opacity-50 shrink-0" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[280px] p-0 shadow-lg border-border/50" align="start">
-                <div className="p-2 border-b border-border">
-                    <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                        <Input
-                            placeholder="Find a data model..."
-                            className="h-8 pl-8 text-xs bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </div>
-                <ScrollArea className="max-h-[280px]">
-                    {isLoading ? (
-                        <ModelListSkeleton />
-                    ) : (
-                        <ModelList
-                            models={models}
-                            selectedId={selectedModel?.id}
-                            onSelect={(m) => {
-                                setSelectedModel(m);
-                                setOpen(false);
-                            }}
-                        />
-                    )}
-                </ScrollArea>
-                <Separator />
-                <div className="p-1">
+        <>
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full justify-start gap-2 h-9 px-2 text-xs font-medium text-primary hover:text-primary hover:bg-primary/5"
+                        className={cn(
+                            "gap-2.5 px-3 text-xs h-9 w-auto justify-between border border-transparent hover:border-border/50 font-medium hover:bg-accent/50 transition-all",
+                            className
+                        )}
                     >
-                        <Plus className="h-3.5 w-3.5" />
-                        Create New Data Model
+                        <span className="truncate flex items-center gap-2 text-foreground">
+                            <Box className={cn("h-3.5 w-3.5", selectedModel ? "text-primary" : "text-muted-foreground")} />
+                            {selectedModel ? selectedModel.name : "Select a data model"}
+                        </span>
+                        <ChevronsUpDown className="h-3.5 w-3.5 ml-2 opacity-50 shrink-0" />
                     </Button>
-                </div>
-            </PopoverContent>
-        </Popover>
+                </PopoverTrigger>
+                <PopoverContent className="w-[280px] p-0 shadow-lg border-border/50" align="start">
+                    <div className="p-2 border-b border-border">
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                            <Input
+                                placeholder="Find a data model..."
+                                className="h-8 pl-8 text-xs bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <ScrollArea className="max-h-[280px]">
+                        {isLoading ? (
+                            <ModelListSkeleton />
+                        ) : (
+                            <ModelList
+                                models={models}
+                                    selectedId={modelId}
+                                    onSelect={(model) => {
+                                        setOpen(false);
+                                        router.push(`/workspaces/${slug}/model/${model.id}`);
+                                }}
+                            />
+                        )}
+                    </ScrollArea>
+                    <Separator />
+                    <div className="p-1">
+                        <CreateDiagramDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-full justify-start gap-2 h-9 px-2 text-xs font-medium text-primary hover:text-primary hover:bg-primary/5"
+                            >
+                                <Plus className="h-3.5 w-3.5" />
+                                Create New Data Model
+                            </Button>
+                        </CreateDiagramDialog>
+                    </div>
+                </PopoverContent>
+            </Popover>
+        </>
     );
 }

@@ -14,8 +14,9 @@ import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
 import { Check, ChevronsUpDown, Plus, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { Suspense, use } from "react";
+import React from "react";
 import { getWorkspaces } from "../../applications/workspace.action";
+import { CreateWorkspaceDialog } from "../organisms/create-workspace-dialog";
 
 const WORKSPACE_COLORS = [
     "bg-blue-500",
@@ -90,14 +91,12 @@ function WorkspaceListSkeleton() {
 }
 
 interface WorkspaceSwitcherProps {
-    workspaceName: string;
     slug?: string;
     className?: string;
     initialData: Workspace[];
 }
 
 export function WorkspaceSwitcher({
-    workspaceName: initialWorkspaceName,
     slug: currentSlug,
     className,
     initialData,
@@ -107,9 +106,6 @@ export function WorkspaceSwitcher({
     const [debouncedSearch] = useDebounceValue(searchQuery, 300);
 
     const router = useRouter();
-
-    // Initial display name
-    const [displayName, setDisplayName] = React.useState(initialWorkspaceName);
 
     const [workspaces, setWorkspaces] = React.useState<Workspace[]>(initialData);
     const [isLoading, setIsLoading] = React.useState(false);
@@ -133,63 +129,70 @@ export function WorkspaceSwitcher({
         fetchWorkspaces();
     }, [debouncedSearch, initialData]);
 
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
+
+    const handleWorkspaceSelect = (workspace: Workspace) => {
+        setOpen(false);
+        router.push(`/workspaces/${workspace.slug}`);
+    }
+
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                        "gap-2 px-3 text-xs h-9 min-w-[160px] max-w-[260px] justify-between font-medium hover:bg-accent/50 transition-all",
-                        className
-                    )}
-                >
-                    <span className="truncate flex items-center gap-2">
-                        <span className={cn("h-2 w-2 rounded-full shrink-0 bg-primary")} />
-                        {displayName}
-                    </span>
-                    <ChevronsUpDown className="h-4 w-4 ml-2 opacity-60 shrink-0" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[240px] p-0 shadow-lg border-border/50" align="start">
-                <div className="p-2 border-b border-border">
-                    <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                        <Input
-                            placeholder="Search workspaces..."
-                            className="h-8 pl-8 text-xs bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </div>
-                <ScrollArea className="max-h-[240px]">
-                    {isLoading ? (
-                        <WorkspaceListSkeleton />
-                    ) : (
-                        <WorkspaceList
-                            workspaces={workspaces}
-                            selectedId={currentSlug}
-                            onSelect={(workspace) => {
-                                setDisplayName(workspace.name);
-                                setOpen(false);
-                                router.push(`/workspaces/${workspace.slug}`);
-                            }}
-                        />
-                    )}
-                </ScrollArea>
-                <Separator />
-                <div className="p-1">
+        <>
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full justify-start gap-2 h-9 px-2 text-xs font-medium text-primary hover:text-primary hover:bg-primary/5"
+                        className={cn(
+                            "gap-2 px-3 text-xs h-9 min-w-[160px] max-w-[260px] justify-between font-medium hover:bg-accent/50 transition-all",
+                            className
+                        )}
                     >
-                        <Plus className="h-3.5 w-3.5" />
-                        Create New Workspace
+                        <span className="truncate flex items-center gap-2">
+                            <span className={cn("h-2 w-2 rounded-full shrink-0 bg-primary")} />
+                            {workspaces.find((w) => w.slug === currentSlug)?.name || "Select Workspace"}
+                        </span>
+                        <ChevronsUpDown className="h-4 w-4 ml-2 opacity-60 shrink-0" />
                     </Button>
-                </div>
-            </PopoverContent>
-        </Popover>
+                </PopoverTrigger>
+                <PopoverContent className="w-[240px] p-0 shadow-lg border-border/50" align="start">
+                    <div className="p-2 border-b border-border">
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                            <Input
+                                placeholder="Search workspaces..."
+                                className="h-8 pl-8 text-xs bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <ScrollArea className="max-h-[240px]">
+                        {isLoading ? (
+                            <WorkspaceListSkeleton />
+                        ) : (
+                            <WorkspaceList
+                                workspaces={workspaces}
+                                selectedId={currentSlug}
+                                onSelect={handleWorkspaceSelect}
+                            />
+                        )}
+                    </ScrollArea>
+                    <Separator />
+                    <div className="p-1">
+                        <CreateWorkspaceDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-full justify-start gap-2 h-9 px-2 text-xs font-medium text-primary hover:text-primary hover:bg-primary/5"
+                            >
+                                <Plus className="h-3.5 w-3.5" />
+                                Create New Workspace
+                            </Button>
+                        </CreateWorkspaceDialog>
+                    </div>
+                </PopoverContent>
+            </Popover>
+        </>
     );
 }

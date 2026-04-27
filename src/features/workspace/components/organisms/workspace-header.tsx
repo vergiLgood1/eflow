@@ -25,10 +25,8 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
 import { toast } from "sonner";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
 import { WorkspaceDataModelSelector } from "../molecules/workspace-data-model-selector";
@@ -51,8 +49,7 @@ export function WorkspaceHeader({
     const router = useRouter();
     const params = useParams();
     const slug = params?.slug as string;
-
-    
+    const modelId = params?.id as string;
 
     const { toggleChat } = useWorkspaceStore();
 
@@ -86,13 +83,13 @@ export function WorkspaceHeader({
                 <div className="h-4 w-px bg-border mx-1" />
 
                 <WorkspaceSwitcher 
-                    workspaceName="My Workspace" 
                     slug={slug} 
                     initialData={workspaces} 
                 />
 
                 <WorkspaceDataModelSelector 
                     slug={slug} 
+                    modelId={modelId}
                     initialData={models} 
                 />
             </div>
