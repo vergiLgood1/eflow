@@ -1,6 +1,6 @@
 "use client";
 
-import { signInWithGithub, signInWithEmail } from "@/features/authentication/applications/auth.action";
+import { signInWithEmail, signInWithGithub } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
 import { signInSchema, SignInSchema } from "@/features/authentication/types/auth.schema";
@@ -9,19 +9,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter, unstable_rethrow } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignInForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isLoading },
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -31,17 +27,13 @@ export function SignInForm() {
   });
 
   const onSubmit = async (values: SignInSchema) => {
-    setIsLoading(true);
     try {
       const result = await signInWithEmail(values);
       if (!result.success) {
         toast.error(result.error);
       }
     } catch (err) {
-      unstable_rethrow(err);
       toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -52,7 +44,6 @@ export function SignInForm() {
         toast.error(result.error);
       }
     } catch (err) {
-      unstable_rethrow(err);
       toast.error("Failed to sign in with GitHub.");
     }
   };

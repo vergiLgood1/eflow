@@ -3,6 +3,8 @@ import { WorkspaceHeader } from "../organisms/workspace-header";
 import { WorkspaceSidebar } from "../organisms/workspace-sidebar";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 
+import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
+
 interface WorkspaceLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
@@ -22,6 +24,7 @@ export function WorkspaceLayoutTemplate({
                         {children}
                     </ScrollArea>
                 </main>
+                <WorkspaceChatPanel />
             </div>
         </div>
     );

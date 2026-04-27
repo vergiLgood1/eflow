@@ -8,17 +8,15 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignUpForm() {
-  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isLoading },
   } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -29,7 +27,6 @@ export function SignUpForm() {
   });
 
   const onSubmit = async (values: SignUpSchema) => {
-    setIsLoading(true);
     try {
       const result = await signUpWithEmail(values);
       if (!result.success) {
@@ -37,8 +34,6 @@ export function SignUpForm() {
       }
     } catch (err) {
       toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
     }
   };
 

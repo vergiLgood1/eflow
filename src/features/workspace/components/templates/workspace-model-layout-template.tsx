@@ -3,6 +3,8 @@ import { WorkspaceHeader } from "../organisms/workspace-header";
 import { WorkspaceModelSidebar } from "../organisms/workspace-model-sidebar";
 import { WorkspaceModelToolbar } from "../organisms/workspace-model-toolbar";
 
+import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
+
 interface WorkspaceLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
@@ -31,6 +33,8 @@ export function WorkspaceModelLayoutTemplate({
                         {children}
                     </div>
                 </main>
+
+                <WorkspaceChatPanel />
             </div>
         </div>
     );
