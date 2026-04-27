@@ -62,6 +62,9 @@ model WorkspaceMember {
 model DataModel {
   id          String   @id @default(uuid())
   name        String
+  description String?
+  tags        String[]
+  isPinned    Boolean  @default(false)
   dbType      String // "POSTGRESQL" | "MYSQL" | "ORACLE" | "SQLSERVER" | "SQLITE"
   workspaceId String
   createdAt   DateTime @default(now())

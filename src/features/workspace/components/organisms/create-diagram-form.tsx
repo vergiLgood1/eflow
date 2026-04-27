@@ -1,6 +1,14 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
+import { Label } from "@/shared/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -10,14 +18,7 @@ import { toast } from "sonner";
 import { createDataModel } from "../../applications/workspace.action";
 import { createDataModelSchema, CreateDataModelSchema } from "../../types/workspace.schema";
 import { WorkspaceField } from "../molecules/workspace-field";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
-import { Label } from "@/shared/components/ui/label";
+import { WorkspaceTextareaField } from "../molecules/workspace-textarea-field";
 
 interface CreateDiagramFormProps {
   onSuccess?: () => void;
@@ -27,7 +28,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
-  const slug = params?.slug as string;
+  const slug = params.slug as string;
 
   const form = useForm<CreateDataModelSchema>({
     resolver: zodResolver(createDataModelSchema),
@@ -76,11 +77,30 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
         {...form.register("name")}
       />
       
+      <WorkspaceTextareaField
+        id="description"
+        label="Description"
+        placeholder="Brief description of your diagram..."
+        disabled={isLoading}
+        rows={2}
+        error={form.formState.errors.description}
+        {...form.register("description")}
+      />
+
+      <WorkspaceField
+        id="tags"
+        label="Tags"
+        placeholder="e.g. SasS, Auth, Next (Comma separated)"
+        disabled={isLoading}
+        error={form.formState.errors.tags}
+        {...form.register("tags")}
+      />
+
       <div className="space-y-2">
         <Label htmlFor="dbType">Database Type</Label>
         <Select
           disabled={isLoading}
-          onValueChange={(value) => form.setValue("dbType", value as any, { shouldValidate: true })}
+          onValueChange={(value) => form.setValue("dbType", value as CreateDataModelSchema["dbType"], { shouldValidate: true })}
           defaultValue={form.getValues("dbType")}
         >
           <SelectTrigger id="dbType">

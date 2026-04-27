@@ -62,6 +62,9 @@ model WorkspaceMember {
 model DataModel {
   id          String   @id @default(uuid())
   name        String
+  description String?
+  tags        String[]
+  isPinned    Boolean  @default(false)
   dbType      String // "POSTGRESQL" | "MYSQL" | "ORACLE" | "SQLSERVER" | "SQLITE"
   workspaceId String
   createdAt   DateTime @default(now())
@@ -178,18 +181,18 @@ model Trigger {
 }
 
 model Procedure {
-  id             String   @id @default(uuid())
-  dataModelId    String
-  name           String
-  description    String?
-  language       String
-  securityType   String // "DEFINER" | "INVOKER"
-  dataAccess     String // "CONTAINS SQL" | etc.
-  isDeterministic Boolean @default(false)
-  body           String
-  parameters     Json? // Stores parameters as JSON array
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String   @id @default(uuid())
+  dataModelId     String
+  name            String
+  description     String?
+  language        String
+  securityType    String // "DEFINER" | "INVOKER"
+  dataAccess      String // "CONTAINS SQL" | etc.
+  isDeterministic Boolean  @default(false)
+  body            String
+  parameters      Json? // Stores parameters as JSON array
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   dataModel DataModel        @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
   versions  VersionHistory[]

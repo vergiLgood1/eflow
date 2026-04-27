@@ -157,6 +157,9 @@ exports.Prisma.WorkspaceMemberScalarFieldEnum = {
 exports.Prisma.DataModelScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
+  tags: 'tags',
+  isPinned: 'isPinned',
   dbType: 'dbType',
   workspaceId: 'workspaceId',
   createdAt: 'createdAt',

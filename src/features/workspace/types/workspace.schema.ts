@@ -7,6 +7,8 @@ export const createWorkspaceSchema = z.object({
 
 export const createDataModelSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   dbType: z.enum(["POSTGRESQL", "MYSQL", "SQLITE", "SQLSERVER", "MONGODB"], {
     message: "Please select a valid database type",
   }),

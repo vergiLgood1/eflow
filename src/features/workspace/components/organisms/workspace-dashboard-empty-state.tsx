@@ -8,10 +8,10 @@ import {
 } from "lucide-react";
 import { WorkspaceEmptyIllustration } from "../atoms/workspace-empty-illustration";
 import { WorkspaceDashboardCard } from "../molecules/workspace-dashboard-card";
-import { CreateDiagramDialog } from "./create-diagram-dialog";
-import { ImportSqlDialog } from "./import-sql-dialog";
 import { ConnectDbDialog } from "./connect-db-dialog";
+import { CreateDiagramDialog } from "./create-diagram-dialog";
 import { ImportFileDialog } from "./import-file-dialog";
+import { ImportSqlDialog } from "./import-sql-dialog";
 
 const TEMPLATES = [
     "E-commerce",

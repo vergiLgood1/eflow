@@ -7221,6 +7221,8 @@ export namespace Prisma {
   export type DataModelMinAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
+    isPinned: boolean | null
     dbType: string | null
     workspaceId: string | null
     createdAt: Date | null
@@ -7230,6 +7232,8 @@ export namespace Prisma {
   export type DataModelMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
+    isPinned: boolean | null
     dbType: string | null
     workspaceId: string | null
     createdAt: Date | null
@@ -7239,6 +7243,9 @@ export namespace Prisma {
   export type DataModelCountAggregateOutputType = {
     id: number
     name: number
+    description: number
+    tags: number
+    isPinned: number
     dbType: number
     workspaceId: number
     createdAt: number
@@ -7250,6 +7257,8 @@ export namespace Prisma {
   export type DataModelMinAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    isPinned?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7259,6 +7268,8 @@ export namespace Prisma {
   export type DataModelMaxAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    isPinned?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7268,6 +7279,9 @@ export namespace Prisma {
   export type DataModelCountAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    tags?: true
+    isPinned?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7350,6 +7364,9 @@ export namespace Prisma {
   export type DataModelGroupByOutputType = {
     id: string
     name: string
+    description: string | null
+    tags: string[]
+    isPinned: boolean
     dbType: string
     workspaceId: string
     createdAt: Date
@@ -7376,6 +7393,9 @@ export namespace Prisma {
   export type DataModelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
+    tags?: boolean
+    isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7394,6 +7414,9 @@ export namespace Prisma {
   export type DataModelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
+    tags?: boolean
+    isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7404,6 +7427,9 @@ export namespace Prisma {
   export type DataModelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
+    tags?: boolean
+    isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7414,13 +7440,16 @@ export namespace Prisma {
   export type DataModelSelectScalar = {
     id?: boolean
     name?: boolean
+    description?: boolean
+    tags?: boolean
+    isPinned?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
+  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "tags" | "isPinned" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
   export type DataModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     tables?: boolean | DataModel$tablesArgs<ExtArgs>
@@ -7454,6 +7483,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      description: string | null
+      tags: string[]
+      isPinned: boolean
       dbType: string
       workspaceId: string
       createdAt: Date
@@ -7891,6 +7923,9 @@ export namespace Prisma {
   interface DataModelFieldRefs {
     readonly id: FieldRef<"DataModel", 'String'>
     readonly name: FieldRef<"DataModel", 'String'>
+    readonly description: FieldRef<"DataModel", 'String'>
+    readonly tags: FieldRef<"DataModel", 'String[]'>
+    readonly isPinned: FieldRef<"DataModel", 'Boolean'>
     readonly dbType: FieldRef<"DataModel", 'String'>
     readonly workspaceId: FieldRef<"DataModel", 'String'>
     readonly createdAt: FieldRef<"DataModel", 'DateTime'>
@@ -24453,6 +24488,9 @@ export namespace Prisma {
   export const DataModelScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    description: 'description',
+    tags: 'tags',
+    isPinned: 'isPinned',
     dbType: 'dbType',
     workspaceId: 'workspaceId',
     createdAt: 'createdAt',
@@ -25022,6 +25060,9 @@ export namespace Prisma {
     NOT?: DataModelWhereInput | DataModelWhereInput[]
     id?: StringFilter<"DataModel"> | string
     name?: StringFilter<"DataModel"> | string
+    description?: StringNullableFilter<"DataModel"> | string | null
+    tags?: StringNullableListFilter<"DataModel">
+    isPinned?: BoolFilter<"DataModel"> | boolean
     dbType?: StringFilter<"DataModel"> | string
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -25039,6 +25080,9 @@ export namespace Prisma {
   export type DataModelOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -25059,6 +25103,9 @@ export namespace Prisma {
     OR?: DataModelWhereInput[]
     NOT?: DataModelWhereInput | DataModelWhereInput[]
     name?: StringFilter<"DataModel"> | string
+    description?: StringNullableFilter<"DataModel"> | string | null
+    tags?: StringNullableListFilter<"DataModel">
+    isPinned?: BoolFilter<"DataModel"> | boolean
     dbType?: StringFilter<"DataModel"> | string
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -25076,6 +25123,9 @@ export namespace Prisma {
   export type DataModelOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -25091,6 +25141,9 @@ export namespace Prisma {
     NOT?: DataModelScalarWhereWithAggregatesInput | DataModelScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DataModel"> | string
     name?: StringWithAggregatesFilter<"DataModel"> | string
+    description?: StringNullableWithAggregatesFilter<"DataModel"> | string | null
+    tags?: StringNullableListFilter<"DataModel">
+    isPinned?: BoolWithAggregatesFilter<"DataModel"> | boolean
     dbType?: StringWithAggregatesFilter<"DataModel"> | string
     workspaceId?: StringWithAggregatesFilter<"DataModel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DataModel"> | Date | string
@@ -26335,6 +26388,9 @@ export namespace Prisma {
   export type DataModelCreateInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26351,6 +26407,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -26367,6 +26426,9 @@ export namespace Prisma {
   export type DataModelUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26383,6 +26445,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26399,6 +26464,9 @@ export namespace Prisma {
   export type DataModelCreateManyInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -26408,6 +26476,9 @@ export namespace Prisma {
   export type DataModelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26416,6 +26487,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27746,6 +27820,14 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type TableListRelationFilter = {
     every?: TableWhereInput
     some?: TableWhereInput
@@ -27819,6 +27901,9 @@ export namespace Prisma {
   export type DataModelCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    tags?: SortOrder
+    isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -27828,6 +27913,8 @@ export namespace Prisma {
   export type DataModelMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -27837,6 +27924,8 @@ export namespace Prisma {
   export type DataModelMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    isPinned?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -28037,14 +28126,6 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type IndexCountOrderByAggregateInput = {
@@ -28768,6 +28849,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMembershipsInput, UserUpdateWithoutMembershipsInput>, UserUncheckedUpdateWithoutMembershipsInput>
   }
 
+  export type DataModelCreatetagsInput = {
+    set: string[]
+  }
+
   export type WorkspaceCreateNestedOneWithoutDataModelsInput = {
     create?: XOR<WorkspaceCreateWithoutDataModelsInput, WorkspaceUncheckedCreateWithoutDataModelsInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutDataModelsInput
@@ -28870,6 +28955,11 @@ export namespace Prisma {
     connectOrCreate?: ActivityLogCreateOrConnectWithoutDataModelInput | ActivityLogCreateOrConnectWithoutDataModelInput[]
     createMany?: ActivityLogCreateManyDataModelInputEnvelope
     connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+  }
+
+  export type DataModelUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutDataModelsNestedInput = {
@@ -30211,6 +30301,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutWorkspaceInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30226,6 +30319,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutWorkspaceInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30286,6 +30382,9 @@ export namespace Prisma {
     NOT?: DataModelScalarWhereInput | DataModelScalarWhereInput[]
     id?: StringFilter<"DataModel"> | string
     name?: StringFilter<"DataModel"> | string
+    description?: StringNullableFilter<"DataModel"> | string | null
+    tags?: StringNullableListFilter<"DataModel">
+    isPinned?: BoolFilter<"DataModel"> | boolean
     dbType?: StringFilter<"DataModel"> | string
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -30874,6 +30973,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutTablesInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30889,6 +30991,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutTablesInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -31048,6 +31153,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutTablesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31063,6 +31171,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutTablesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31343,6 +31454,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutRelationshipsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31358,6 +31472,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutRelationshipsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -31471,6 +31588,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutRelationshipsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31486,6 +31606,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutRelationshipsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31655,6 +31778,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutViewsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31670,6 +31796,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutViewsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -31731,6 +31860,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutViewsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31746,6 +31878,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutViewsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31897,6 +32032,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutProceduresInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31912,6 +32050,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutProceduresInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -31973,6 +32114,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutProceduresInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31988,6 +32132,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutProceduresInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32019,6 +32166,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutDiagramsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32034,6 +32184,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutDiagramsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -32143,6 +32296,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutDiagramsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32158,6 +32314,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutDiagramsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32486,6 +32645,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutCheckpointsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32501,6 +32663,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutCheckpointsInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -32532,6 +32697,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutCheckpointsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32547,6 +32715,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutCheckpointsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32562,6 +32733,9 @@ export namespace Prisma {
   export type DataModelCreateWithoutActivitiesInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32577,6 +32751,9 @@ export namespace Prisma {
   export type DataModelUncheckedCreateWithoutActivitiesInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     workspaceId: string
     createdAt?: Date | string
@@ -32608,6 +32785,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutActivitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32623,6 +32803,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutActivitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32874,6 +33057,9 @@ export namespace Prisma {
   export type DataModelCreateManyWorkspaceInput = {
     id?: string
     name: string
+    description?: string | null
+    tags?: DataModelCreatetagsInput | string[]
+    isPinned?: boolean
     dbType: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32906,6 +33092,9 @@ export namespace Prisma {
   export type DataModelUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32921,6 +33110,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32936,6 +33128,9 @@ export namespace Prisma {
   export type DataModelUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: DataModelUpdatetagsInput | string[]
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
     dbType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
