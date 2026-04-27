@@ -1,18 +1,11 @@
-import { togglePinDataModel } from "@/features/workspace/applications/workspace.action";
 import { Button } from "@/shared/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/lib/utils";
-import { Ellipsis, Globe, Pencil, Star, Trash2, Users } from "lucide-react";
+import { Globe, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "sonner";
 import { ShareDiagramDialog } from "../organisms/share-diagram-dialog";
+import { useDiagramActions } from "../../hooks/use-diagram-actions";
+import { WorkspaceDiagramDropdown } from "./workspace-diagram-dropdown";
 
 interface WorkspaceDiagramCardProps {
     id: string;
@@ -22,7 +15,7 @@ interface WorkspaceDiagramCardProps {
     dbType: string;
     updatedAt: string;
     isPublic?: boolean;
-    isPinned?: boolean; // Changed from isStarred
+    isPinned?: boolean; 
     className?: string;
 }
 
@@ -38,25 +31,11 @@ export function WorkspaceDiagramCard({
     className,
 }: WorkspaceDiagramCardProps) {
     const router = useRouter();
+    const { handlePin, handleActionClick } = useDiagramActions(id);
 
     const handleClick = () => {
         router.push(`/workspaces/${workspaceSlug}/model/${id}`);
     }
-
-    const handleStar = async (e: React.MouseEvent) => {
-        e.stopPropagation();
-
-        const response = await togglePinDataModel(id);
-        if (response.success) {
-            router.refresh();
-        } else {
-            toast.error("Failed to update pin status");
-        }
-    };
-
-    const handleAction = (e: React.MouseEvent) => {
-        e.stopPropagation();
-    };
 
     return (
         <div
@@ -84,7 +63,7 @@ export function WorkspaceDiagramCard({
                         "absolute top-2 right-2 h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity",
                         initialIsPinned && "opacity-100 text-yellow-500"
                     )}
-                    onClick={handleStar}
+                    onClick={handlePin}
                 >
                     <Star className={cn("h-4 w-4", initialIsPinned && "fill-current")} />
                 </Button>
@@ -112,31 +91,18 @@ export function WorkspaceDiagramCard({
                     <h3 className="font-semibold text-foreground truncate flex-1">
                         {title}
                     </h3>
-                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={handleAction}>
+                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={handleActionClick}>
                         <ShareDiagramDialog title={title}>
                             <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
                                 <Users className="h-3.5 w-3.5" />
                             </Button>
                         </ShareDiagramDialog>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
-                                    <Ellipsis className="h-3.5 w-3.5" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40 rounded-xl border-border/60">
-                                <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium">
-                                    <Pencil className="h-3.5 w-3.5" />
-                                    Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium text-destructive focus:text-destructive focus:bg-destructive/10">
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                    Delete
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <WorkspaceDiagramDropdown 
+                            id={id} 
+                            isPublic={isPublic} 
+                            isPinned={initialIsPinned} 
+                        />
                     </div>
                 </div>
 

@@ -2,16 +2,17 @@
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar, Database, Ellipsis, Pencil, Star, Trash2, Users } from "lucide-react";
+import { Database, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { EmptyDiagramState } from "../molecules/empty-diagram-state";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { ShareDiagramDialog } from "./share-diagram-dialog";
+import { useDiagramActions } from "../../hooks/use-diagram-actions";
+import { WorkspaceDiagramDropdown } from "../molecules/workspace-diagram-dropdown";
 
 interface WorkspaceDiagramListProps {
     models: DataModel[];
@@ -50,6 +51,7 @@ function DiagramGrid({
                     dbType={model.dbType.toLowerCase()}
                     updatedAt={formatDistanceToNow(new Date(model.updatedAt), { addSuffix: false })}
                     isPinned={model.isPinned}
+                    isPublic={model.isPublic}
                 />
             ))}
         </div>
@@ -93,9 +95,6 @@ function DiagramList({
     );
 }
 
-import { togglePinDataModel } from "../../applications/workspace.action";
-import { toast } from "sonner";
-
 function DiagramListItem({ 
     model, 
     workspaceName,
@@ -106,24 +105,10 @@ function DiagramListItem({
     workspaceSlug: string
 }) {
     const router = useRouter();
+    const { handlePin, handleActionClick } = useDiagramActions(model.id);
 
     const handleClick = () => {
         router.push(`/workspaces/${workspaceSlug}/model/${model.id}`);
-    };
-
-    const handleAction = (e: React.MouseEvent) => {
-        e.stopPropagation();
-    };
-
-    const handleStar = async (e: React.MouseEvent) => {
-        e.stopPropagation();
-        
-        const response = await togglePinDataModel(model.id);
-        if (response.success) {
-            router.refresh();
-        } else {
-            toast.error("Failed to update pin status");
-        }
     };
 
     return (
@@ -150,7 +135,7 @@ function DiagramListItem({
             <div className="col-span-3 flex items-center gap-2 text-[11px] text-muted-foreground font-medium uppercase tracking-tight">
                 {formatDistanceToNow(new Date(model.updatedAt), { addSuffix: false })}
             </div>
-            <div className="col-span-2 flex items-center justify-end gap-1 px-2" onClick={handleAction}>
+            <div className="col-span-2 flex items-center justify-end gap-1 px-2" onClick={handleActionClick}>
                 <Button 
                     variant="ghost" 
                     size="icon" 
@@ -158,7 +143,7 @@ function DiagramListItem({
                         "h-8 w-8 text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/5 transition-colors",
                         model.isPinned && "text-yellow-500 opacity-100"
                     )}
-                    onClick={handleStar}
+                    onClick={handlePin}
                 >
                     <Star className={cn("h-4 w-4", model.isPinned && "fill-current")} />
                 </Button>
@@ -169,28 +154,11 @@ function DiagramListItem({
                     </Button>
                 </ShareDiagramDialog>
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
-                            <Ellipsis className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40 rounded-xl border-border/60 shadow-xl">
-                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium">
-                            <Pencil className="h-3.5 w-3.5" />
-                            Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium" onClick={handleStar}>
-                            <Star className="h-3.5 w-3.5" />
-                            {model.isPinned ? "Unstar" : "Star"}
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium text-destructive focus:text-destructive focus:bg-destructive/10">
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <WorkspaceDiagramDropdown 
+                    id={model.id} 
+                    isPublic={model.isPublic} 
+                    isPinned={model.isPinned} 
+                />
             </div>
         </div>
     );

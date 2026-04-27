@@ -3,8 +3,8 @@
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
-import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
 import { DataModel } from "../../../../prisma/generated";
+import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
 
 
 export async function isWorkspaceSlugExists(slug: string): Promise<boolean> {
@@ -94,14 +94,22 @@ export async function getDataModels(workspaceId: string, query?: string) {
 export async function getDataModelsBySlug(slug: string, query?: string) {
     if (!slug) return [];
 
+    const session = await auth.getSession();
     const workspace = await db.workspace.findUnique({
-        where: { slug }
+        where: { slug },
+        include: { members: true }
     });
+
     if (!workspace) return [];
+
+    const isMember = session.data?.user
+        ? workspace.members.some(m => m.userId === session.data?.user.id)
+        : false;
 
     return await db.dataModel.findMany({
         where: {
             workspaceId: workspace.id,
+            ...(isMember ? {} : { isPublic: true }),
             name: {
                 contains: query,
                 mode: 'insensitive'
@@ -435,4 +443,47 @@ export async function togglePinDataModel(id: string): Promise<ActionResponse<Dat
     } catch (error) {
         return handleActionError(error);
     }
+}
+export async function toggleVisibilityDataModel(id: string): Promise<ActionResponse<DataModel>> {
+    try {
+        const model = await db.dataModel.findUnique({ where: { id } });
+        if (!model) throw new AppError("Data model not found");
+
+        const updated = await db.dataModel.update({
+            where: { id },
+            data: { isPublic: !model.isPublic }
+        });
+
+        return { success: true, data: updated };
+    } catch (error) {
+        return handleActionError(error);
+    }
+}
+
+export async function getDataModelById(id: string) {
+    const session = await auth.getSession();
+
+    const model = await db.dataModel.findUnique({
+        where: { id },
+        include: {
+            workspace: {
+                include: {
+                    members: true
+                }
+            }
+        }
+    });
+
+    if (!model) return null;
+
+    // Check if user has access
+    const isMember = session.data?.user
+        ? model.workspace.members.some(m => m.userId === session.data?.user.id)
+        : false;
+
+    const hasAccess = model.isPublic || isMember;
+
+    if (!hasAccess) return null;
+
+    return model;
 }

@@ -1,7 +1,7 @@
 import { auth } from "@/features/authentication/lib/auth-server";
-import { getDataModelsBySlug, getWorkspacesByCurrentUser } from "@/features/workspace/applications/workspace.action";
+import { getDataModelById, getDataModelsBySlug, getWorkspacesByCurrentUser } from "@/features/workspace/applications/workspace.action";
 import { WorkspaceModelLayoutTemplate } from "@/features/workspace/components/templates/workspace-model-layout-template";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 
 export default async function Layout({
     children,
@@ -13,16 +13,18 @@ export default async function Layout({
 
     const { slug, id } = await params;
 
-    const workspaces = await getWorkspacesByCurrentUser();
-    const models = await getDataModelsBySlug(slug);
-    const session = await auth.getSession()
-
-    if (!session || !session.data) {
-        return redirect("/auth/sign-in")
+    const model = await getDataModelById(id);
+    
+    if (!model) {
+        // If the model doesn't exist or is private and user has no access
+        return notFound();
     }
 
-    const userName = session.data.user.name;
+    const session = await auth.getSession();
+    const workspaces = await getWorkspacesByCurrentUser();
+    const models = await getDataModelsBySlug(slug);
 
+    const userName = session.data?.user?.name || "Guest";
 
     return (
         <WorkspaceModelLayoutTemplate

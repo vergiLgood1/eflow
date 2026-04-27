@@ -155,30 +155,43 @@ export function WorkspaceHeader({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/account/profile`)}>
-                                <UserIcon className="mr-2 h-4 w-4" />
-                                <span>Profile</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/account/billing`)}>
-                                <CreditCard className="mr-2 h-4 w-4" />
-                                <span>Billing</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/account/settings`)}>
-                                <Settings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="text-destructive focus:text-destructive"
-                            onClick={handleLogout}
-                        >
-                            <LogOut className="mr-2 h-4 w-4" />
-                            <span>Log out</span>
-                        </DropdownMenuItem>
+                        {userName === "Guest" ? (
+                            <>
+                                <DropdownMenuLabel>Guest Session</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleNavigation(`/auth/sign-in`)}>
+                                    <LogOut className="mr-2 h-4 w-4 rotate-180" />
+                                    <span>Sign In</span>
+                                </DropdownMenuItem>
+                            </>
+                        ) : (
+                            <>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem onClick={() => handleNavigation(`/account/profile`)}>
+                                        <UserIcon className="mr-2 h-4 w-4" />
+                                        <span>Profile</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleNavigation(`/account/billing`)}>
+                                        <CreditCard className="mr-2 h-4 w-4" />
+                                        <span>Billing</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleNavigation(`/account/settings`)}>
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        <span>Settings</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onClick={handleLogout}
+                                >
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    <span>Log out</span>
+                                </DropdownMenuItem>
+                            </>
+                        )}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
