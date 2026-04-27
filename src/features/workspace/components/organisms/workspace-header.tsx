@@ -25,17 +25,26 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
-import { useWorkspaceStore } from "../../store/use-workspace-store";
 import { toast } from "sonner";
+import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import { useWorkspaceStore } from "../../store/use-workspace-store";
 import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
 import { WorkspaceDataModelSelector } from "../molecules/workspace-data-model-selector";
+import { WorkspaceNotificationPopover } from "../molecules/workspace-notification-popover";
+import { WorkspaceSupportDialog } from "../molecules/workspace-support-dialog";
 import { WorkspaceSwitcher } from "../molecules/workspace-switcher";
 
 interface WorkspaceHeaderProps {
     userName: string;
+    workspacesPromise?: Promise<Workspace[]>;
+    modelsPromise?: Promise<DataModel[]>;
 }
 
-export function WorkspaceHeader({ userName }: WorkspaceHeaderProps) {
+export function WorkspaceHeader({
+    userName,
+    workspacesPromise,
+    modelsPromise,
+}: WorkspaceHeaderProps) {
     const { theme, setTheme } = useTheme();
     const router = useRouter();
     const params = useParams();
@@ -72,15 +81,25 @@ export function WorkspaceHeader({ userName }: WorkspaceHeaderProps) {
 
                 <div className="h-4 w-px bg-border mx-1" />
 
-                <WorkspaceSwitcher workspaceName="My Workspace" />
-                <WorkspaceDataModelSelector />
+                <WorkspaceSwitcher workspaceName="My Workspace" slug={slug} initialPromise={workspacesPromise} />
+                <WorkspaceDataModelSelector slug={slug} initialPromise={modelsPromise} />
             </div>
 
             <div className="flex items-center gap-2 ml-auto">
                 <div className="hidden lg:flex items-center gap-1 mr-2">
-                    <WorkspaceModelToolbarButton tooltip="Contact Support / Report Bug" icon={<LifeBuoy className="h-4 w-4 text-muted-foreground" />} onClick={() => toast.info("Support center coming soon")} />
+                    <WorkspaceSupportDialog>
+                        <WorkspaceModelToolbarButton
+                            tooltip="Contact Support / Report Bug"
+                            icon={<LifeBuoy className="h-4 w-4 text-muted-foreground" />}
+                        />
+                    </WorkspaceSupportDialog>
 
-                    <WorkspaceModelToolbarButton tooltip="Notifications" icon={<Bell className="h-4 w-4 text-muted-foreground" />} onClick={() => toast.info("No new notifications")} />
+                    <WorkspaceNotificationPopover>
+                        <WorkspaceModelToolbarButton
+                            tooltip="Notifications"
+                            icon={<Bell className="h-4 w-4 text-muted-foreground" />}
+                        />
+                    </WorkspaceNotificationPopover>
 
                     <Button
                         variant="ghost"
@@ -98,7 +117,7 @@ export function WorkspaceHeader({ userName }: WorkspaceHeaderProps) {
                         variant="outline"
                         size="sm"
                         className="hidden sm:flex h-8 gap-2 text-xs font-semibold bg-primary/5 border-primary/20 hover:bg-primary/10 hover:border-primary/30 text-primary transition-all px-3 rounded-full"
-                        onClick={() => handleNavigation(`/workspaces/${slug}/billing`)}
+                        onClick={() => handleNavigation(`/account/billing`)}
                     >
                         <Sparkles className="h-3.5 w-3.5" />
                         Upgrade
@@ -130,15 +149,15 @@ export function WorkspaceHeader({ userName }: WorkspaceHeaderProps) {
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/workspaces/${slug}/account`)}>
+                            <DropdownMenuItem onClick={() => handleNavigation(`/account/profile`)}>
                                 <UserIcon className="mr-2 h-4 w-4" />
                                 <span>Profile</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/workspaces/${slug}/billing`)}>
+                            <DropdownMenuItem onClick={() => handleNavigation(`/account/billing`)}>
                                 <CreditCard className="mr-2 h-4 w-4" />
                                 <span>Billing</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleNavigation(`/workspaces/${slug}/account`)}>
+                            <DropdownMenuItem onClick={() => handleNavigation(`/account/settings`)}>
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>

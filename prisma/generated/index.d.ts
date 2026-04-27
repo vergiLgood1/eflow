@@ -1319,6 +1319,7 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    hasCompleteOnboarding: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1330,6 +1331,7 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    hasCompleteOnboarding: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1341,6 +1343,7 @@ export namespace Prisma {
     image: number
     createdAt: number
     updatedAt: number
+    hasCompleteOnboarding: number
     _all: number
   }
 
@@ -1354,6 +1357,7 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    hasCompleteOnboarding?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1365,6 +1369,7 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    hasCompleteOnboarding?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1376,6 +1381,7 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    hasCompleteOnboarding?: true
     _all?: true
   }
 
@@ -1460,6 +1466,7 @@ export namespace Prisma {
     image: string | null
     createdAt: Date
     updatedAt: Date
+    hasCompleteOnboarding: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1488,6 +1495,7 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hasCompleteOnboarding?: boolean
     memberships?: boolean | User$membershipsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -1501,6 +1509,7 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hasCompleteOnboarding?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1512,6 +1521,7 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hasCompleteOnboarding?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1523,9 +1533,10 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hasCompleteOnboarding?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "hasCompleteOnboarding", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | User$membershipsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1547,6 +1558,7 @@ export namespace Prisma {
       image: string | null
       createdAt: Date
       updatedAt: Date
+      hasCompleteOnboarding: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1979,6 +1991,7 @@ export namespace Prisma {
     readonly image: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly hasCompleteOnboarding: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -6694,7 +6707,8 @@ export namespace Prisma {
     emailVerified: 'emailVerified',
     image: 'image',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    hasCompleteOnboarding: 'hasCompleteOnboarding'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -6850,6 +6864,7 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    hasCompleteOnboarding?: BoolFilter<"User"> | boolean
     memberships?: WorkspaceMemberListRelationFilter
   }
 
@@ -6862,6 +6877,7 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hasCompleteOnboarding?: SortOrder
     memberships?: WorkspaceMemberOrderByRelationAggregateInput
   }
 
@@ -6877,6 +6893,7 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    hasCompleteOnboarding?: BoolFilter<"User"> | boolean
     memberships?: WorkspaceMemberListRelationFilter
   }, "id" | "id" | "email">
 
@@ -6889,6 +6906,7 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hasCompleteOnboarding?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -6906,6 +6924,7 @@ export namespace Prisma {
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    hasCompleteOnboarding?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type WorkspaceWhereInput = {
@@ -7138,6 +7157,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
     memberships?: WorkspaceMemberCreateNestedManyWithoutUserInput
   }
 
@@ -7150,6 +7170,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
     memberships?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -7162,6 +7183,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
     memberships?: WorkspaceMemberUpdateManyWithoutUserNestedInput
   }
 
@@ -7174,6 +7196,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
     memberships?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -7186,6 +7209,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7197,6 +7221,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -7208,6 +7233,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type WorkspaceCreateInput = {
@@ -7478,6 +7504,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type WorkspaceMemberListRelationFilter = {
     every?: WorkspaceMemberWhereInput
     some?: WorkspaceMemberWhereInput
@@ -7502,6 +7533,7 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hasCompleteOnboarding?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7513,6 +7545,7 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hasCompleteOnboarding?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -7524,6 +7557,7 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hasCompleteOnboarding?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7582,6 +7616,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DataModelListRelationFilter = {
@@ -7765,6 +7807,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type WorkspaceMemberUpdateManyWithoutUserNestedInput = {
@@ -7973,6 +8019,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -8049,6 +8100,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8260,6 +8319,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
   }
 
   export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -8271,6 +8331,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    hasCompleteOnboarding?: boolean
   }
 
   export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -8327,6 +8388,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -8338,6 +8400,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasCompleteOnboarding?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type WorkspaceCreateWithoutDataModelsInput = {

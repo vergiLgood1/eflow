@@ -3,8 +3,13 @@ import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-heade
 import { WorkspaceUpgradeBanner } from "../molecules/workspace-upgrade-banner";
 import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
 import { WorkspaceProUpsellCard } from "../molecules/workspace-pro-upsell-card";
+import type { DataModel } from "../../../../../prisma/generated";
 
-export function WorkspaceDashboardContentTemplate() {
+interface WorkspaceDashboardContentTemplateProps {
+    modelsPromise: Promise<DataModel[]>;
+}
+
+export function WorkspaceDashboardContentTemplate({ modelsPromise }: WorkspaceDashboardContentTemplateProps) {
     return (
         <div className="max-w-[1600px] mx-auto p-6 md:p-10 pb-20">
             <WorkspaceDashboardHeader 
@@ -14,7 +19,7 @@ export function WorkspaceDashboardContentTemplate() {
             
             <WorkspaceUpgradeBanner />
             
-            <WorkspaceDiagramList />
+            <WorkspaceDiagramList modelsPromise={modelsPromise} />
             
             <WorkspaceProUpsellCard />
         </div>

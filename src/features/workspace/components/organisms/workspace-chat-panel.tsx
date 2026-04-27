@@ -9,7 +9,7 @@ import { useWorkspaceStore } from "../../store/use-workspace-store";
 
 export function WorkspaceChatPanel() {
     const { isChatOpen } = useWorkspaceStore();
-    const [width, setWidth] = useState(350);
+    const [width, setWidth] = useState(380);
     const panelRef = useRef<HTMLDivElement>(null);
     const isResizing = useRef(false);
 

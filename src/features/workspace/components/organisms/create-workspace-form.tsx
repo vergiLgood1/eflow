@@ -7,14 +7,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createWorkspace } from "../../applications/workspace.action";
+import { createWorkspace, initWorkspace } from "../../applications/workspace.action";
 import { createWorkspaceSchema, CreateWorkspaceSchema } from "../../types/workspace.schema";
 import { WorkspaceField } from "../molecules/workspace-field";
 
-/**
- * Organism that provides a form for creating a new workspace.
- * Includes automatic slug generation based on the workspace name.
- */
 export function CreateWorkspaceForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -43,7 +39,7 @@ export function CreateWorkspaceForm() {
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     setIsLoading(true);
     try {
-      const result = await createWorkspace(data);
+      const result = await initWorkspace(data);
 
       if (!result.success) {
         toast.error(result.error);

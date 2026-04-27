@@ -63,28 +63,7 @@ export function WorkspaceSidebar() {
                         </div>
                     </div>
 
-                    {/* Workspace Management */}
-                    <div className="space-y-3">
-                        <div className="px-3 flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-                                Administration
-                            </span>
-                        </div>
-                        <nav className="space-y-1">
-                            <WorkspaceSidebarItem 
-                                icon={<Users className="h-4 w-4" />} 
-                                label="Team Members" 
-                            />
-                            <WorkspaceSidebarItem 
-                                icon={<Settings className="h-4 w-4" />} 
-                                label="Workspace Settings" 
-                            />
-                            <WorkspaceSidebarItem 
-                                icon={<FileText className="h-4 w-4" />} 
-                                label="Resources" 
-                            />
-                        </nav>
-                    </div>
+                  
                 </div>
             </ScrollArea>
             

@@ -13,6 +13,35 @@ export default async function middleware(request: NextRequest) {
     const userId = session.data.user.id;
     const { pathname } = request.nextUrl;
 
+    const user = await db.user.findUnique({
+        where: { id: userId },
+        select: { hasCompleteOnboarding: true }
+    });
+
+    if (!user) {
+        return NextResponse.redirect(new URL('/auth/sign-in', request.url));
+    }
+
+    if (user.hasCompleteOnboarding && pathname === '/workspaces/onboarding') {
+        const latestWorkspace = await db.workspace.findFirst({
+            where: {
+                members: {
+                    some: {
+                        userId: userId,
+                    },
+                },
+            },
+            orderBy: {
+                updatedAt: 'desc',
+            },
+        });
+
+        if (latestWorkspace) {
+            return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
+        }
+        return NextResponse.redirect(new URL('/workspaces', request.url));
+    }
+
     if (pathname === '/workspaces/onboarding') {
         return NextResponse.next();
     }
@@ -30,7 +59,7 @@ export default async function middleware(request: NextRequest) {
         },
     });
 
-    if (!latestWorkspace) {
+    if (!latestWorkspace && !user?.hasCompleteOnboarding) {
         if (pathname !== '/workspaces/onboarding') {
             return NextResponse.redirect(new URL('/workspaces/onboarding', request.url));
         }
@@ -38,7 +67,9 @@ export default async function middleware(request: NextRequest) {
     }
 
     if (pathname === '/workspaces' || pathname === '/workspaces/onboarding') {
-        return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
+        if (latestWorkspace) {
+            return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
+        }
     }
 
     return NextResponse.next();
