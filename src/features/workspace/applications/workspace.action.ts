@@ -4,6 +4,7 @@ import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
 import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
+import { DataModel } from "../../../../prisma/generated";
 
 
 export async function isWorkspaceSlugExists(slug: string): Promise<boolean> {
@@ -415,6 +416,22 @@ export async function deleteDataModelTags(modelId: string, tagNames: string[]): 
             success: true,
             message: "Tags deleted successfully"
         };
+    } catch (error) {
+        return handleActionError(error);
+    }
+}
+
+export async function togglePinDataModel(id: string): Promise<ActionResponse<DataModel>> {
+    try {
+        const model = await db.dataModel.findUnique({ where: { id } });
+        if (!model) throw new AppError("Data model not found");
+
+        const updated = await db.dataModel.update({
+            where: { id },
+            data: { isPinned: !model.isPinned }
+        });
+
+        return { success: true, data: updated };
     } catch (error) {
         return handleActionError(error);
     }

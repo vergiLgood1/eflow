@@ -12,9 +12,36 @@ import {
     Settings,
     Users
 } from "lucide-react";
+import { useWorkspaceStore } from "@/features/workspace/store/use-workspace-store";
+import { useEffect, useState } from "react";
 import { WorkspaceSidebarItem } from "../molecules/workspace-sidebar-item";
 
-export function WorkspaceSidebar() {
+import { useParams } from "next/navigation";
+import type { DataModel } from "../../../../../prisma/generated";
+
+export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
+    const params = useParams();
+    const slug = params?.slug as string;
+    
+    const { pinnedDiagrams, togglePin } = useWorkspaceStore();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    // Pinned models from the current workspace (server-side truth)
+    const serverPinnedModels = models.filter(m => m.isPinned);
+    
+    // Combine with other pinned items from zustand that are NOT in this workspace
+    // (to keep global pins visible even if they are not in the current models list)
+    const otherPinnedModels = pinnedDiagrams.filter(pd => !models.some(m => m.id === pd.id));
+    
+    const allPinned = [
+        ...serverPinnedModels.map(m => ({ id: m.id, name: m.name, slug: slug })),
+        ...otherPinnedModels
+    ];
+
     return (
         <aside className="w-[260px] shrink-0 border-r border-border bg-card/20 backdrop-blur-sm flex flex-col sticky top-12 h-[calc(100vh-48px)]">
             <ScrollArea className="flex-1 ">
@@ -53,13 +80,27 @@ export function WorkspaceSidebar() {
                                 <Plus className="h-3 w-3" />
                             </Button>
                         </div>
-                        <div className="px-4 py-10 border border-dashed border-border/60 rounded-2xl flex flex-col items-center justify-center text-center gap-3 bg-muted/5 group transition-all hover:bg-muted/10">
-                            <div className="h-10 w-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground transition-all group-hover:scale-110 group-hover:bg-primary/5 group-hover:text-primary">
-                                <Layers className="h-5 w-5" />
-                            </div>
-                            <div className="text-[12px] text-muted-foreground font-medium">
-                                Pin your favorite <br/> diagrams here
-                            </div>
+                        
+                        <div className="space-y-1">
+                            {isMounted && allPinned.length > 0 ? (
+                                allPinned.map((diagram) => (
+                                    <WorkspaceSidebarItem 
+                                        key={diagram.id}
+                                        icon={<FileText className="h-4 w-4" />} 
+                                        label={diagram.name}
+                                        href={`/workspaces/${diagram.slug}/model/${diagram.id}`}
+                                    />
+                                ))
+                            ) : (
+                                <div className="px-4 py-8 border border-dashed border-border/60 rounded-2xl flex flex-col items-center justify-center text-center gap-2 bg-muted/5 group transition-all hover:bg-muted/10">
+                                    <div className="h-8 w-8 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground transition-all group-hover:scale-110 group-hover:bg-primary/5 group-hover:text-primary">
+                                        <Layers className="h-4 w-4" />
+                                    </div>
+                                    <div className="text-[11px] text-muted-foreground font-medium">
+                                        Pin your favorite diagrams
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 

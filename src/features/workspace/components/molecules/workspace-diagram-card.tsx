@@ -1,9 +1,19 @@
-"use client";
-
+import { togglePinDataModel } from "@/features/workspace/applications/workspace.action";
+import { useWorkspaceStore } from "@/features/workspace/store/use-workspace-store";
 import { Button } from "@/shared/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/lib/utils";
-import { Ellipsis, Globe, Star, Users } from "lucide-react";
+import { Ellipsis, Globe, Pencil, Star, Trash2, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "sonner";
+import { ShareDiagramDialog } from "../organisms/share-diagram-dialog";
 
 interface WorkspaceDiagramCardProps {
     id: string;
@@ -13,7 +23,7 @@ interface WorkspaceDiagramCardProps {
     dbType: string;
     updatedAt: string;
     isPublic?: boolean;
-    isStarred?: boolean;
+    isPinned?: boolean; // Changed from isStarred
     className?: string;
 }
 
@@ -25,14 +35,35 @@ export function WorkspaceDiagramCard({
     dbType,
     updatedAt,
     isPublic = true,
-    isStarred = false,
+    isPinned: initialIsPinned = false,
     className,
 }: WorkspaceDiagramCardProps) {
     const router = useRouter();
+    const { togglePin } = useWorkspaceStore();
 
     const handleClick = () => {
         router.push(`/workspaces/${workspaceSlug}/model/${id}`);
     }
+
+    const handleStar = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        // Optimistic UI update
+        togglePin({ id, name: title, slug: workspaceSlug });
+
+        const response = await togglePinDataModel(id);
+        if (response.success) {
+            router.refresh();
+        } else {
+            // Revert on failure
+            togglePin({ id, name: title, slug: workspaceSlug });
+            toast.error("Failed to update pin status");
+        }
+    };
+
+    const handleAction = (e: React.MouseEvent) => {
+        e.stopPropagation();
+    };
 
     return (
         <div
@@ -58,10 +89,11 @@ export function WorkspaceDiagramCard({
                     size="icon"
                     className={cn(
                         "absolute top-2 right-2 h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity",
-                        isStarred && "opacity-100 text-yellow-500"
+                        initialIsPinned && "opacity-100 text-yellow-500"
                     )}
+                    onClick={handleStar}
                 >
-                    <Star className={cn("h-4 w-4", isStarred && "fill-current")} />
+                    <Star className={cn("h-4 w-4", initialIsPinned && "fill-current")} />
                 </Button>
             </div>
 
@@ -87,13 +119,31 @@ export function WorkspaceDiagramCard({
                     <h3 className="font-semibold text-foreground truncate flex-1">
                         {title}
                     </h3>
-                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
-                            <Users className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
-                            <Ellipsis className="h-3.5 w-3.5" />
-                        </Button>
+                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={handleAction}>
+                        <ShareDiagramDialog title={title}>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
+                                <Users className="h-3.5 w-3.5" />
+                            </Button>
+                        </ShareDiagramDialog>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/50">
+                                    <Ellipsis className="h-3.5 w-3.5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40 rounded-xl border-border/60">
+                                <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium">
+                                    <Pencil className="h-3.5 w-3.5" />
+                                    Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium text-destructive focus:text-destructive focus:bg-destructive/10">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                    Delete
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
 

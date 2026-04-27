@@ -2,13 +2,17 @@
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar, Database, Star } from "lucide-react";
-import React from "react";
+import { Calendar, Database, Ellipsis, Pencil, Star, Trash2, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { EmptyDiagramState } from "../molecules/empty-diagram-state";
+import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
+import { ShareDiagramDialog } from "./share-diagram-dialog";
+import { useWorkspaceStore } from "../../store/use-workspace-store";
 
 interface WorkspaceDiagramListProps {
     models: DataModel[];
@@ -45,8 +49,8 @@ function DiagramGrid({
                     workspaceName={workspaceMap.get(model.workspaceId)?.name ?? ""}
                     workspaceSlug={workspaceMap.get(model.workspaceId)?.slug ?? ""}
                     dbType={model.dbType.toLowerCase()}
-                    updatedAt={`${formatDistanceToNow(new Date(model.updatedAt))} ago`}
-                    isStarred={false}
+                    updatedAt={formatDistanceToNow(new Date(model.updatedAt), { addSuffix: false })}
+                    isPinned={model.isPinned}
                 />
             ))}
         </div>
@@ -76,40 +80,125 @@ function DiagramList({
                 <div className="col-span-5">Name</div>
                 <div className="col-span-2">Database</div>
                 <div className="col-span-3">Last Modified</div>
-                <div className="col-span-2 text-right">Actions</div>
+                <div className="col-span-2 text-right px-4">Actions</div>
             </div>
             {models.map((model) => (
-                <div 
-                    key={model.id} 
-                    className="grid grid-cols-12 items-center px-4 py-3 bg-card border border-border/50 rounded-xl hover:border-primary/30 hover:shadow-md transition-all group cursor-pointer"
-                >
-                    <div className="col-span-5 flex items-center gap-3 min-w-0">
-                        <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                            <Database className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="truncate">
-                            <p className="text-sm font-bold text-foreground truncate">{model.name}</p>
-                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
-                                {workspaceMap.get(model.workspaceId)?.name ?? "Unknown Workspace"}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="col-span-2">
-                        <Badge variant="outline" className="text-[10px] h-5 bg-muted/30 border-border/50 font-bold uppercase">
-                            {model.dbType}
-                        </Badge>
-                    </div>
-                    <div className="col-span-3 flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                        <Calendar className="h-3.5 w-3.5 opacity-40" />
-                        {formatDistanceToNow(new Date(model.updatedAt))} ago
-                    </div>
-                    <div className="col-span-2 text-right">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/5">
-                            <Star className="h-4 w-4" />
-                        </Button>
-                    </div>
-                </div>
+                <DiagramListItem
+                    key={model.id}
+                    model={model}
+                    workspaceName={workspaceMap.get(model.workspaceId)?.name ?? "Unknown Workspace"}
+                    workspaceSlug={workspaceMap.get(model.workspaceId)?.slug ?? ""}
+                />
             ))}
+        </div>
+    );
+}
+
+import { togglePinDataModel } from "../../applications/workspace.action";
+import { toast } from "sonner";
+
+function DiagramListItem({ 
+    model, 
+    workspaceName,
+    workspaceSlug 
+}: { 
+    model: DataModel, 
+    workspaceName: string,
+    workspaceSlug: string
+}) {
+    const router = useRouter();
+    const { togglePin } = useWorkspaceStore();
+
+    const handleClick = () => {
+        router.push(`/workspaces/${workspaceSlug}/model/${model.id}`);
+    };
+
+    const handleAction = (e: React.MouseEvent) => {
+        e.stopPropagation();
+    };
+
+    const handleStar = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        
+        // Optimistic UI for sidebar
+        togglePin({ id: model.id, name: model.name, slug: workspaceSlug });
+        
+        const response = await togglePinDataModel(model.id);
+        if (response.success) {
+            router.refresh();
+        } else {
+            // Revert on failure
+            togglePin({ id: model.id, name: model.name, slug: workspaceSlug });
+            toast.error("Failed to update pin status");
+        }
+    };
+
+    return (
+        <div 
+            onClick={handleClick}
+            className="grid grid-cols-12 items-center px-4 py-3 bg-card border border-border/50 rounded-xl hover:border-primary/30 hover:shadow-md transition-all group cursor-pointer"
+        >
+            <div className="col-span-5 flex items-center gap-3 min-w-0">
+                <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                    <Database className="h-5 w-5 text-primary" />
+                </div>
+                <div className="truncate">
+                    <p className="text-sm font-bold text-foreground truncate">{model.name}</p>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                        {workspaceName}
+                    </p>
+                </div>
+            </div>
+            <div className="col-span-2">
+                <Badge variant="outline" className="text-[10px] h-5 bg-muted/30 border-border/50 font-bold uppercase">
+                    {model.dbType}
+                </Badge>
+            </div>
+            <div className="col-span-3 flex items-center gap-2 text-[11px] text-muted-foreground font-medium uppercase tracking-tight">
+                {formatDistanceToNow(new Date(model.updatedAt), { addSuffix: false })}
+            </div>
+            <div className="col-span-2 flex items-center justify-end gap-1 px-2" onClick={handleAction}>
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className={cn(
+                        "h-8 w-8 text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/5 transition-colors",
+                        model.isPinned && "text-yellow-500 opacity-100"
+                    )}
+                    onClick={handleStar}
+                >
+                    <Star className={cn("h-4 w-4", model.isPinned && "fill-current")} />
+                </Button>
+
+                <ShareDiagramDialog title={model.name}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/5">
+                        <Users className="h-4 w-4" />
+                    </Button>
+                </ShareDiagramDialog>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
+                            <Ellipsis className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40 rounded-xl border-border/60 shadow-xl">
+                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium">
+                            <Pencil className="h-3.5 w-3.5" />
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium" onClick={handleStar}>
+                            <Star className="h-3.5 w-3.5" />
+                            {model.isPinned ? "Unstar" : "Star"}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="gap-2 rounded-lg py-2 cursor-pointer font-medium text-destructive focus:text-destructive focus:bg-destructive/10">
+                            <Trash2 className="h-3.5 w-3.5" />
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
     );
 }

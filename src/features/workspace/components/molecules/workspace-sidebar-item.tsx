@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/components/ui/button";
+import Link from "next/link";
 
 interface WorkspaceSidebarItemProps {
     icon: React.ReactNode;
@@ -8,6 +9,7 @@ interface WorkspaceSidebarItemProps {
     isActive?: boolean;
     onClick?: () => void;
     className?: string;
+    href?: string;
 }
 
 export function WorkspaceSidebarItem({
@@ -16,8 +18,9 @@ export function WorkspaceSidebarItem({
     isActive,
     onClick,
     className,
+    href,
 }: WorkspaceSidebarItemProps) {
-    return (
+    const content = (
         <Button
             variant={isActive ? "secondary" : "ghost"}
             size="sm"
@@ -29,7 +32,17 @@ export function WorkspaceSidebarItem({
             onClick={onClick}
         >
             {icon}
-            <span className="text-sm font-medium">{label}</span>
+            <span className="text-sm font-medium truncate">{label}</span>
         </Button>
     );
+
+    if (href) {
+        return (
+            <Link href={href} className="block w-full">
+                {content}
+            </Link>
+        );
+    }
+
+    return content;
 }

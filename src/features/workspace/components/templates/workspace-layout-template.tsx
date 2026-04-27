@@ -27,7 +27,7 @@ export function WorkspaceLayoutTemplate({
                 models={models}
             />
             <div className="flex-1 flex overflow-hidden">
-                <WorkspaceSidebar />
+                <WorkspaceSidebar models={models} />
                 <main className="flex-1 min-w-0 relative">
                     <ScrollArea className="h-full w-full">
                         {children}
