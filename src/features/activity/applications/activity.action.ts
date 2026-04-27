@@ -4,10 +4,18 @@ import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { AppError, handleActionError } from "@/shared/lib/error";
 import { ActivityItemData, ActivityStats } from "../types/activity";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, subDays } from "date-fns";
 import { enUS } from "date-fns/locale";
 
-export async function getActivityLogs(workspaceSlug: string): Promise<ActivityItemData[]> {
+interface ActivityFilters {
+    category?: string;
+    time?: string;
+}
+
+export async function getActivityLogs(
+    workspaceSlug: string, 
+    filters?: ActivityFilters
+): Promise<ActivityItemData[]> {
     try {
         const workspace = await db.workspace.findUnique({
             where: { slug: workspaceSlug },
@@ -18,12 +26,34 @@ export async function getActivityLogs(workspaceSlug: string): Promise<ActivityIt
             throw new AppError("Workspace not found", 404);
         }
 
+        const where: any = {
+            dataModel: {
+                workspaceId: workspace.id
+            }
+        };
+
+        // Filter by category
+        if (filters?.category && filters.category !== "all") {
+            where.details = {
+                path: ["type"],
+                equals: filters.category
+            };
+        }
+
+        // Filter by timeframe
+        if (filters?.time && filters.time !== "max") {
+            let date = new Date();
+            if (filters.time === "24h") date = subDays(new Date(), 1);
+            if (filters.time === "7d") date = subDays(new Date(), 7);
+            if (filters.time === "30d") date = subDays(new Date(), 30);
+            
+            where.createdAt = {
+                gte: date
+            };
+        }
+
         const logs = await db.activityLog.findMany({
-            where: {
-                dataModel: {
-                    workspaceId: workspace.id
-                }
-            },
+            where,
             include: {
                 user: true,
                 dataModel: true
@@ -60,7 +90,10 @@ export async function getActivityLogs(workspaceSlug: string): Promise<ActivityIt
     }
 }
 
-export async function getActivityStats(workspaceSlug: string): Promise<ActivityStats> {
+export async function getActivityStats(
+    workspaceSlug: string,
+    filters?: ActivityFilters
+): Promise<ActivityStats> {
     try {
         const workspace = await db.workspace.findUnique({
             where: { slug: workspaceSlug },
@@ -69,12 +102,26 @@ export async function getActivityStats(workspaceSlug: string): Promise<ActivityS
 
         if (!workspace) return { total: 0, creations: 0, updates: 0, deletions: 0 };
 
+        const where: any = {
+            dataModel: {
+                workspaceId: workspace.id
+            }
+        };
+
+        // Even for stats, we might want to filter by time
+        if (filters?.time && filters.time !== "max") {
+            let date = new Date();
+            if (filters.time === "24h") date = subDays(new Date(), 1);
+            if (filters.time === "7d") date = subDays(new Date(), 7);
+            if (filters.time === "30d") date = subDays(new Date(), 30);
+            
+            where.createdAt = {
+                gte: date
+            };
+        }
+
         const logs = await db.activityLog.findMany({
-            where: {
-                dataModel: {
-                    workspaceId: workspace.id
-                }
-            },
+            where,
             select: {
                 action: true,
                 details: true
