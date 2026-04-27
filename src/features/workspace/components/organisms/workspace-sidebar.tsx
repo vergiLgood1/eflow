@@ -48,7 +48,7 @@ export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
                             <WorkspaceSidebarItem 
                                 icon={<Link2 className="h-4 w-4" />} 
                                 label="Explore" 
-                                href={`/workspaces/${slug}/explore`}
+                                href={`/explore`}
                             />
                         </nav>
                     </div>

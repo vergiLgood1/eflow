@@ -90,6 +90,8 @@ model DataModel {
   name        String
   description String?
   isPinned    Boolean      @default(false)
+  isPublic    Boolean      @default(false)
+  previewColor String?
   dbType      DatabaseType
   workspaceId String
   createdAt   DateTime     @default(now())

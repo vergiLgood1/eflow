@@ -86,14 +86,16 @@ model WorkspaceMember {
 ///////////////////////
 
 model DataModel {
-  id          String       @id @default(uuid())
-  name        String
-  description String?
-  isPinned    Boolean      @default(false)
-  dbType      DatabaseType
-  workspaceId String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id           String       @id @default(uuid())
+  name         String
+  description  String?
+  isPinned     Boolean      @default(false)
+  isPublic     Boolean      @default(false)
+  previewColor String?
+  dbType       DatabaseType
+  workspaceId  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   tags          DataModelTag[]

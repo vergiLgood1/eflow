@@ -7514,6 +7514,8 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isPinned: boolean | null
+    isPublic: boolean | null
+    previewColor: string | null
     dbType: $Enums.DatabaseType | null
     workspaceId: string | null
     createdAt: Date | null
@@ -7525,6 +7527,8 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isPinned: boolean | null
+    isPublic: boolean | null
+    previewColor: string | null
     dbType: $Enums.DatabaseType | null
     workspaceId: string | null
     createdAt: Date | null
@@ -7536,6 +7540,8 @@ export namespace Prisma {
     name: number
     description: number
     isPinned: number
+    isPublic: number
+    previewColor: number
     dbType: number
     workspaceId: number
     createdAt: number
@@ -7549,6 +7555,8 @@ export namespace Prisma {
     name?: true
     description?: true
     isPinned?: true
+    isPublic?: true
+    previewColor?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7560,6 +7568,8 @@ export namespace Prisma {
     name?: true
     description?: true
     isPinned?: true
+    isPublic?: true
+    previewColor?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7571,6 +7581,8 @@ export namespace Prisma {
     name?: true
     description?: true
     isPinned?: true
+    isPublic?: true
+    previewColor?: true
     dbType?: true
     workspaceId?: true
     createdAt?: true
@@ -7655,6 +7667,8 @@ export namespace Prisma {
     name: string
     description: string | null
     isPinned: boolean
+    isPublic: boolean
+    previewColor: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt: Date
@@ -7683,6 +7697,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7704,6 +7720,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7716,6 +7734,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
@@ -7728,13 +7748,15 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: boolean
     dbType?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isPinned" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
+  export type DataModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isPinned" | "isPublic" | "previewColor" | "dbType" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["dataModel"]>
   export type DataModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     tags?: boolean | DataModel$tagsArgs<ExtArgs>
@@ -7772,6 +7794,8 @@ export namespace Prisma {
       name: string
       description: string | null
       isPinned: boolean
+      isPublic: boolean
+      previewColor: string | null
       dbType: $Enums.DatabaseType
       workspaceId: string
       createdAt: Date
@@ -8212,6 +8236,8 @@ export namespace Prisma {
     readonly name: FieldRef<"DataModel", 'String'>
     readonly description: FieldRef<"DataModel", 'String'>
     readonly isPinned: FieldRef<"DataModel", 'Boolean'>
+    readonly isPublic: FieldRef<"DataModel", 'Boolean'>
+    readonly previewColor: FieldRef<"DataModel", 'String'>
     readonly dbType: FieldRef<"DataModel", 'DatabaseType'>
     readonly workspaceId: FieldRef<"DataModel", 'String'>
     readonly createdAt: FieldRef<"DataModel", 'DateTime'>
@@ -26915,6 +26941,8 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     isPinned: 'isPinned',
+    isPublic: 'isPublic',
+    previewColor: 'previewColor',
     dbType: 'dbType',
     workspaceId: 'workspaceId',
     createdAt: 'createdAt',
@@ -27536,6 +27564,8 @@ export namespace Prisma {
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
     isPinned?: BoolFilter<"DataModel"> | boolean
+    isPublic?: BoolFilter<"DataModel"> | boolean
+    previewColor?: StringNullableFilter<"DataModel"> | string | null
     dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -27556,6 +27586,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isPinned?: SortOrder
+    isPublic?: SortOrder
+    previewColor?: SortOrderInput | SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -27579,6 +27611,8 @@ export namespace Prisma {
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
     isPinned?: BoolFilter<"DataModel"> | boolean
+    isPublic?: BoolFilter<"DataModel"> | boolean
+    previewColor?: StringNullableFilter<"DataModel"> | string | null
     dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -27599,6 +27633,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isPinned?: SortOrder
+    isPublic?: SortOrder
+    previewColor?: SortOrderInput | SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -27616,6 +27652,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"DataModel"> | string
     description?: StringNullableWithAggregatesFilter<"DataModel"> | string | null
     isPinned?: BoolWithAggregatesFilter<"DataModel"> | boolean
+    isPublic?: BoolWithAggregatesFilter<"DataModel"> | boolean
+    previewColor?: StringNullableWithAggregatesFilter<"DataModel"> | string | null
     dbType?: EnumDatabaseTypeWithAggregatesFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringWithAggregatesFilter<"DataModel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DataModel"> | Date | string
@@ -28968,6 +29006,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28987,6 +29027,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -29006,6 +29048,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29025,6 +29069,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29044,6 +29090,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -29055,6 +29103,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29065,6 +29115,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30597,6 +30649,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isPinned?: SortOrder
+    isPublic?: SortOrder
+    previewColor?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -30608,6 +30662,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isPinned?: SortOrder
+    isPublic?: SortOrder
+    previewColor?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -30619,6 +30675,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isPinned?: SortOrder
+    isPublic?: SortOrder
+    previewColor?: SortOrder
     dbType?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
@@ -33318,6 +33376,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33336,6 +33396,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33399,6 +33461,8 @@ export namespace Prisma {
     name?: StringFilter<"DataModel"> | string
     description?: StringNullableFilter<"DataModel"> | string | null
     isPinned?: BoolFilter<"DataModel"> | boolean
+    isPublic?: BoolFilter<"DataModel"> | boolean
+    previewColor?: StringNullableFilter<"DataModel"> | string | null
     dbType?: EnumDatabaseTypeFilter<"DataModel"> | $Enums.DatabaseType
     workspaceId?: StringFilter<"DataModel"> | string
     createdAt?: DateTimeFilter<"DataModel"> | Date | string
@@ -34057,6 +34121,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34075,6 +34141,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -34130,6 +34198,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34148,6 +34218,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34193,6 +34265,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34211,6 +34285,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -34373,6 +34449,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34391,6 +34469,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34674,6 +34754,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34692,6 +34774,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -34808,6 +34892,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34826,6 +34912,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34998,6 +35086,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35016,6 +35106,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -35080,6 +35172,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35098,6 +35192,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35252,6 +35348,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35270,6 +35368,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -35334,6 +35434,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35352,6 +35454,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35386,6 +35490,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35404,6 +35510,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -35516,6 +35624,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35534,6 +35644,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35865,6 +35977,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35883,6 +35997,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -35917,6 +36033,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35935,6 +36053,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35953,6 +36073,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35971,6 +36093,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     workspaceId: string
     createdAt?: Date | string
@@ -36036,6 +36160,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36054,6 +36180,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36377,6 +36505,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     isPinned?: boolean
+    isPublic?: boolean
+    previewColor?: string | null
     dbType: $Enums.DatabaseType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36411,6 +36541,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36429,6 +36561,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36447,6 +36581,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    previewColor?: NullableStringFieldUpdateOperationsInput | string | null
     dbType?: EnumDatabaseTypeFieldUpdateOperationsInput | $Enums.DatabaseType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
