@@ -13,13 +13,14 @@ interface WorkspaceDashboardTemplateProps {
 }
 
 function DashboardContent({ modelsPromise, workspacePromise }: { modelsPromise: Promise<DataModel[]>, workspacePromise: Promise<Workspace[]> }) {
-    const models = modelsPromise ? use(modelsPromise) : [];
+    const models = use(modelsPromise);
+    const workspaces = use(workspacePromise);
 
     if (models.length === 0) {
         return <WorkspaceDashboardEmptyState />;
     }
 
-    return <WorkspaceDashboardContentTemplate workspacePromise={workspacePromise} modelsPromise={modelsPromise} />;
+    return <WorkspaceDashboardContentTemplate models={models} workspaces={workspaces} />;
 }
 
 function DashboardLoading() {

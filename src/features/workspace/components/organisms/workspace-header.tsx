@@ -52,6 +52,8 @@ export function WorkspaceHeader({
     const params = useParams();
     const slug = params?.slug as string;
 
+    
+
     const { toggleChat } = useWorkspaceStore();
 
     const handleLogout = async () => {

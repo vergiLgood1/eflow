@@ -5,11 +5,11 @@ import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-heade
 import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
 
 interface WorkspaceDashboardContentTemplateProps {
-    modelsPromise: Promise<DataModel[]>;
-    workspacePromise: Promise<Workspace[]>;
+    models: DataModel[];
+    workspaces: Workspace[];
 }
 
-export function WorkspaceDashboardContentTemplate({ modelsPromise, workspacePromise }: WorkspaceDashboardContentTemplateProps) {
+export function WorkspaceDashboardContentTemplate({ models, workspaces }: WorkspaceDashboardContentTemplateProps) {
     return (
         <div className="w-full mx-auto p-6 md:p-10 pb-20">
             <WorkspaceDashboardHeader 
@@ -19,7 +19,7 @@ export function WorkspaceDashboardContentTemplate({ modelsPromise, workspaceProm
             
             <WorkspaceUpgradeBanner />
             
-            <WorkspaceDiagramList modelsPromise={modelsPromise} workspacePromise={workspacePromise} />
+            <WorkspaceDiagramList models={models} workspaces={workspaces} />
             
             <WorkspaceProUpsellCard />
         </div>
