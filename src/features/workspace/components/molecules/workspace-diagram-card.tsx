@@ -1,11 +1,15 @@
-import React from "react";
-import { Star, Globe, Users, Ellipsis } from "lucide-react";
-import { cn } from "@/shared/lib/utils";
+"use client";
+
 import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/utils";
+import { Ellipsis, Globe, Star, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface WorkspaceDiagramCardProps {
+    id: string;
     title: string;
     workspaceName: string;
+    workspaceSlug: string;
     dbType: string;
     updatedAt: string;
     isPublic?: boolean;
@@ -14,25 +18,34 @@ interface WorkspaceDiagramCardProps {
 }
 
 export function WorkspaceDiagramCard({
+    id,
     title,
     workspaceName,
+    workspaceSlug,
     dbType,
     updatedAt,
     isPublic = true,
     isStarred = false,
     className,
 }: WorkspaceDiagramCardProps) {
+    const router = useRouter();
+
+    const handleClick = () => {
+        router.push(`/workspaces/${workspaceSlug}/model/${id}`);
+    }
+
     return (
         <div
             className={cn(
                 "group bg-card/50 border border-border rounded-xl overflow-hidden hover:border-border/80 transition-all hover:shadow-lg hover:shadow-black/20 text-left cursor-pointer flex flex-col",
                 className
             )}
+            onClick={handleClick}
             role="button"
             tabIndex={0}
         >
             <div
-                className="h-32 relative bg-background bg-[radial-gradient(circle,rgba(63,63,70,0.1)_1px,transparent_1px)] bg-[size:12px_12px]"
+                className="h-32 relative bg-background bg-[radial-gradient(circle,rgba(63,63,70,0.1)_1px,transparent_1px)] bg-size-[12px_12px]"
             >
                 {/* Visual Preview Placeholder */}
                 <div className="absolute inset-4 flex items-center justify-center gap-2 opacity-30 group-hover:opacity-50 transition-opacity">

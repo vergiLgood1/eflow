@@ -3,17 +3,19 @@
 import { Badge } from "@/shared/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { Suspense, use } from "react";
-import type { DataModel } from "../../../../../prisma/generated";
+import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
 
 
 interface WorkspaceDiagramListProps {
     modelsPromise: Promise<DataModel[]>;
+    workspacePromise: Promise<Workspace[]>
 }
 
-function DiagramGrid({ modelsPromise }: { modelsPromise: Promise<any[]> }) {
+function DiagramGrid({ modelsPromise, workspacePromise }: { modelsPromise: Promise<DataModel[]>, workspacePromise: Promise<Workspace[]> }) {
     const models = use(modelsPromise);
+    const workspace = workspacePromise ? use(workspacePromise) : [];
 
     if (models.length === 0) {
         return <WorkspaceDashboardEmptyState />;
@@ -24,8 +26,10 @@ function DiagramGrid({ modelsPromise }: { modelsPromise: Promise<any[]> }) {
             {models.map((model) => (
                 <WorkspaceDiagramCard
                     key={model.id}
+                    id={model.id}
                     title={model.name}
-                    workspaceName={model.workspace?.name || "Workspace"}
+                    workspaceName={workspace.find((w) => w.id === model.workspaceId)?.name ?? ""}
+                    workspaceSlug={workspace.find((w) => w.id === model.workspaceId)?.slug ?? ""}
                     dbType={model.dbType.toLowerCase()}
                     updatedAt={`${formatDistanceToNow(new Date(model.updatedAt))} ago`}
                     isStarred={false}
@@ -45,7 +49,7 @@ function DiagramGridSkeleton() {
     );
 }
 
-export function WorkspaceDiagramList({ modelsPromise }: WorkspaceDiagramListProps) {
+export function WorkspaceDiagramList({ modelsPromise, workspacePromise }: WorkspaceDiagramListProps) {
     return (
         <section className="mb-10">
             <div className="mb-8">
@@ -61,7 +65,7 @@ export function WorkspaceDiagramList({ modelsPromise }: WorkspaceDiagramListProp
             </div>
             
             <Suspense fallback={<DiagramGridSkeleton />}>
-                <DiagramGrid modelsPromise={modelsPromise} />
+                <DiagramGrid workspacePromise={workspacePromise} modelsPromise={modelsPromise} />
             </Suspense>
         </section>
     );

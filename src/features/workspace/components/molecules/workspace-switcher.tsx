@@ -9,9 +9,11 @@ import {
 } from "@/shared/components/ui/popover";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
 import { Check, ChevronsUpDown, Plus, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { Suspense, use } from "react";
 import { getWorkspaces } from "../../applications/workspace.action";
 
@@ -77,9 +79,14 @@ function WorkspaceList({ promise, selectedId, onSelect }: WorkspaceListProps) {
 function WorkspaceListSkeleton() {
     return (
         <div className="p-1 space-y-1">
-            <div className="px-2 py-1.5 h-4 w-16 bg-muted animate-pulse rounded mb-1" />
-            {[1, 2, 3].map((i) => (
-                <div key={i} className="h-9 w-full bg-muted/50 animate-pulse rounded" />
+            <div className="px-2 py-1.5">
+                <Skeleton className="h-3 w-16" />
+            </div>
+            {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-2 h-9 px-2">
+                    <Skeleton className="h-2 w-2 rounded-full shrink-0" />
+                    <Skeleton className="h-3 w-24" />
+                </div>
             ))}
         </div>
     );
@@ -101,6 +108,8 @@ export function WorkspaceSwitcher({
     const [open, setOpen] = React.useState(false);
     const [searchQuery, setSearchQuery] = React.useState("");
     const [debouncedSearch] = useDebounceValue(searchQuery, 300);
+
+    const router = useRouter();
 
     // Initial display name
     const [displayName, setDisplayName] = React.useState(initialWorkspaceName);
@@ -152,11 +161,12 @@ export function WorkspaceSwitcher({
                         <WorkspaceList
                             promise={workspacesPromise}
                             selectedId={currentSlug} // Using slug as ID for visual check in this mock-like list
-                            onSelect={(w) => {
-                                setDisplayName(w.name);
+                            onSelect={(workspace) => {
+                                setDisplayName(workspace.name);
+
                                 setOpen(false);
-                                // In real app, we would redirect here:
-                                // window.location.href = `/workspaces/${w.slug}`;
+
+                                router.push(`/workspaces/${workspace.slug}`);
                             }}
                         />
                     </Suspense>

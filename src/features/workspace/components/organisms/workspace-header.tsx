@@ -25,8 +25,10 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 import { toast } from "sonner";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
 import { WorkspaceDataModelSelector } from "../molecules/workspace-data-model-selector";
@@ -81,8 +83,20 @@ export function WorkspaceHeader({
 
                 <div className="h-4 w-px bg-border mx-1" />
 
-                <WorkspaceSwitcher workspaceName="My Workspace" slug={slug} initialPromise={workspacesPromise} />
-                <WorkspaceDataModelSelector slug={slug} initialPromise={modelsPromise} />
+                <Suspense fallback={<Skeleton className="h-9 w-40 rounded-lg" />}>
+                    <WorkspaceSwitcher 
+                        workspaceName="My Workspace" 
+                        slug={slug} 
+                        initialPromise={workspacesPromise} 
+                    />
+                </Suspense>
+
+                <Suspense fallback={<Skeleton className="h-9 w-48 rounded-lg" />}>
+                    <WorkspaceDataModelSelector 
+                        slug={slug} 
+                        initialPromise={modelsPromise} 
+                    />
+                </Suspense>
             </div>
 
             <div className="flex items-center gap-2 ml-auto">

@@ -3,22 +3,23 @@
 import { Center } from "@/shared/components/layout/Center";
 import { Loader2 } from "lucide-react";
 import { Suspense, use } from "react";
-import type { DataModel } from "../../../../../prisma/generated";
+import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
 import { WorkspaceDashboardContentTemplate } from "./workspace-dashboard-content-template";
 
 interface WorkspaceDashboardTemplateProps {
     modelsPromise: Promise<DataModel[]>;
+    workspacePromise: Promise<Workspace[]>
 }
 
-function DashboardContent({ modelsPromise }: { modelsPromise: Promise<DataModel[]> }) {
-    const models = use(modelsPromise);
+function DashboardContent({ modelsPromise, workspacePromise }: { modelsPromise: Promise<DataModel[]>, workspacePromise: Promise<Workspace[]> }) {
+    const models = modelsPromise ? use(modelsPromise) : [];
 
     if (models.length === 0) {
         return <WorkspaceDashboardEmptyState />;
     }
 
-    return <WorkspaceDashboardContentTemplate modelsPromise={modelsPromise} />;
+    return <WorkspaceDashboardContentTemplate workspacePromise={workspacePromise} modelsPromise={modelsPromise} />;
 }
 
 function DashboardLoading() {
@@ -34,11 +35,12 @@ function DashboardLoading() {
 
 export function WorkspaceDashboardTemplate({
     modelsPromise,
+    workspacePromise,
 }: WorkspaceDashboardTemplateProps) {
     return (
         <div className="flex-1 flex flex-col min-w-0 bg-background">
             <Suspense fallback={<DashboardLoading />}>
-                <DashboardContent modelsPromise={modelsPromise} />
+                <DashboardContent modelsPromise={modelsPromise} workspacePromise={workspacePromise} />
             </Suspense>
         </div>
     );

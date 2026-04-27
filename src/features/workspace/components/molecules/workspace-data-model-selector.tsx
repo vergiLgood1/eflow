@@ -9,11 +9,12 @@ import {
 } from "@/shared/components/ui/popover";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { Box, Check, ChevronsUpDown, MoreVertical, Plus, Search } from "lucide-react";
-import React, { Suspense, use, useMemo } from "react";
+import React, { Suspense, use } from "react";
 import { getDataModelsBySlug } from "../../applications/workspace.action";
 
 interface DataModel {
@@ -82,9 +83,14 @@ function ModelList({ promise, selectedId, onSelect }: ModelListProps) {
 function ModelListSkeleton() {
     return (
         <div className="p-1 space-y-1">
-            <div className="px-2 py-1.5 h-4 w-20 bg-muted animate-pulse rounded mb-1" />
-            {[1, 2, 3].map((i) => (
-                <div key={i} className="h-12 w-full bg-muted/50 animate-pulse rounded" />
+            <div className="px-2 py-1.5">
+                <Skeleton className="h-3 w-20" />
+            </div>
+            {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col gap-2 h-14 px-2 justify-center">
+                    <Skeleton className="h-3 w-32" />
+                    <Skeleton className="h-2 w-20" />
+                </div>
             ))}
         </div>
     );
