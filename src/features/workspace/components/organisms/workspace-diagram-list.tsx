@@ -1,20 +1,22 @@
 "use client";
 
 import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { Suspense } from "react";
+import { Calendar, Database, Star } from "lucide-react";
+import React from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
 
-
 interface WorkspaceDiagramListProps {
     models: DataModel[];
     workspaces: Workspace[];
+    viewMode?: "grid" | "list";
 }
 
 function DiagramGrid({ models, workspaces }: { models: DataModel[], workspaces: Workspace[] }) {
-
     if (models.length === 0) {
         return <WorkspaceDashboardEmptyState />;
     }
@@ -39,34 +41,75 @@ function DiagramGrid({ models, workspaces }: { models: DataModel[], workspaces: 
     );
 }
 
-function DiagramGridSkeleton() {
+function DiagramList({ models, workspaces }: { models: DataModel[], workspaces: Workspace[] }) {
+    if (models.length === 0) {
+        return <WorkspaceDashboardEmptyState />;
+    }
+
+    const workspaceMap = new Map(workspaces.map(w => [w.id, w]));
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-[200px] w-full bg-muted/50 animate-pulse rounded-xl" />
+        <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-12 px-4 py-2 text-xs font-semibold text-muted-foreground/60 uppercase tracking-wider">
+                <div className="col-span-5">Name</div>
+                <div className="col-span-2">Database</div>
+                <div className="col-span-3">Last Modified</div>
+                <div className="col-span-2 text-right">Actions</div>
+            </div>
+            {models.map((model) => (
+                <div 
+                    key={model.id} 
+                    className="grid grid-cols-12 items-center px-4 py-3 bg-card border border-border/50 rounded-xl hover:border-primary/30 hover:shadow-md transition-all group cursor-pointer"
+                >
+                    <div className="col-span-5 flex items-center gap-3 min-w-0">
+                        <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                            <Database className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="truncate">
+                            <p className="text-sm font-bold text-foreground truncate">{model.name}</p>
+                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                                {workspaceMap.get(model.workspaceId)?.name ?? "Unknown Workspace"}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="col-span-2">
+                        <Badge variant="outline" className="text-[10px] h-5 bg-muted/30 border-border/50 font-bold uppercase">
+                            {model.dbType}
+                        </Badge>
+                    </div>
+                    <div className="col-span-3 flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                        <Calendar className="h-3.5 w-3.5 opacity-40" />
+                        {formatDistanceToNow(new Date(model.updatedAt))} ago
+                    </div>
+                    <div className="col-span-2 text-right">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/5">
+                            <Star className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
             ))}
         </div>
     );
 }
 
-export function WorkspaceDiagramList({ models, workspaces }: WorkspaceDiagramListProps) {
+export function WorkspaceDiagramList({ models, workspaces, viewMode = "grid" }: WorkspaceDiagramListProps) {
     return (
         <section className="mb-10">
             <div className="mb-8">
                 <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-3">
                     Data Models
-                    {/* <Suspense fallback={<Badge variant="secondary" className="animate-pulse">...</Badge>}> */}
                     <DiagramCount models={models} workspaces={workspaces} />
-                    {/* </Suspense> */}
                 </h2>
                 <p className="text-sm text-muted-foreground font-medium">
                     Manage your ER diagrams and database schemas with ease
                 </p>
             </div>
             
-            {/* <Suspense fallback={<DiagramGridSkeleton />}> */}
+            {viewMode === "grid" ? (
                 <DiagramGrid models={models} workspaces={workspaces} />
-            {/* </Suspense> */}
+            ) : (
+                <DiagramList models={models} workspaces={workspaces} />
+            )}
         </section>
     );
 }
