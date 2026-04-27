@@ -37,7 +37,7 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    if (pathname === '/workspaces' || pathname === '/workspaces/onboarding') {
+    if (pathname === '/workspaces/onboarding') {
         return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
     }
 

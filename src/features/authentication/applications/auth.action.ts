@@ -21,7 +21,7 @@ export async function signInWithEmail(req: SignInSchema): Promise<ActionResponse
       throw new AppError('Failed to sign in. Try again', 400);
     }
 
-    redirect("/workspaces");
+    redirect("/workspaces/onboarding");
   } catch (error) {
     return handleActionError(error);
   }
@@ -62,14 +62,14 @@ export async function signInWithGithub(): Promise<ActionResponse> {
   try {
     const { error } = await auth.signIn.social({
       provider: "github",
-      callbackURL: "/workspaces",
+      callbackURL: "/workspaces/onboarding",
     });
 
     if (error) {
       throw new AppError(error.message || "Failed to sign in with GitHub. Try again", 400);
     }
 
-    redirect("/workspaces");
+    redirect("/workspaces/onboarding");
   } catch (error) {
     return handleActionError(error);
   }

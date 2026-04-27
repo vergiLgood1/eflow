@@ -1,6 +1,5 @@
 "use client";
 
-
 import { signInWithGithub, signUpWithEmail } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
@@ -9,14 +8,12 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
-import { useRouter, unstable_rethrow } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -39,7 +36,6 @@ export function SignUpForm() {
         toast.error(result.error);
       }
     } catch (err) {
-      unstable_rethrow(err);
       toast.error("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
@@ -53,7 +49,6 @@ export function SignUpForm() {
         toast.error(result.error);
       }
     } catch (err) {
-      unstable_rethrow(err);
       toast.error("Failed to sign up with GitHub.");
     }
   };
