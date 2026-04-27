@@ -1,15 +1,11 @@
-// "use client";
-
 import { Separator } from "@/shared/components/ui/separator";
 import {
     Activity,
     ChevronLeft,
     Clock,
     CodeXml,
-    Cpu,
     Download,
     FileCode,
-    Flag,
     Layers,
     MousePointer2,
     Plus,
@@ -22,7 +18,7 @@ import {
     Upload,
     Users,
     ZoomIn,
-    ZoomOut,
+    ZoomOut
 } from "lucide-react";
 import { WorkspaceModelRelationIcon } from "../atoms/workspace-model-relation-icon";
 import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
@@ -48,62 +44,60 @@ export function WorkspaceModelToolbar() {
                 <div className="flex min-w-0 flex-1 items-center gap-1">
                     <WorkspaceModelToolbarButton tooltip="Settings" icon={<Settings className="h-4 w-4" />} />
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    
+
                     <WorkspaceModelToolbarButton
-                        tooltip="Move"
+                        tooltip="Cursor"
                         icon={<MousePointer2 className="h-4 w-4" />}
                         className="bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
                     />
-                    <WorkspaceModelToolbarButton tooltip="Table" icon={<Table2 className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Table properties" icon={<TableProperties className="h-4 w-4" />} />
-                    
-                    <WorkspaceModelToolbarButton tooltip="1:1" label="1:1">
+                    <WorkspaceModelToolbarButton tooltip="Add Table" icon={<Table2 className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Add View" icon={<TableProperties className="h-4 w-4" />} />
+
+                    <WorkspaceModelToolbarButton tooltip="One to One" label="1:1">
                         <WorkspaceModelRelationIcon type="1:1" />
                     </WorkspaceModelToolbarButton>
-                    <WorkspaceModelToolbarButton tooltip="1:n" label="1:n">
+                    <WorkspaceModelToolbarButton tooltip="One to Many" label="1:n">
                         <WorkspaceModelRelationIcon type="1:n" />
                     </WorkspaceModelToolbarButton>
-                    <WorkspaceModelToolbarButton tooltip="0..1" label="0..1">
+                    <WorkspaceModelToolbarButton tooltip="One to One (optional)" label="0..1">
                         <WorkspaceModelRelationIcon type="0..1" />
                     </WorkspaceModelToolbarButton>
-                    <WorkspaceModelToolbarButton tooltip="0..n" label="0..n">
+                    <WorkspaceModelToolbarButton tooltip="One to Many (optional)" label="0..n">
                         <WorkspaceModelRelationIcon type="0..n" />
                     </WorkspaceModelToolbarButton>
-                    <WorkspaceModelToolbarButton tooltip="n:n" label="n:n">
+                    <WorkspaceModelToolbarButton tooltip="Many to Many" label="n:n">
                         <WorkspaceModelRelationIcon type="n:n" />
                     </WorkspaceModelToolbarButton>
-                    
-                    <WorkspaceModelToolbarButton tooltip="Diagram" icon={<Square className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Outline" icon={<Layers className="h-4 w-4" />} />
-                    
+
+                    <WorkspaceModelToolbarButton tooltip="Note" icon={<Square className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Group" icon={<Layers className="h-4 w-4" />} />
+
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    
-                    <WorkspaceModelToolbarButton tooltip="Comment" icon={<Flag className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Upload" icon={<Upload className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Download" icon={<Download className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="File Code" icon={<FileCode className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="CodeXml" icon={<CodeXml className="h-4 w-4" />} />
-                    
+
+                    <WorkspaceModelToolbarButton tooltip="Import SQL" icon={<Upload className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Export SQL" icon={<Download className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Import DBML" icon={<FileCode className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="DBML Mode" icon={<CodeXml className="h-4 w-4" />} />
+
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    
+
                     <WorkspaceModelToolbarButton tooltip="Undo" icon={<Undo2 className="h-4 w-4" />} disabled />
                     <WorkspaceModelToolbarButton tooltip="Redo" icon={<Redo2 className="h-4 w-4" />} disabled />
-                    
+
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    
+
                     <WorkspaceModelToolbarButton tooltip="Zoom In" icon={<ZoomIn className="h-4 w-4" />} />
                     <WorkspaceModelToolbarButton tooltip="Zoom Out" icon={<ZoomOut className="h-4 w-4" />} />
-                    
+
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    
-                    <WorkspaceModelToolbarButton tooltip="Activity" icon={<Activity className="h-4 w-4" />} />
+
+                    <WorkspaceModelToolbarButton tooltip="Animated Relationships" icon={<Activity className="h-4 w-4" />} />
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1">
                     <Separator orientation="vertical" className="mx-1 h-6" />
-                    <WorkspaceModelToolbarButton tooltip="Users" icon={<Users className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="CPU" icon={<Cpu className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Clock" icon={<Clock className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Share" icon={<Users className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton tooltip="Diagram Activity" icon={<Clock className="h-4 w-4" />} />
                     <WorkspaceModelUserAvatar name="Diyo Anggara" />
                 </div>
             </div>

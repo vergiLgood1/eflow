@@ -1,25 +1,15 @@
 import { auth } from "@/features/authentication/lib/auth-server";
-import { getWorkspaceCountByUserId } from "@/features/workspace/applications/workspace.action";
 import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+
 
 export default async function WorkspacesPage() {
   const session = await auth.getSession();
 
-  if (!session || !session.data) {
-    redirect("/auth/sign-in");
+  if (!session?.data) {
+    return null; // Fallback, though middleware handles redirect
   }
 
-  const workspaceCount = await getWorkspaceCountByUserId(session.data.user.id)
-
-  if (!workspaceCount.success) {
-    throw new Error("Failed to fetch workspace count");
-  }
-
-  if (workspaceCount.data === 0) {
-    redirect("/workspaces/onboarding");
-  }
 
   return (
     <div className="container py-10 space-y-6">
