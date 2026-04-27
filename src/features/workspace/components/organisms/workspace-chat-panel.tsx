@@ -2,18 +2,70 @@
 
 import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { cn } from "@/shared/lib/utils";
+import { useResizeObserver } from "@/shared/hooks/use-resize-observer";
 import { ChevronDown, Coins, Database, MessageSquare, Send } from "lucide-react";
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 
 export function WorkspaceChatPanel() {
     const { isChatOpen } = useWorkspaceStore();
+    const [width, setWidth] = useState(350);
+    const panelRef = useRef<HTMLDivElement>(null);
+    const isResizing = useRef(false);
+
+    // Observe size changes via the requested hook
+    useResizeObserver({
+        ref: panelRef,
+    });
+
+    const startResizing = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        isResizing.current = true;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+    }, []);
+
+    const stopResizing = useCallback(() => {
+        isResizing.current = false;
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+    }, []);
+
+    const resize = useCallback((e: MouseEvent) => {
+        if (isResizing.current) {
+            const newWidth = window.innerWidth - e.clientX;
+            // Min width 300, Max 40% of window
+            if (newWidth > 300 && newWidth < window.innerWidth * 0.5) {
+                setWidth(newWidth);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener("mousemove", resize);
+        window.addEventListener("mouseup", stopResizing);
+        return () => {
+            window.removeEventListener("mousemove", resize);
+            window.removeEventListener("mouseup", stopResizing);
+        };
+    }, [resize, stopResizing]);
 
     if (!isChatOpen) return null;
 
     return (
-        <aside className="w-[350px] shrink-0 border-l border-border bg-background flex flex-col overflow-hidden z-20 h-full">
+        <aside
+            ref={panelRef}
+            style={{ width: `${width}px` }}
+            className="shrink-0 border-l border-border bg-background flex flex-col overflow-hidden z-20 h-full relative"
+        >
+            {/* Resize Handle - Draggable left edge */}
+            <div
+                className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-primary/40 transition-colors z-50 group"
+                onMouseDown={startResizing}
+            >
+                <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-border group-hover:bg-primary/50 transition-colors" />
+            </div>
+
             <div className="h-full w-full flex flex-col bg-background overflow-hidden">
                 {/* Header */}
                 <div className="border-b border-border p-3 flex items-center justify-between gap-2">
