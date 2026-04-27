@@ -13,8 +13,8 @@ export default async function Layout({
 
     const { slug, id } = await params;
 
-    const workspacesPromise = getWorkspacesByCurrentUser();
-    const modelsPromise = getDataModelsBySlug(slug);
+    const workspaces = await getWorkspacesByCurrentUser();
+    const models = await getDataModelsBySlug(slug);
     const session = await auth.getSession()
 
     if (!session || !session.data) {
@@ -27,8 +27,8 @@ export default async function Layout({
     return (
         <WorkspaceModelLayoutTemplate
             userName={userName}
-            workspacesPromise={workspacesPromise}
-            modelsPromise={modelsPromise}
+            workspaces={workspaces}
+            models={models}
         >
             {children}
         </WorkspaceModelLayoutTemplate>

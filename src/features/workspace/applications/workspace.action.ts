@@ -3,26 +3,17 @@
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
-import { Prisma } from "../../../../prisma/generated";
 import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
 
 
-export async function isWorkspaceSlugExists(slug: string): Promise<ActionResponse<boolean>> {
-    try {
-        const workspace = await db.workspace.findUnique({
-            where: {
-                slug: slug,
-            },
-        });
+export async function isWorkspaceSlugExists(slug: string): Promise<boolean> {
+    const workspace = await db.workspace.findUnique({
+        where: {
+            slug: slug,
+        },
+    });
 
-        return {
-            success: true,
-            data: !!workspace,
-            message: "Workspace slug exists"
-        };
-    } catch (error) {
-        return handleActionError(error);
-    }
+    return !!workspace;
 }
 
 export async function getWorkspaces(query?: string) {
@@ -122,26 +113,16 @@ export async function getDataModelsBySlug(slug: string, query?: string) {
 }
 
 // get count workspace by userId
-export async function getWorkspaceCountByUserId(userId: string): Promise<ActionResponse<number>> {
-    try {
-        const count = await db.workspace.count({
-            where: {
-                members: {
-                    some: {
-                        userId: userId,
-                    },
+export async function getWorkspaceCountByUserId(userId: string): Promise<number> {
+    return await db.workspace.count({
+        where: {
+            members: {
+                some: {
+                    userId: userId,
                 },
             },
-        });
-
-        return {
-            success: true,
-            data: count,
-            message: "Workspace count fetched successfully"
-        };
-    } catch (error) {
-        return handleActionError(error);
-    }
+        },
+    });
 }
 
 export async function createWorkspace(data: { name: string; slug: string }): Promise<ActionResponse> {
@@ -284,7 +265,23 @@ export async function createDataModel(workspaceSlug: string, data: CreateDataMod
             });
 
             if (validatedData.tags?.length) {
-                await handleTags(tx, model.id, validatedData.tags);
+                const upserted = await Promise.all(
+                    validatedData.tags.map((name) =>
+                        tx.tag.upsert({
+                            where: { name },
+                            update: {},
+                            create: { name },
+                        })
+                    )
+                );
+
+                await tx.dataModelTag.createMany({
+                    data: upserted.map((tag) => ({
+                        dataModelId: model.id,
+                        tagId: tag.id,
+                    })),
+                    skipDuplicates: true,
+                });
             }
 
             return model;
@@ -300,66 +297,125 @@ export async function createDataModel(workspaceSlug: string, data: CreateDataMod
     }
 }
 
+export async function updateDataModelTags(modelId: string, tags: string[]): Promise<ActionResponse> {
+    try {
+        await db.$transaction(async (tx) => {
+            const existing = await tx.dataModelTag.findMany({
+                where: { dataModelId: modelId },
+                include: { tag: true },
+            });
 
-async function handleTags(tx: Prisma.TransactionClient, modelId: string, tags: string[]) {
-    const upserted = await Promise.all(
-        tags.map((name) =>
-            tx.tag.upsert({
-                where: { name },
-                update: {},
-                create: { name },
-            })
-        )
-    );
+            const existingNames = existing.map((t) => t.tag.name);
 
-    await tx.dataModelTag.createMany({
-        data: upserted.map((tag) => ({
-            dataModelId: modelId,
-            tagId: tag.id,
-        })),
-        skipDuplicates: true,
-    });
+            const toAdd = tags.filter((t) => !existingNames.includes(t));
+            const toRemove = existingNames.filter((t) => !tags.includes(t));
+
+            if (toAdd.length) {
+                const upserted = await Promise.all(
+                    toAdd.map((name) =>
+                        tx.tag.upsert({
+                            where: { name },
+                            update: {},
+                            create: { name },
+                        })
+                    )
+                );
+
+                await tx.dataModelTag.createMany({
+                    data: upserted.map((tag) => ({
+                        dataModelId: modelId,
+                        tagId: tag.id,
+                    })),
+                    skipDuplicates: true,
+                });
+            }
+
+            if (toRemove.length) {
+                const tagsToDelete = await tx.tag.findMany({
+                    where: {
+                        name: { in: toRemove },
+                    },
+                    select: { id: true },
+                });
+
+                await tx.dataModelTag.deleteMany({
+                    where: {
+                        dataModelId: modelId,
+                        tagId: {
+                            in: tagsToDelete.map((t) => t.id),
+                        },
+                    },
+                });
+            }
+        });
+
+        return {
+            success: true,
+            message: "Tags updated successfully"
+        };
+    } catch (error) {
+        return handleActionError(error);
+    }
 }
 
-async function handleDeleteTags(
-    tx: Prisma.TransactionClient,
-    modelId: string,
-    tagNames: string[]
-) {
-    if (!tagNames.length) return;
+export async function addDataModelTags(modelId: string, tags: string[]): Promise<ActionResponse> {
+    try {
+        await db.$transaction(async (tx) => {
+            const upserted = await Promise.all(
+                tags.map((name) =>
+                    tx.tag.upsert({
+                        where: { name },
+                        update: {},
+                        create: { name },
+                    })
+                )
+            );
 
-    const tags = await tx.tag.findMany({
-        where: {
-            name: { in: tagNames },
-        },
-        select: { id: true },
-    });
+            await tx.dataModelTag.createMany({
+                data: upserted.map((tag) => ({
+                    dataModelId: modelId,
+                    tagId: tag.id,
+                })),
+                skipDuplicates: true,
+            });
+        });
 
-    await tx.dataModelTag.deleteMany({
-        where: {
-            dataModelId: modelId,
-            tagId: {
-                in: tags.map((t) => t.id),
-            },
-        },
-    });
+        return {
+            success: true,
+            message: "Tags added successfully"
+        };
+    } catch (error) {
+        return handleActionError(error);
+    }
 }
 
-async function handleUpdateTags(
-    tx: Prisma.TransactionClient,
-    modelId: string,
-    newTagNames: string[]
-) {
-    const existing = await tx.dataModelTag.findMany({
-        where: { dataModelId: modelId },
-        include: { tag: true },
-    });
+export async function deleteDataModelTags(modelId: string, tagNames: string[]): Promise<ActionResponse> {
+    try {
+        await db.$transaction(async (tx) => {
+            if (!tagNames.length) return;
 
-    const existingNames = existing.map((t) => t.tag.name);
+            const tags = await tx.tag.findMany({
+                where: {
+                    name: { in: tagNames },
+                },
+                select: { id: true },
+            });
 
-    const toAdd = newTagNames.filter((t) => !existingNames.includes(t));
-    const toRemove = existingNames.filter((t) => !newTagNames.includes(t));
+            await tx.dataModelTag.deleteMany({
+                where: {
+                    dataModelId: modelId,
+                    tagId: {
+                        in: tags.map((t) => t.id),
+                    },
+                },
+            });
+        });
 
-    await handleDeleteTags(tx, modelId, toRemove);
-    await handleTags(tx, modelId, toAdd);
+        return {
+            success: true,
+            message: "Tags deleted successfully"
+        };
+    } catch (error) {
+        return handleActionError(error);
+    }
 }

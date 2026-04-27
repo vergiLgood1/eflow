@@ -38,14 +38,14 @@ import { WorkspaceSwitcher } from "../molecules/workspace-switcher";
 
 interface WorkspaceHeaderProps {
     userName: string;
-    workspacesPromise?: Promise<Workspace[]>;
-    modelsPromise?: Promise<DataModel[]>;
+    workspaces: Workspace[];
+    models: DataModel[];
 }
 
 export function WorkspaceHeader({
     userName,
-    workspacesPromise,
-    modelsPromise,
+    workspaces,
+    models,
 }: WorkspaceHeaderProps) {
     const { theme, setTheme } = useTheme();
     const router = useRouter();
@@ -85,20 +85,16 @@ export function WorkspaceHeader({
 
                 <div className="h-4 w-px bg-border mx-1" />
 
-                <Suspense fallback={<Skeleton className="h-9 w-40 rounded-lg" />}>
-                    <WorkspaceSwitcher 
-                        workspaceName="My Workspace" 
-                        slug={slug} 
-                        initialPromise={workspacesPromise} 
-                    />
-                </Suspense>
+                <WorkspaceSwitcher 
+                    workspaceName="My Workspace" 
+                    slug={slug} 
+                    initialData={workspaces} 
+                />
 
-                <Suspense fallback={<Skeleton className="h-9 w-48 rounded-lg" />}>
-                    <WorkspaceDataModelSelector 
-                        slug={slug} 
-                        initialPromise={modelsPromise} 
-                    />
-                </Suspense>
+                <WorkspaceDataModelSelector 
+                    slug={slug} 
+                    initialData={models} 
+                />
             </div>
 
             <div className="flex items-center gap-2 ml-auto">

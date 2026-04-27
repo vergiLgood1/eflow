@@ -9,22 +9,22 @@ import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
 interface WorkspaceLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
-    workspacesPromise: Promise<Workspace[]>;
-    modelsPromise: Promise<DataModel[]>;
+    workspaces: Workspace[];
+    models: DataModel[];
 }
 
 export function WorkspaceLayoutTemplate({
     children,
     userName,
-    workspacesPromise,
-    modelsPromise,
+    workspaces,
+    models,
 }: WorkspaceLayoutTemplateProps) {
     return (
         <div className="h-screen flex flex-col min-w-0 overflow-hidden bg-background">
             <WorkspaceHeader
                 userName={userName}
-                workspacesPromise={workspacesPromise}
-                modelsPromise={modelsPromise}
+                workspaces={workspaces}
+                models={models}
             />
             <div className="flex-1 flex overflow-hidden">
                 <WorkspaceSidebar />

@@ -24,15 +24,12 @@ interface DataModel {
 }
 
 interface ModelListProps {
-    promise?: Promise<DataModel[]>;
+    models: DataModel[];
     selectedId?: string;
     onSelect: (model: DataModel) => void;
 }
 
-function ModelList({ promise, selectedId, onSelect }: ModelListProps) {
-    if (!promise) return null;
-    const models = use(promise);
-
+function ModelList({ models, selectedId, onSelect }: ModelListProps) {
     return (
         <div className="p-1">
             <p className="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
@@ -99,30 +96,40 @@ function ModelListSkeleton() {
 interface WorkspaceDataModelSelectorProps {
     slug: string;
     className?: string;
-    initialPromise?: Promise<DataModel[]>;
+    initialData: DataModel[];
 }
 
 export function WorkspaceDataModelSelector({
     slug,
     className,
-    initialPromise,
+    initialData,
 }: WorkspaceDataModelSelectorProps) {
     const [open, setOpen] = React.useState(false);
     const [searchQuery, setSearchQuery] = React.useState("");
     const [debouncedSearch] = useDebounceValue(searchQuery, 300);
     const [selectedModel, setSelectedModel] = React.useState<DataModel | null>(null);
 
-    const [modelsPromise, setModelsPromise] = React.useState(initialPromise);
+    const [models, setModels] = React.useState<DataModel[]>(initialData);
+    const [isLoading, setIsLoading] = React.useState(false);
 
     React.useEffect(() => {
-        if (!debouncedSearch) {
-            setModelsPromise(initialPromise);
-            return;
-        }
+        const fetchModels = async () => {
+            if (!debouncedSearch) {
+                setModels(initialData);
+                return;
+            }
 
-        const newPromise = getDataModelsBySlug(slug, debouncedSearch);
-        setModelsPromise(newPromise);
-    }, [slug, debouncedSearch, initialPromise]);
+            setIsLoading(true);
+            try {
+                const data = await getDataModelsBySlug(slug, debouncedSearch);
+                setModels(data);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchModels();
+    }, [slug, debouncedSearch, initialData]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -155,16 +162,18 @@ export function WorkspaceDataModelSelector({
                     </div>
                 </div>
                 <ScrollArea className="max-h-[280px]">
-                    <Suspense fallback={<ModelListSkeleton />}>
+                    {isLoading ? (
+                        <ModelListSkeleton />
+                    ) : (
                         <ModelList
-                            promise={modelsPromise}
+                            models={models}
                             selectedId={selectedModel?.id}
                             onSelect={(m) => {
                                 setSelectedModel(m);
                                 setOpen(false);
                             }}
                         />
-                    </Suspense>
+                    )}
                 </ScrollArea>
                 <Separator />
                 <div className="p-1">

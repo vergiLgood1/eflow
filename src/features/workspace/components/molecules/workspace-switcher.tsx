@@ -33,15 +33,12 @@ interface Workspace {
 }
 
 interface WorkspaceListProps {
-    promise?: Promise<Workspace[]>;
+    workspaces: Workspace[];
     selectedId?: string;
     onSelect: (workspace: Workspace) => void;
 }
 
-function WorkspaceList({ promise, selectedId, onSelect }: WorkspaceListProps) {
-    if (!promise) return null;
-    const workspaces = use(promise);
-
+function WorkspaceList({ workspaces, selectedId, onSelect }: WorkspaceListProps) {
     return (
         <div className="p-1">
             <p className="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
@@ -96,14 +93,14 @@ interface WorkspaceSwitcherProps {
     workspaceName: string;
     slug?: string;
     className?: string;
-    initialPromise?: Promise<Workspace[]>;
+    initialData: Workspace[];
 }
 
 export function WorkspaceSwitcher({
     workspaceName: initialWorkspaceName,
     slug: currentSlug,
     className,
-    initialPromise,
+    initialData,
 }: WorkspaceSwitcherProps) {
     const [open, setOpen] = React.useState(false);
     const [searchQuery, setSearchQuery] = React.useState("");
@@ -114,17 +111,27 @@ export function WorkspaceSwitcher({
     // Initial display name
     const [displayName, setDisplayName] = React.useState(initialWorkspaceName);
 
-    const [workspacesPromise, setWorkspacesPromise] = React.useState(initialPromise);
+    const [workspaces, setWorkspaces] = React.useState<Workspace[]>(initialData);
+    const [isLoading, setIsLoading] = React.useState(false);
 
     React.useEffect(() => {
-        if (!debouncedSearch) {
-            setWorkspacesPromise(initialPromise);
-            return;
-        }
+        const fetchWorkspaces = async () => {
+            if (!debouncedSearch) {
+                setWorkspaces(initialData);
+                return;
+            }
 
-        const newPromise = getWorkspaces(debouncedSearch);
-        setWorkspacesPromise(newPromise);
-    }, [debouncedSearch, initialPromise]);
+            setIsLoading(true);
+            try {
+                const data = await getWorkspaces(debouncedSearch);
+                setWorkspaces(data);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchWorkspaces();
+    }, [debouncedSearch, initialData]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -157,19 +164,19 @@ export function WorkspaceSwitcher({
                     </div>
                 </div>
                 <ScrollArea className="max-h-[240px]">
-                    <Suspense fallback={<WorkspaceListSkeleton />}>
+                    {isLoading ? (
+                        <WorkspaceListSkeleton />
+                    ) : (
                         <WorkspaceList
-                            promise={workspacesPromise}
-                            selectedId={currentSlug} // Using slug as ID for visual check in this mock-like list
+                            workspaces={workspaces}
+                            selectedId={currentSlug}
                             onSelect={(workspace) => {
                                 setDisplayName(workspace.name);
-
                                 setOpen(false);
-
                                 router.push(`/workspaces/${workspace.slug}`);
                             }}
                         />
-                    </Suspense>
+                    )}
                 </ScrollArea>
                 <Separator />
                 <div className="p-1">
