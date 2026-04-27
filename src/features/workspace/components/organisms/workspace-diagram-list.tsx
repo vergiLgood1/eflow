@@ -8,17 +8,29 @@ import { Calendar, Database, Star } from "lucide-react";
 import React from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
-import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
+import { EmptyDiagramState } from "../molecules/empty-diagram-state";
 
 interface WorkspaceDiagramListProps {
     models: DataModel[];
     workspaces: Workspace[];
     viewMode?: "grid" | "list";
+    searchQuery?: string;
+    onClearSearch?: () => void;
 }
 
-function DiagramGrid({ models, workspaces }: { models: DataModel[], workspaces: Workspace[] }) {
+function DiagramGrid({ 
+    models, 
+    workspaces, 
+    searchQuery, 
+    onClearSearch 
+}: { 
+    models: DataModel[], 
+    workspaces: Workspace[],
+    searchQuery?: string,
+    onClearSearch?: () => void
+}) {
     if (models.length === 0) {
-        return <WorkspaceDashboardEmptyState />;
+        return <EmptyDiagramState type={searchQuery ? "no-search" : "empty"} searchQuery={searchQuery} onClearSearch={onClearSearch} />;
     }
 
     const workspaceMap = new Map(workspaces.map(w => [w.id, w]));
@@ -41,9 +53,19 @@ function DiagramGrid({ models, workspaces }: { models: DataModel[], workspaces: 
     );
 }
 
-function DiagramList({ models, workspaces }: { models: DataModel[], workspaces: Workspace[] }) {
+function DiagramList({ 
+    models, 
+    workspaces, 
+    searchQuery, 
+    onClearSearch 
+}: { 
+    models: DataModel[], 
+    workspaces: Workspace[],
+    searchQuery?: string,
+    onClearSearch?: () => void
+}) {
     if (models.length === 0) {
-        return <WorkspaceDashboardEmptyState />;
+        return <EmptyDiagramState type={searchQuery ? "no-search" : "empty"} searchQuery={searchQuery} onClearSearch={onClearSearch} />;
     }
 
     const workspaceMap = new Map(workspaces.map(w => [w.id, w]));
@@ -92,7 +114,13 @@ function DiagramList({ models, workspaces }: { models: DataModel[], workspaces: 
     );
 }
 
-export function WorkspaceDiagramList({ models, workspaces, viewMode = "grid" }: WorkspaceDiagramListProps) {
+export function WorkspaceDiagramList({ 
+    models, 
+    workspaces, 
+    viewMode = "grid",
+    searchQuery,
+    onClearSearch
+}: WorkspaceDiagramListProps) {
     return (
         <section className="mb-10">
             <div className="mb-8">
@@ -106,9 +134,19 @@ export function WorkspaceDiagramList({ models, workspaces, viewMode = "grid" }: 
             </div>
             
             {viewMode === "grid" ? (
-                <DiagramGrid models={models} workspaces={workspaces} />
+                <DiagramGrid 
+                    models={models} 
+                    workspaces={workspaces} 
+                    searchQuery={searchQuery}
+                    onClearSearch={onClearSearch}
+                />
             ) : (
-                <DiagramList models={models} workspaces={workspaces} />
+                <DiagramList 
+                    models={models} 
+                    workspaces={workspaces} 
+                    searchQuery={searchQuery}
+                    onClearSearch={onClearSearch}
+                />
             )}
         </section>
     );

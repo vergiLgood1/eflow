@@ -1,10 +1,11 @@
-import React from "react";
-import { Crown, ArrowRight, Check } from "lucide-react";
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Badge } from "@/shared/components/ui/badge";
+import { ArrowRight, Check, Crown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function WorkspaceProUpsellCard() {
+    const router = useRouter();
     const features = [
         "Unlimited workspaces & diagrams",
         "Private diagrams & security",
@@ -14,13 +15,15 @@ export function WorkspaceProUpsellCard() {
         "Priority 24/7 support"
     ];
 
+    const handleUpgrade = () => {
+        router.push("/account/billing");
+    };
+
     return (
-        <Card className="mt-12 overflow-hidden border-2 border-primary/20 bg-card/40 backdrop-blur-sm relative group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500" />
-            
+        <Card className="mt-12 overflow-hidden border bg-card/40 backdrop-blur-sm relative group">
             <CardContent className="p-8">
                 <div className="flex flex-col lg:flex-row items-start gap-8">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white shrink-0 shadow-xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500">
+                    <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white shrink-0 shadow-xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500">
                         <Crown className="h-8 w-8 fill-current" />
                     </div>
                     
@@ -47,7 +50,11 @@ export function WorkspaceProUpsellCard() {
                         </div>
                         
                         <div className="flex flex-col sm:flex-row items-center gap-6 pt-6 border-t border-border/50">
-                            <Button size="lg" className="h-12 px-8 gap-3 shadow-xl shadow-primary/30 rounded-full font-bold text-base transition-all hover:scale-105 active:scale-95">
+                            <Button
+                                size="lg"
+                                className="h-12 px-8 gap-3 shadow-xl shadow-primary/30 rounded-full font-bold text-base transition-all hover:scale-105 active:scale-95"
+                                onClick={handleUpgrade}
+                            >
                                 Upgrade to Pro
                                 <ArrowRight className="h-5 w-5" />
                             </Button>

@@ -3,6 +3,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Kbd } from "@/shared/components/ui/kbd";
 import { cn } from "@/shared/lib/utils";
 import { LayoutGrid, LayoutTemplate, List, Plus, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { CreateDiagramDialog } from "./create-diagram-dialog";
 
@@ -25,6 +26,7 @@ export function WorkspaceDashboardHeader({
     onViewModeChange,
     className,
 }: WorkspaceDashboardHeaderProps) {
+    const router = useRouter();
     const pathParts = path.split('/').filter(Boolean);
 
     return (
@@ -83,7 +85,12 @@ export function WorkspaceDashboardHeader({
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-                <Button variant="outline" size="lg" className="h-11 px-5 gap-2.5 border-border/60 hover:bg-accent hover:border-border font-bold text-[13px] rounded-xl transition-all">
+                <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="h-11 px-5 gap-2.5 border-border/60 hover:bg-accent hover:border-border font-bold text-[13px] rounded-xl transition-all"
+                    onClick={() => router.push("/templates")}
+                >
                     <LayoutTemplate className="h-4 w-4 text-primary" />
                     Templates
                 </Button>
