@@ -91,7 +91,7 @@ export function ShareDiagramDialog({ children, title }: ShareDiagramDialogProps)
                                             <div className="flex items-center justify-between p-2 rounded-xl hover:bg-background/50 transition-colors group cursor-pointer">
                                                 <div className="flex items-center gap-3 min-w-0">
                                                     <Checkbox className="rounded-md h-4 w-4" />
-                                                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border border-border/50 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
+                                                    <div className="h-10 w-10 rounded-full bg-linear-to-br from-emerald-500/20 to-sky-500/20 border border-border/50 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
                                                         ER
                                                     </div>
                                                     <div className="min-w-0">
@@ -127,7 +127,7 @@ export function ShareDiagramDialog({ children, title }: ShareDiagramDialogProps)
                                     </div>
                                     <div className="flex items-center justify-between p-3 rounded-2xl border border-border/50 bg-background/40">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border border-border/50 flex items-center justify-center text-[10px] font-bold text-primary">
+                                            <div className="h-9 w-9 rounded-full bg-linear-to-br from-emerald-500/20 to-sky-500/20 border border-border/50 flex items-center justify-center text-[10px] font-bold text-primary">
                                                 ER
                                             </div>
                                             <div>
