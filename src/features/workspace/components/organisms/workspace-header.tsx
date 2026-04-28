@@ -28,7 +28,8 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
-import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
+
+import { ModelToolbarButton } from "@/features/model/components/atoms/model-toolbar-button";
 import { WorkspaceDataModelSelector } from "../molecules/workspace-data-model-selector";
 import { WorkspaceNotificationPopover } from "../molecules/workspace-notification-popover";
 import { WorkspaceSupportDialog } from "../molecules/workspace-support-dialog";
@@ -97,14 +98,14 @@ export function WorkspaceHeader({
             <div className="flex items-center gap-2 ml-auto">
                 <div className="hidden lg:flex items-center gap-1 mr-2">
                     <WorkspaceSupportDialog>
-                        <WorkspaceModelToolbarButton
+                        <ModelToolbarButton
                             tooltip="Contact Support / Report Bug"
                             icon={<LifeBuoy className="h-4 w-4 text-muted-foreground" />}
                         />
                     </WorkspaceSupportDialog>
 
                     <WorkspaceNotificationPopover>
-                        <WorkspaceModelToolbarButton
+                        <ModelToolbarButton
                             tooltip="Notifications"
                             icon={<Bell className="h-4 w-4 text-muted-foreground" />}
                         />
@@ -137,7 +138,7 @@ export function WorkspaceHeader({
 
                 <div className="h-4 w-px bg-border mx-1" />
 
-                <WorkspaceModelToolbarButton 
+                <ModelToolbarButton 
                     tooltip="Toggle Chat" 
                     icon={<PanelRight className="h-4 w-4 text-muted-foreground" />} 
                     onClick={toggleChat}

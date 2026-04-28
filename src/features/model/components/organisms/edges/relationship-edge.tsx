@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getSmoothStepPath } from "@xyflow/react";
-import { RelationshipEdgeData } from "@/features/workspace/types/canvas";
+import { RelationshipEdgeData } from "@/features/model/types/canvas";
 
 // EdgeProps (without generic) is compatible with EdgeTypes.
 // We narrow `data` inside the body: semantically safe because React Flow

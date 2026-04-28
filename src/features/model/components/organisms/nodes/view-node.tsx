@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, NodeProps } from "@xyflow/react";
 import { Eye, FileCode2 } from "lucide-react";
-import { ViewNodeData } from "@/features/workspace/types/canvas";
+import { ViewNodeData } from "@/features/model/types/canvas";
 import { cn } from "@/shared/lib/utils";
 
 const NodeHandle = ({ type, position, id }: { type: "source" | "target"; position: Position; id: string }) => (

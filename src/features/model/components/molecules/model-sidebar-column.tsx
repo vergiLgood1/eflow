@@ -1,16 +1,16 @@
 import React from "react";
 
-interface WorkspaceModelSidebarColumnProps {
+interface ModelSidebarColumnProps {
     name: string;
     type: string;
     id?: string;
 }
 
-export function WorkspaceModelSidebarColumn({
+export function ModelSidebarColumn({
     name,
     type,
     id,
-}: WorkspaceModelSidebarColumnProps) {
+}: ModelSidebarColumnProps) {
     return (
         <div className="group flex items-center gap-1">
             <button
@@ -23,15 +23,15 @@ export function WorkspaceModelSidebarColumn({
     );
 }
 
-interface WorkspaceModelSidebarSectionProps {
+interface ModelSidebarSectionProps {
     title: string;
     children: React.ReactNode;
 }
 
-export function WorkspaceModelSidebarSection({
+export function ModelSidebarSection({
     title,
     children,
-}: WorkspaceModelSidebarSectionProps) {
+}: ModelSidebarSectionProps) {
     return (
         <>
             <div className="flex items-center gap-2">

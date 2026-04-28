@@ -14,6 +14,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";
+import colors from "tailwindcss/colors";
 
 import { useCanvasStore } from "../../store/use-canvas-store";
 import type {
@@ -45,6 +46,7 @@ const INITIAL_NODES: Node[] = [
         type: "table",
         data: {
             name: "users",
+            color: colors.blue[500],
             columns: [
                 { id: "c1", name: "id", type: "uuid", isPk: true },
                 { id: "c2", name: "email", type: "varchar" },
@@ -58,6 +60,7 @@ const INITIAL_NODES: Node[] = [
         type: "table",
         data: {
             name: "profiles",
+            color: colors.blue[500],
             columns: [
                 { id: "c4", name: "id", type: "uuid", isPk: true },
                 { id: "c5", name: "user_id", type: "uuid", isFk: true },
@@ -88,14 +91,14 @@ const TOOL_CURSOR: Record<string, string> = {
 
 // ---- Component ----
 
-interface WorkspaceModelCanvasProps {
+interface ModelCanvasProps {
     dataModelId: string;
 }
 
 /**
  * Inner component runs inside ReactFlowProvider so we can use context hooks.
  */
-function CanvasInner({ dataModelId }: WorkspaceModelCanvasProps) {
+function CanvasInner({ dataModelId }: ModelCanvasProps) {
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
     const onNodesChange = useCanvasStore((s) => s.onNodesChange);
@@ -136,6 +139,7 @@ function CanvasInner({ dataModelId }: WorkspaceModelCanvasProps) {
                         position,
                         data: {
                             name: "new_table",
+                            color: colors.blue[500],
                             columns: [
                                 { id: crypto.randomUUID(), name: "id", type: "uuid", isPk: true },
                             ],
@@ -206,7 +210,7 @@ function CanvasInner({ dataModelId }: WorkspaceModelCanvasProps) {
     );
 }
 
-export function WorkspaceModelCanvas({ dataModelId }: WorkspaceModelCanvasProps) {
+export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
     return (
         <div className="w-full h-full bg-muted/5">
             <ReactFlowProvider>

@@ -2,17 +2,17 @@ import React from "react";
 import { Input } from "@/shared/components/ui/input";
 import { Search } from "lucide-react";
 
-interface WorkspaceModelSearchInputProps {
+interface ModelSearchInputProps {
     placeholder?: string;
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function WorkspaceModelSearchInput({
+export function ModelSearchInput({
     placeholder = "Search...",
     value,
     onChange,
-}: WorkspaceModelSearchInputProps) {
+}: ModelSearchInputProps) {
     return (
         <div className="relative">
             <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

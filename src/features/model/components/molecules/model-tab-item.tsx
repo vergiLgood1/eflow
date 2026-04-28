@@ -1,17 +1,17 @@
 import React from "react";
 import { cn } from "@/shared/lib/utils";
 
-interface WorkspaceModelTabItemProps {
+interface ModelTabItemProps {
     label: string;
     isActive?: boolean;
     onClick?: () => void;
 }
 
-export function WorkspaceModelTabItem({
+export function ModelTabItem({
     label,
     isActive = false,
     onClick,
-}: WorkspaceModelTabItemProps) {
+}: ModelTabItemProps) {
     return (
         <div
             className={cn(

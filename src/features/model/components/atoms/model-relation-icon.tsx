@@ -2,15 +2,15 @@ import React from "react";
 
 export type RelationType = "1:1" | "1:n" | "0..1" | "0..n" | "n:n";
 
-interface WorkspaceModelRelationIconProps {
+interface ModelRelationIconProps {
     type: RelationType;
     className?: string;
 }
 
-export function WorkspaceModelRelationIcon({
+export function ModelRelationIcon({
     type,
     className,
-}: WorkspaceModelRelationIconProps) {
+}: ModelRelationIconProps) {
     const strokeWidth = 1.5;
 
     switch (type) {

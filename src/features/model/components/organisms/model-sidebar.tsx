@@ -5,21 +5,19 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Plus } from "lucide-react";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { isTableNode } from "../../types/canvas";
-import { WorkspaceModelSearchInput } from "../molecules/workspace-model-search-input";
-import {
-    WorkspaceModelSidebarColumn,
-    WorkspaceModelSidebarSection,
-} from "../molecules/workspace-model-sidebar-column";
-import { WorkspaceModelSidebarTable } from "../molecules/workspace-model-sidebar-table";
+import { ModelSearchInput } from "../molecules/model-search-input";
+import { ModelSidebarColumn, ModelSidebarSection } from "../molecules/model-sidebar-column";
 
-export function WorkspaceModelSidebar() {
+import { ModelSidebarTable } from "../molecules/model-sidebar-table";
+
+export function ModelSidebar() {
     const nodes = useCanvasStore((s) => s.nodes);
     const tableNodes = nodes.filter(isTableNode);
 
     return (
         <aside className="flex w-[280px] flex-col bg-card border-r text-foreground h-full overflow-hidden">
             <div className="px-3 pt-3 pb-2">
-                <WorkspaceModelSearchInput />
+                <ModelSearchInput />
             </div>
             <ScrollArea className="flex-1">
                 <div className="px-1 pb-2">
@@ -29,17 +27,17 @@ export function WorkspaceModelSidebar() {
                         </div>
                     ) : (
                         tableNodes.map((node) => (
-                            <WorkspaceModelSidebarTable key={node.id} name={node.data.name} isOpen={true}>
-                                <WorkspaceModelSidebarSection title="Columns">
+                            <ModelSidebarTable key={node.id} name={node.data.name} isOpen={true}>
+                                <ModelSidebarSection title="Columns">
                                     {node.data.columns?.map((col) => (
-                                        <WorkspaceModelSidebarColumn
+                                        <ModelSidebarColumn
                                             key={col.id}
                                             name={col.name}
                                             type={col.type}
                                         />
                                     ))}
-                                </WorkspaceModelSidebarSection>
-                            </WorkspaceModelSidebarTable>
+                                </ModelSidebarSection>
+                            </ModelSidebarTable>
                         ))
                     )}
                 </div>

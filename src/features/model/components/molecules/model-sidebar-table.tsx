@@ -7,19 +7,19 @@ import {
     CollapsibleTrigger,
 } from "@/shared/components/ui/collapsible";
 
-interface WorkspaceModelSidebarTableProps {
+interface ModelSidebarTableProps {
     name: string;
     isOpen?: boolean;
     onToggle?: () => void;
     children?: React.ReactNode;
 }
 
-export function WorkspaceModelSidebarTable({
+export function ModelSidebarTable({
     name,
     isOpen = false,
     onToggle,
     children,
-}: WorkspaceModelSidebarTableProps) {
+}: ModelSidebarTableProps) {
     return (
         <Collapsible open={isOpen} onOpenChange={onToggle} className="px-2">
             <div

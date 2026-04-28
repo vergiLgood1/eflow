@@ -9,7 +9,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 
-interface WorkspaceModelToolbarButtonProps extends ButtonProps {
+interface ModelToolbarButtonProps extends ButtonProps {
     tooltip?: string;
     icon?: React.ReactNode;
     label?: string;
@@ -17,14 +17,14 @@ interface WorkspaceModelToolbarButtonProps extends ButtonProps {
     children?: React.ReactNode;
 }
 
-export function WorkspaceModelToolbarButton({
+export function ModelToolbarButton({
     tooltip,
     icon,
     label,
     className,
     children,
     ...props
-}: WorkspaceModelToolbarButtonProps) {
+}: ModelToolbarButtonProps) {
     const button = (
         <Button
             variant="ghost"

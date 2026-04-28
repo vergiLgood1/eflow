@@ -1,17 +1,17 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 
-interface WorkspaceModelUserAvatarProps {
+interface ModelUserAvatarProps {
     name: string;
     image?: string;
     color?: string;
 }
 
-export function WorkspaceModelUserAvatar({
+export function ModelUserAvatar({
     name,
     image,
     color = "rgb(249, 115, 22)",
-}: WorkspaceModelUserAvatarProps) {
+}: ModelUserAvatarProps) {
     const initials = name
         .split(" ")
         .map((n) => n[0])

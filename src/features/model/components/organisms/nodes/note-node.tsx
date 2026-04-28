@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { NodeProps } from "@xyflow/react";
-import { NoteNodeData } from "@/features/workspace/types/canvas";
+import { NoteNodeData } from "@/features/model/types/canvas";
 import { cn } from "@/shared/lib/utils";
 
 export const NoteNodeComponent = memo(({ data: rawData, selected }: NodeProps) => {

@@ -1,6 +1,6 @@
 import { auth } from "@/features/authentication/lib/auth-server";
 import { getDataModelById, getDataModelsBySlug, getWorkspacesByCurrentUser } from "@/features/workspace/applications/workspace.action";
-import { WorkspaceModelLayoutTemplate } from "@/features/workspace/components/templates/workspace-model-layout-template";
+import { ModelLayoutTemplate } from "@/features/model/components/templates/model-layout-template";
 import { redirect, notFound } from "next/navigation";
 
 export default async function Layout({
@@ -27,12 +27,12 @@ export default async function Layout({
     const userName = session.data?.user?.name || "Guest";
 
     return (
-        <WorkspaceModelLayoutTemplate
+        <ModelLayoutTemplate
             userName={userName}
             workspaces={workspaces}
             models={models}
         >
             {children}
-        </WorkspaceModelLayoutTemplate>
+        </ModelLayoutTemplate>
     );
 }

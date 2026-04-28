@@ -1,24 +1,24 @@
 import React from "react";
-import { WorkspaceHeader } from "../organisms/workspace-header";
-import { WorkspaceModelSidebar } from "../organisms/workspace-model-sidebar";
-import { WorkspaceModelToolbar } from "../organisms/workspace-model-toolbar";
+import { WorkspaceHeader } from "@/features/workspace/components/organisms/workspace-header";
+import { ModelSidebar } from "../organisms/model-sidebar";
+import { ModelToolbar } from "../organisms/model-toolbar";
 
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
+import { WorkspaceChatPanel } from "@/features/workspace/components/organisms/workspace-chat-panel";
 
-interface WorkspaceModelLayoutTemplateProps {
+interface ModelLayoutTemplateProps {
     children: React.ReactNode;
     userName: string;
     workspaces: Workspace[];
     models: DataModel[];
 }
 
-export function WorkspaceModelLayoutTemplate({
+export function ModelLayoutTemplate({
     children,
     userName,
     workspaces,
     models,
-}: WorkspaceModelLayoutTemplateProps) {
+}: ModelLayoutTemplateProps) {
     return (
         <div className="h-screen flex flex-col min-w-0 overflow-hidden bg-background">
             {/* Main Application Header */}
@@ -30,12 +30,12 @@ export function WorkspaceModelLayoutTemplate({
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Model Navigation Sidebar */}
-                <WorkspaceModelSidebar />
+                <ModelSidebar />
 
                 {/* Main Content Area */}
                 <main className="flex-1 min-w-0 flex flex-col relative bg-muted/10">
                     {/* Secondary Toolbars (Tabs & Actions) */}
-                    <WorkspaceModelToolbar />
+                    <ModelToolbar />
 
                     {/* Canvas / Editor View */}
                     <div className="flex-1 relative overflow-hidden">

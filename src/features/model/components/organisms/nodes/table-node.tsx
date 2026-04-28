@@ -2,7 +2,7 @@ import { memo } from "react";
 import { Handle, Position, NodeProps } from "@xyflow/react";
 import { Table2, Pencil, Trash2, Link2, Database, Zap } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { TableNodeData, ColumnData } from "@/features/workspace/types/canvas";
+import { TableNodeData, ColumnData } from "@/features/model/types/canvas";
 import { cn } from "@/shared/lib/utils";
 import { EntityActionsBox } from "./entity-actions-box";
 
