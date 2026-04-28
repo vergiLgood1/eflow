@@ -487,3 +487,74 @@ export async function getDataModelById(id: string) {
 
     return model;
 }
+
+// ---- Canvas / Diagram Sync ----
+
+interface TableNodeSnapshot {
+    id: string;
+    tableId: string;
+    x: number;
+    y: number;
+}
+
+interface SaveDiagramPayload {
+    dataModelId: string;
+    name: string;
+    tableNodes: TableNodeSnapshot[];
+}
+
+export async function saveDiagram(payload: SaveDiagramPayload): Promise<ActionResponse> {
+    try {
+        const session = await auth.getSession();
+        if (!session.data?.user) throw new AppError("Unauthorized", 401);
+
+        // Ensure the data model exists and the user has access
+        const model = await db.dataModel.findUnique({
+            where: { id: payload.dataModelId },
+            include: { workspace: { include: { members: true } } },
+        });
+
+        if (!model) throw new AppError("Data model not found", 404);
+
+        const isMember = model.workspace.members.some(
+            (m) => m.userId === session.data?.user.id
+        );
+        if (!isMember) throw new AppError("Unauthorized", 403);
+
+        await db.$transaction(async (tx) => {
+            // Upsert the diagram (one default diagram per model for now)
+            const diagram = await tx.diagram.upsert({
+                where: {
+                    // We use a unique constraint on the name within a dataModel
+                    // using findFirst + create/update pattern since no composite unique here
+                    id: `${payload.dataModelId}-default`,
+                },
+                update: { name: payload.name, updatedAt: new Date() },
+                create: {
+                    id: `${payload.dataModelId}-default`,
+                    dataModelId: payload.dataModelId,
+                    name: payload.name,
+                    isDraft: false,
+                },
+            });
+
+            // Upsert table node positions
+            for (const node of payload.tableNodes) {
+                await tx.tableNode.upsert({
+                    where: { diagramId_tableId: { diagramId: diagram.id, tableId: node.tableId } },
+                    update: { x: node.x, y: node.y },
+                    create: {
+                        diagramId: diagram.id,
+                        tableId: node.tableId,
+                        x: node.x,
+                        y: node.y,
+                    },
+                });
+            }
+        });
+
+        return { success: true, message: "Diagram saved" };
+    } catch (error) {
+        return handleActionError(error);
+    }
+}

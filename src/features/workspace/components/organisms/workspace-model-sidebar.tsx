@@ -1,15 +1,21 @@
-import React from "react";
+"use client";
+
+import { Button } from "@/shared/components/ui/button";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { Plus } from "lucide-react";
+import { useCanvasStore } from "../../store/use-canvas-store";
+import { isTableNode } from "../../types/canvas";
 import { WorkspaceModelSearchInput } from "../molecules/workspace-model-search-input";
-import { WorkspaceModelSidebarTable } from "../molecules/workspace-model-sidebar-table";
 import {
     WorkspaceModelSidebarColumn,
     WorkspaceModelSidebarSection,
 } from "../molecules/workspace-model-sidebar-column";
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { Plus } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
+import { WorkspaceModelSidebarTable } from "../molecules/workspace-model-sidebar-table";
 
 export function WorkspaceModelSidebar() {
+    const nodes = useCanvasStore((s) => s.nodes);
+    const tableNodes = nodes.filter(isTableNode);
+
     return (
         <aside className="flex w-[280px] flex-col bg-card border-r text-foreground h-full overflow-hidden">
             <div className="px-3 pt-3 pb-2">
@@ -17,26 +23,25 @@ export function WorkspaceModelSidebar() {
             </div>
             <ScrollArea className="flex-1">
                 <div className="px-1 pb-2">
-                    <WorkspaceModelSidebarTable name="addresses" isOpen={true}>
-                        <WorkspaceModelSidebarSection title="Columns">
-                            <WorkspaceModelSidebarColumn name="id" type="bigint" />
-                            <WorkspaceModelSidebarColumn name="chain" type="varchar" />
-                            <WorkspaceModelSidebarColumn name="address" type="varchar" />
-                            <WorkspaceModelSidebarColumn name="key_id" type="uuid" />
-                            <WorkspaceModelSidebarColumn name="public_key" type="bytea" />
-                            <WorkspaceModelSidebarColumn name="type" type="varchar" />
-                            <WorkspaceModelSidebarColumn name="nonce" type="bigint" />
-                            <WorkspaceModelSidebarColumn name="created_at" type="bigint" />
-                            <WorkspaceModelSidebarColumn name="last_updated" type="bigint" />
-                        </WorkspaceModelSidebarSection>
-                        <WorkspaceModelSidebarSection title="Foreign keys (0)">
-                            {null}
-                        </WorkspaceModelSidebarSection>
-                    </WorkspaceModelSidebarTable>
-
-                    <WorkspaceModelSidebarTable name="blocks" />
-                    <WorkspaceModelSidebarTable name="tokens" />
-                    <WorkspaceModelSidebarTable name="transactions" />
+                    {tableNodes.length === 0 ? (
+                        <div className="py-6 text-center text-xs text-muted-foreground">
+                            No tables yet. Add one from the toolbar.
+                        </div>
+                    ) : (
+                        tableNodes.map((node) => (
+                            <WorkspaceModelSidebarTable key={node.id} name={node.data.name} isOpen={true}>
+                                <WorkspaceModelSidebarSection title="Columns">
+                                    {node.data.columns?.map((col) => (
+                                        <WorkspaceModelSidebarColumn
+                                            key={col.id}
+                                            name={col.name}
+                                            type={col.type}
+                                        />
+                                    ))}
+                                </WorkspaceModelSidebarSection>
+                            </WorkspaceModelSidebarTable>
+                        ))
+                    )}
                 </div>
 
                 <div className="border-t mt-2">

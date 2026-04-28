@@ -1,0 +1,109 @@
+import type { Node, Edge } from "@xyflow/react";
+
+// ---------------------------------------------------------------------------
+// Column
+// ---------------------------------------------------------------------------
+
+export type ColumnType =
+    | "int"
+    | "bigint"
+    | "varchar"
+    | "text"
+    | "boolean"
+    | "timestamp"
+    | "jsonb"
+    | "uuid"
+    | "custom";
+
+export interface ColumnData {
+    id: string;
+    name: string;
+    /** Accepts both ColumnType values and arbitrary strings for custom types. */
+    type: string;
+    isPk?: boolean;
+    isFk?: boolean;
+    isIdx?: boolean;
+    nullable?: boolean;
+    defaultValue?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Node data interfaces
+// Each explicitly extends Record<string, unknown> to satisfy
+// the @xyflow/react `Node<TData extends Record<string, unknown>>` constraint.
+// ---------------------------------------------------------------------------
+
+export interface TableNodeData extends Record<string, unknown> {
+    name: string;
+    columns: ColumnData[];
+    /** e.g. "postgres" | "mysql" – drives visual badge */
+    dbType?: string;
+    /** Hex or CSS colour for the header bar */
+    color?: string;
+    /** Optional notes for the table */
+    notes?: string;
+}
+
+export interface ViewNodeData extends Record<string, unknown> {
+    name: string;
+    query: string;
+}
+
+export interface NoteNodeData extends Record<string, unknown> {
+    content: string;
+    color?: string;
+}
+
+export interface GroupNodeData extends Record<string, unknown> {
+    name: string;
+    color?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Typed React Flow node / edge aliases
+// ---------------------------------------------------------------------------
+
+export type TableNode = Node<TableNodeData, "table">;
+export type ViewNode  = Node<ViewNodeData, "view">;
+export type NoteNode  = Node<NoteNodeData, "note">;
+export type GroupNode = Node<GroupNodeData, "group">;
+
+export type CanvasNode = TableNode | ViewNode | NoteNode | GroupNode;
+
+// ---------------------------------------------------------------------------
+// Edge data
+// ---------------------------------------------------------------------------
+
+export type CardinalityType = "1:1" | "1:n" | "n:1" | "n:m";
+
+export interface RelationshipEdgeData extends Record<string, unknown> {
+    cardinality: CardinalityType;
+    onDelete?: "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION";
+    onUpdate?: "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION";
+}
+
+export type RelationshipEdge = Edge<RelationshipEdgeData, "relationship">;
+
+// ---------------------------------------------------------------------------
+// Type guards — use these for narrowing instead of raw .type === "table" checks
+// ---------------------------------------------------------------------------
+
+export function isTableNode(node: Node): node is TableNode {
+    return node.type === "table";
+}
+
+export function isViewNode(node: Node): node is ViewNode {
+    return node.type === "view";
+}
+
+export function isNoteNode(node: Node): node is NoteNode {
+    return node.type === "note";
+}
+
+export function isGroupNode(node: Node): node is GroupNode {
+    return node.type === "group";
+}
+
+export function isRelationshipEdge(edge: Edge): edge is RelationshipEdge {
+    return edge.type === "relationship";
+}

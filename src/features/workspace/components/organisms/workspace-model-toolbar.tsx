@@ -1,3 +1,5 @@
+"use client";
+
 import { Separator } from "@/shared/components/ui/separator";
 import {
     Activity,
@@ -18,14 +20,24 @@ import {
     Upload,
     Users,
     ZoomIn,
-    ZoomOut
+    ZoomOut,
 } from "lucide-react";
+import { useCanvasStore, type CanvasTool } from "../../store/use-canvas-store";
 import { WorkspaceModelRelationIcon } from "../atoms/workspace-model-relation-icon";
 import { WorkspaceModelToolbarButton } from "../atoms/workspace-model-toolbar-button";
 import { WorkspaceModelTabItem } from "../molecules/workspace-model-tab-item";
 import { WorkspaceModelUserAvatar } from "../molecules/workspace-model-user-avatar";
 
+const ACTIVE_TOOL_CLASS = "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80";
+
 export function WorkspaceModelToolbar() {
+    const activeTool = useCanvasStore((s) => s.activeTool);
+    const setActiveTool = useCanvasStore((s) => s.setActiveTool);
+
+    const handleToolClick = (tool: CanvasTool) => {
+        setActiveTool(activeTool === tool ? "select" : tool);
+    };
+
     return (
         <div className="flex flex-col border-b bg-card">
             {/* Tab Bar */}
@@ -48,10 +60,21 @@ export function WorkspaceModelToolbar() {
                     <WorkspaceModelToolbarButton
                         tooltip="Cursor"
                         icon={<MousePointer2 className="h-4 w-4" />}
-                        className="bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
+                        className={activeTool === "select" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => setActiveTool("select")}
                     />
-                    <WorkspaceModelToolbarButton tooltip="Add Table" icon={<Table2 className="h-4 w-4" />} />
-                    <WorkspaceModelToolbarButton tooltip="Add View" icon={<TableProperties className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton
+                        tooltip="Add Table (click canvas to place)"
+                        icon={<Table2 className="h-4 w-4" />}
+                        className={activeTool === "table" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("table")}
+                    />
+                    <WorkspaceModelToolbarButton
+                        tooltip="Add View (click canvas to place)"
+                        icon={<TableProperties className="h-4 w-4" />}
+                        className={activeTool === "view" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("view")}
+                    />
 
                     <WorkspaceModelToolbarButton tooltip="One to One" label="1:1">
                         <WorkspaceModelRelationIcon type="1:1" />
@@ -69,7 +92,12 @@ export function WorkspaceModelToolbar() {
                         <WorkspaceModelRelationIcon type="n:n" />
                     </WorkspaceModelToolbarButton>
 
-                    <WorkspaceModelToolbarButton tooltip="Note" icon={<Square className="h-4 w-4" />} />
+                    <WorkspaceModelToolbarButton
+                        tooltip="Note (click canvas to place)"
+                        icon={<Square className="h-4 w-4" />}
+                        className={activeTool === "note" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("note")}
+                    />
                     <WorkspaceModelToolbarButton tooltip="Group" icon={<Layers className="h-4 w-4" />} />
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
