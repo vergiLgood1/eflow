@@ -45,7 +45,7 @@ export function ModelTabItem({
             )}
 
             {isActive && (
-                <div className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-primary" />
+                <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary" />
             )}
         </div>
     );

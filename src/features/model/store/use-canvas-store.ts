@@ -41,6 +41,7 @@ interface CanvasState {
     isDirty: boolean;
     activeTool: CanvasTool;
     isAnimated: boolean;
+    pendingConnectionSourceId: string | null;
 
     /** 
      * Storage for all open workspaces. 
@@ -63,6 +64,7 @@ interface CanvasState {
     setActiveTool: (tool: CanvasTool) => void;
     toggleAnimation: () => void;
     markSaved: () => void;
+    handleNodeClick: (id: string) => void;
 
     undo: () => void;
     redo: () => void;
@@ -99,6 +101,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     isDirty: false,
     activeTool: "select",
     isAnimated: false,
+    pendingConnectionSourceId: null,
     workspaces: {},
     history: [],
     future: [],
@@ -119,12 +122,26 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
             if (cardinality === "0:n") cardinality = "0..n";
         }
 
+        const getMarkers = (card: string) => {
+            // Mapping cardinality to standard marker IDs or types
+            // For now using simple logic: if it has 'n', it's 'many' (arrow), if '1' it's 'one'
+            const [source, target] = card.split(":");
+            return {
+                markerStart: source === "n" ? "marker-many" : "marker-one",
+                markerEnd: target === "n" ? "marker-many" : "marker-one",
+            };
+        };
+
+        const { markerStart, markerEnd } = getMarkers(cardinality);
+
         set({
             edges: addEdge(
                 {
                     ...connection,
                     type: "relationship",
                     data: { cardinality },
+                    markerStart,
+                    markerEnd,
                 },
                 edges
             ),
@@ -140,9 +157,60 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
         if (v.x === viewport.x && v.y === viewport.y && v.zoom === viewport.zoom) return;
         set({ viewport: v });
     },
-    setActiveTool: (tool) => set({ activeTool: tool }),
+    setActiveTool: (tool) => set({ activeTool: tool, pendingConnectionSourceId: null }),
     toggleAnimation: () => set((state) => ({ isAnimated: !state.isAnimated })),
     markSaved: () => set({ isDirty: false }),
+
+    handleNodeClick: (id) => {
+        const { activeTool, pendingConnectionSourceId, edges } = get();
+        
+        // Only proceed if a relationship tool is active
+        if (!activeTool.startsWith("rel-")) return;
+
+        if (!pendingConnectionSourceId) {
+            // First click: select source
+            set({ pendingConnectionSourceId: id });
+        } else {
+            // Second click: select target and create edge
+            if (pendingConnectionSourceId === id) return; // Can't connect to self
+
+            let cardinality = activeTool.replace("rel-", "").replace("-", ":");
+            if (cardinality === "0:1") cardinality = "0..1";
+            if (cardinality === "0:n") cardinality = "0..n";
+
+            const getMarkers = (card: string) => {
+                const parts = card.includes("..") ? card.split("..") : card.split(":");
+                const s = parts[0];
+                const t = parts[1];
+                return {
+                    markerStart: (s === "n" || s === "0") ? "marker-many" : "marker-one",
+                    markerEnd: (t === "n" || t === "0") ? "marker-many" : "marker-one",
+                };
+            };
+
+            const { markerStart, markerEnd } = getMarkers(cardinality);
+
+            get().saveToHistory();
+            
+            set({
+                edges: addEdge(
+                    {
+                        id: crypto.randomUUID(),
+                        source: pendingConnectionSourceId,
+                        target: id,
+                        type: "relationship",
+                        data: { cardinality },
+                        markerStart,
+                        markerEnd,
+                    },
+                    edges
+                ),
+                pendingConnectionSourceId: null,
+                activeTool: "select",
+                isDirty: true
+            });
+        }
+    },
 
     saveToHistory: () => {
         const { nodes, edges, history } = get();

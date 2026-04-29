@@ -51,17 +51,11 @@ export function ModelLayoutTemplate({
 
                         {/* Canvas / Editor View Area */}
                         <div className="flex-1 relative overflow-hidden">
-                            {tabs.map((tab) => (
-                                <TabsContent
-                                    key={tab.id}
-                                    value={tab.id}
-                                    className="h-full w-full m-0 p-0"
-                                >
+                            {activeTabId ? (
+                                <div className="h-full w-full">
                                     {children}
-                                </TabsContent>
-                            ))}
-
-                            {tabs.length === 0 && (
+                                </div>
+                            ) : (
                                 <div className="flex h-full items-center justify-center text-muted-foreground italic">
                                     No active workspace. Create one from the toolbar.
                                 </div>

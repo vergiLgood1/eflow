@@ -17,7 +17,6 @@ import {
     Settings,
     Square,
     Table2,
-    TableProperties,
     Undo2,
     Upload,
     Users,
@@ -149,12 +148,6 @@ export function ModelToolbar() {
                         icon={<Table2 className="h-4 w-4" />}
                         className={activeTool === "table" ? ACTIVE_TOOL_CLASS : undefined}
                         onClick={() => handleToolClick("table")}
-                    />
-                    <ModelToolbarButton
-                        tooltip="Add View (click canvas to place)"
-                        icon={<TableProperties className="h-4 w-4" />}
-                        className={activeTool === "view" ? ACTIVE_TOOL_CLASS : undefined}
-                        onClick={() => handleToolClick("view")}
                     />
 
                     <ModelToolbarButton

@@ -7,9 +7,10 @@ import {
     Controls,
     MiniMap,
     ReactFlow,
+    ReactFlowProvider,
     useReactFlow,
     type Edge,
-    type Node
+    type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";
@@ -21,10 +22,13 @@ import type {
     TableNodeData,
 } from "../../types/canvas";
 import { CanvasContextMenu } from "./canvas-context-menu";
-import { RelationshipEdgeComponent } from "./edges/relationship-edge";
+import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
+import { ModelEdgeMarkers } from "../atoms/model-edge-markers";
 import { NoteNodeComponent } from "./nodes/note-node";
 import { TableNodeComponent } from "./nodes/table-node";
 import { ViewNodeComponent } from "./nodes/view-node";
+import { useWorkspaceStore } from "../../store/use-workspace-store";
+import { useRef } from "react";
 
 const nodeTypes = {
     table: TableNodeComponent,
@@ -97,7 +101,7 @@ interface ModelCanvasProps {
 /**
  * Inner component runs inside ReactFlowProvider so we can use context hooks.
  */
-export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
+function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
     const viewport = useCanvasStore((s) => s.viewport);
@@ -117,12 +121,21 @@ export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
     const edgesWithAnimation = edges.map((edge) => ({
         ...edge,
         animated: isAnimated,
+        style: {
+            ...edge.style,
+            strokeDasharray: "5,5",
+        },
     }));
 
-    // Sync viewport from store when it changes (e.g. on tab swap)
+    const setViewportStore = useCanvasStore((s) => s.setViewport);
+    const activeTabId = useWorkspaceStore((s) => s.activeTabId);
+
+    // Sync viewport from store when the TAB changes
     useEffect(() => {
-        setViewport(viewport);
-    }, [viewport, setViewport]);
+        if (activeTabId) {
+            setViewport(viewport);
+        }
+    }, [activeTabId, setViewport, viewport]);
 
     // Initialize mock data if store is empty
     useEffect(() => {
@@ -197,19 +210,25 @@ export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeTool, setActiveTool]);
 
-    const setViewportStore = useCanvasStore((s) => s.setViewport);
+    const handleNodeClick = useCanvasStore((s) => s.handleNodeClick);
+    const pendingSourceId = useCanvasStore((s) => s.pendingConnectionSourceId);
 
     return (
-        <div className="w-full h-full bg-muted/5">
+        <div className="w-full h-full bg-muted/5 relative">
+            <ModelEdgeMarkers />
             <CanvasContextMenu>
                 <ReactFlow
-                    nodes={nodes}
+                    nodes={nodes.map(n => ({
+                        ...n,
+                        selected: n.id === pendingSourceId ? true : n.selected
+                    }))}
                     edges={edgesWithAnimation}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
                     onPaneClick={handlePaneClick}
-                    onViewportChange={setViewportStore}
+                    onNodeClick={(_, node) => handleNodeClick(node.id)}
+                    onMoveEnd={(_, vp) => setViewportStore(vp)}
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}
                     connectionMode={ConnectionMode.Loose}
@@ -223,5 +242,13 @@ export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
                 </ReactFlow>
             </CanvasContextMenu>
         </div>
+    );
+}
+
+export function ModelCanvas(props: ModelCanvasProps) {
+    return (
+        <ReactFlowProvider>
+            <ModelCanvasInner {...props} />
+        </ReactFlowProvider>
     );
 }

@@ -15,6 +15,7 @@ export const RelationshipEdgeComponent = memo(({
     targetPosition,
     style,
     markerEnd,
+    markerStart,
     data: rawData,
 }: EdgeProps) => {
     const data = rawData as RelationshipEdgeData | undefined;
@@ -29,25 +30,21 @@ export const RelationshipEdgeComponent = memo(({
         borderRadius: 8,
     });
 
+    const edgeStyle = {
+        ...style,
+        color: style?.stroke || "currentColor",
+    };
+
     return (
         <>
-            <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} id={id} />
+            <BaseEdge path={edgePath} markerStart={markerStart} markerEnd={markerEnd} style={edgeStyle} id={id} />
             <EdgeLabelRenderer>
                 {data?.cardinality && (
                     <div
                         style={{
-                            position: "absolute",
                             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                            background: "hsl(var(--background))",
-                            padding: "2px 6px",
-                            borderRadius: "4px",
-                            fontSize: "10px",
-                            fontWeight: 600,
-                            border: "1px solid hsl(var(--border))",
-                            color: "hsl(var(--foreground))",
-                            pointerEvents: "all",
                         }}
-                        className="nodrag nopan"
+                        className="nodrag nopan absolute bg-background px-1.5 py-0.5 rounded text-[10px] font-semibold border border-border text-foreground pointer-events-auto select-none"
                     >
                         {data.cardinality}
                     </div>
