@@ -7,10 +7,9 @@ import {
     Controls,
     MiniMap,
     ReactFlow,
-    ReactFlowProvider,
     useReactFlow,
     type Edge,
-    type Node,
+    type Node
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";

@@ -1,7 +1,8 @@
 "use client";
 
 import { Separator } from "@/shared/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { useReactFlow } from "@xyflow/react";
 import {
     Activity,
     ChevronLeft,
@@ -24,7 +25,6 @@ import {
     ZoomIn,
     ZoomOut
 } from "lucide-react";
-import { useReactFlow } from "@xyflow/react";
 import { useState } from "react";
 import { useCanvasStore, type CanvasTool } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
@@ -81,7 +81,7 @@ export function ModelToolbar() {
                     onClick={() => addTab({ name: "new_tab", type: "diagram" })}
                 />
 
-                <TabsList className="bg-transparent p-0 gap-1 h-full items-end flex-1 overflow-x-auto no-scrollbar">
+                <TabsList className="bg-transparent p-0 gap-1 h-full items-end no-scrollbar">
                     {tabs.map((tab) => (
                         <TabsTrigger
                             key={tab.id}
@@ -90,7 +90,7 @@ export function ModelToolbar() {
                                 setEditingTabId(tab.id);
                                 setEditingName(tab.name);
                             }}
-                            className="group relative bg-transparent border-0 rounded-b-none flex items-center justify-center"
+                            className="group relative bg-transparent border-0 rounded-b-none  no-scrollbar"
                         >
                             {/* Tab Label */}
                             {editingTabId === tab.id ? (
