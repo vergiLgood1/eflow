@@ -98,9 +98,10 @@ interface ModelCanvasProps {
 /**
  * Inner component runs inside ReactFlowProvider so we can use context hooks.
  */
-function CanvasInner({ dataModelId }: ModelCanvasProps) {
+export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
+    const viewport = useCanvasStore((s) => s.viewport);
     const onNodesChange = useCanvasStore((s) => s.onNodesChange);
     const onEdgesChange = useCanvasStore((s) => s.onEdgesChange);
     const onConnect = useCanvasStore((s) => s.onConnect);
@@ -109,17 +110,28 @@ function CanvasInner({ dataModelId }: ModelCanvasProps) {
     const addNode = useCanvasStore((s) => s.addNode);
     const activeTool = useCanvasStore((s) => s.activeTool);
     const setActiveTool = useCanvasStore((s) => s.setActiveTool);
+    const isAnimated = useCanvasStore((s) => s.isAnimated);
 
-    const { screenToFlowPosition } = useReactFlow();
+    const { screenToFlowPosition, setViewport } = useReactFlow();
 
-    // Initialize mock data — replaced when DB loading is wired
+    // Map global animation state to edges
+    const edgesWithAnimation = edges.map((edge) => ({
+        ...edge,
+        animated: isAnimated,
+    }));
+
+    // Sync viewport from store when it changes (e.g. on tab swap)
+    useEffect(() => {
+        setViewport(viewport);
+    }, [viewport, setViewport]);
+
+    // Initialize mock data if store is empty
     useEffect(() => {
         if (nodes.length === 0) {
             setNodes(INITIAL_NODES);
             setEdges(INITIAL_EDGES);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [nodes.length, setNodes, setEdges]);
 
     // Handle pane click — place node at cursor when a tool is active
     const handlePaneClick = useCallback(
@@ -186,36 +198,31 @@ function CanvasInner({ dataModelId }: ModelCanvasProps) {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeTool, setActiveTool]);
 
-    return (
-        <CanvasContextMenu>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onPaneClick={handlePaneClick}
-                nodeTypes={nodeTypes}
-                edgeTypes={edgeTypes}
-                connectionMode={ConnectionMode.Loose}
-                fitView
-                className="bg-dot-pattern"
-                style={{ cursor: TOOL_CURSOR[activeTool] ?? "default" }}
-            >
-                <Controls />
-                <MiniMap position="top-right" />
-                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-            </ReactFlow>
-        </CanvasContextMenu>
-    );
-}
+    const setViewportStore = useCanvasStore((s) => s.setViewport);
 
-export function ModelCanvas({ dataModelId }: ModelCanvasProps) {
     return (
         <div className="w-full h-full bg-muted/5">
-            <ReactFlowProvider>
-                <CanvasInner dataModelId={dataModelId} />
-            </ReactFlowProvider>
+            <CanvasContextMenu>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edgesWithAnimation}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onPaneClick={handlePaneClick}
+                    onViewportChange={setViewportStore}
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    connectionMode={ConnectionMode.Loose}
+                    fitView
+                    className="bg-dot-pattern"
+                    style={{ cursor: TOOL_CURSOR[activeTool] ?? "default" }}
+                >
+                    <Controls />
+                    <MiniMap position="top-right" />
+                    <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                </ReactFlow>
+            </CanvasContextMenu>
         </div>
     );
 }

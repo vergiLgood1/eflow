@@ -279,9 +279,11 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
                 {/* Columns */}
                 <div className="flex-1 py-1 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-border/50">
-                    {data.columns?.map((col) => (
-                        <ColumnRow key={col.id} nodeId={id} column={col} />
-                    ))}
+                    {data.columns
+                        ?.filter((col) => !(data.hiddenColumns as string[] || []).includes(col.id))
+                        .map((col) => (
+                            <ColumnRow key={col.id} nodeId={id} column={col} />
+                        ))}
                 </div>
 
                 {/* Footer */}

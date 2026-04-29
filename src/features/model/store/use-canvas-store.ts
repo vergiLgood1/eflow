@@ -1,3 +1,5 @@
+"use client "
+
 import {
     type Connection,
     type Edge,
@@ -38,6 +40,16 @@ interface CanvasState {
     viewport: Viewport;
     isDirty: boolean;
     activeTool: CanvasTool;
+    isAnimated: boolean;
+
+    /** 
+     * Storage for all open workspaces. 
+     */
+    workspaces: Record<string, { nodes: Node[]; edges: Edge[]; viewport: Viewport }>;
+
+    /** Undo/Redo history */
+    history: { nodes: Node[]; edges: Edge[] }[];
+    future: { nodes: Node[]; edges: Edge[] }[];
 
     // ---- React Flow event handlers ----
     onNodesChange: (changes: NodeChange[]) => void;
@@ -49,7 +61,12 @@ interface CanvasState {
     setEdges: (edges: Edge[]) => void;
     setViewport: (viewport: Viewport) => void;
     setActiveTool: (tool: CanvasTool) => void;
+    toggleAnimation: () => void;
     markSaved: () => void;
+
+    undo: () => void;
+    redo: () => void;
+    saveToHistory: () => void;
 
     // ---- Node mutations ----
     /** Accepts the fully-typed CanvasNode union — stored as base Node. */
@@ -61,7 +78,14 @@ interface CanvasState {
      */
     updateNodeData: (id: string, data: Record<string, unknown>) => void;
     removeNode: (id: string) => void;
+    updateNode: (id: string, updates: Partial<Node>) => void;
     duplicateNode: (id: string) => void;
+
+    /**
+     * Saves current state into 'fromId' and loads state from 'toId'.
+     * If 'toId' doesn't exist in workspaces, it initializes with empty.
+     */
+    swapWorkspace: (fromId: string | null, toId: string) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -74,6 +98,10 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     viewport: { x: 0, y: 0, zoom: 1 },
     isDirty: false,
     activeTool: "select",
+    isAnimated: false,
+    workspaces: {},
+    history: [],
+    future: [],
 
     onNodesChange: (changes) =>
         set({ nodes: applyNodeChanges(changes, get().nodes), isDirty: true }),
@@ -107,16 +135,64 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
     setNodes: (nodes) => set({ nodes }),
     setEdges: (edges) => set({ edges }),
-    setViewport: (viewport) => set({ viewport }),
+    setViewport: (v) => {
+        const { viewport } = get();
+        if (v.x === viewport.x && v.y === viewport.y && v.zoom === viewport.zoom) return;
+        set({ viewport: v });
+    },
     setActiveTool: (tool) => set({ activeTool: tool }),
+    toggleAnimation: () => set((state) => ({ isAnimated: !state.isAnimated })),
     markSaved: () => set({ isDirty: false }),
 
+    saveToHistory: () => {
+        const { nodes, edges, history } = get();
+        // Limit history to 50 steps
+        const newHistory = [...history, { nodes: [...nodes], edges: [...edges] }].slice(-50);
+        set({ history: newHistory, future: [] });
+    },
+
+    undo: () => {
+        const { history, future, nodes, edges } = get();
+        if (history.length === 0) return;
+
+        const previous = history[history.length - 1];
+        const newHistory = history.slice(0, -1);
+
+        set({
+            nodes: previous.nodes,
+            edges: previous.edges,
+            history: newHistory,
+            future: [{ nodes, edges }, ...future].slice(0, 50),
+            isDirty: true
+        });
+    },
+
+    redo: () => {
+        const { history, future, nodes, edges } = get();
+        if (future.length === 0) return;
+
+        const next = future[0];
+        const newFuture = future.slice(1);
+
+        set({
+            nodes: next.nodes,
+            edges: next.edges,
+            history: [...history, { nodes, edges }].slice(-50),
+            future: newFuture,
+            isDirty: true
+        });
+    },
+
     // CanvasNode extends Node so this assignment is valid without a cast.
-    addNode: (node) => set({ nodes: [...get().nodes, node], isDirty: true }),
+    addNode: (node) => {
+        get().saveToHistory();
+        set({ nodes: [...get().nodes, node], isDirty: true });
+    },
 
     // Spread is safe: node.data is Record<string, unknown>, incoming data
     // is the same type. No unknown or any involved.
-    updateNodeData: (id, data) =>
+    updateNodeData: (id, data) => {
+    // No history for every keystroke? Usually better to save on blur/end
         set({
             nodes: get().nodes.map((node) =>
                 node.id === id
@@ -124,16 +200,27 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
                     : node
             ),
             isDirty: true,
+        });
+    },
+
+    updateNode: (id, updates) =>
+        set({
+            nodes: get().nodes.map((node) =>
+                node.id === id ? { ...node, ...updates } : node
+            ),
+            isDirty: true,
         }),
 
-    removeNode: (id) =>
+    removeNode: (id) => {
+        get().saveToHistory();
         set({
             nodes: get().nodes.filter((node) => node.id !== id),
             edges: get().edges.filter(
                 (edge) => edge.source !== id && edge.target !== id
             ),
             isDirty: true,
-        }),
+        });
+    },
 
     duplicateNode: (id) => {
         const node = get().nodes.find((node) => node.id === id);
@@ -147,5 +234,31 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
             selected: false,
         };
         set({ nodes: [...get().nodes, duplicated], isDirty: true });
+    },
+
+    swapWorkspace: (fromId, toId) => {
+        const { nodes, edges, viewport, workspaces } = get();
+
+        const nextWorkspaces = { ...workspaces };
+
+        // 1. Save current state to old workspace if it exists
+        if (fromId) {
+            nextWorkspaces[fromId] = { nodes, edges, viewport };
+        }
+
+        // 2. Load new state or initialize
+        const target = nextWorkspaces[toId] || {
+            nodes: [],
+            edges: [],
+            viewport: { x: 0, y: 0, zoom: 1 }
+        };
+
+        set({
+            nodes: target.nodes,
+            edges: target.edges,
+            viewport: target.viewport,
+            workspaces: nextWorkspaces,
+            isDirty: false // Reset dirty state on switch
+        });
     },
 }));
