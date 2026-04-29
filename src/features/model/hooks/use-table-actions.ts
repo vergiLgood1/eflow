@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
-import { ColumnData, TableNodeData } from "../types/canvas";
+import { ColumnData, TableNode, TableNodeData } from "../types/canvas";
 
 /**
  * Reusable hook for table-specific canvas actions.
@@ -112,6 +112,11 @@ export function useTableActions() {
         toast.success(`Insert SQL for ${data.name} copied!`);
     }, [getTableData]);
 
+    const getAllTables = useCallback(() => {
+        const nodes = useCanvasStore.getState().nodes;
+        return nodes.filter((node): node is TableNode => node.type === "table");
+    }, []);
+
     return {
         addColumn,
         updateColumn,
@@ -121,5 +126,6 @@ export function useTableActions() {
         duplicateTable,
         copyInsertSql,
         getTableData,
+        getAllTables,
     };
 }
