@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
 import { ColumnData, TableNodeData } from "../types/canvas";
 
@@ -9,12 +10,12 @@ import { ColumnData, TableNodeData } from "../types/canvas";
  * Centralizes logic for column management and table updates.
  */
 export function useTableActions() {
-    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
-    const removeNode = useCanvasStore((s) => s.removeNode);
+    const updateNodeData = useCanvasStore((state) => state.updateNodeData);
+    const removeNode = useCanvasStore((state) => state.removeNode);
 
     const getTableData = useCallback((nodeId: string) => {
         const nodes = useCanvasStore.getState().nodes;
-        const node = nodes.find((n) => n.id === nodeId);
+        const node = nodes.find((node) => node.id === nodeId);
         return node?.data as TableNodeData | undefined;
     }, []);
 
@@ -41,8 +42,8 @@ export function useTableActions() {
 
         updateNodeData(nodeId, {
             ...data,
-            columns: data.columns.map((col) =>
-                col.id === columnId ? { ...col, ...updates } : col
+            columns: data.columns.map((column) =>
+                column.id === columnId ? { ...column, ...updates } : column
             ),
         });
     }, [getTableData, updateNodeData]);
@@ -53,7 +54,7 @@ export function useTableActions() {
 
         updateNodeData(nodeId, {
             ...data,
-            columns: data.columns.filter((col) => col.id !== columnId),
+            columns: data.columns.filter((column) => column.id !== columnId),
         });
     }, [getTableData, updateNodeData]);
 
@@ -74,7 +75,7 @@ export function useTableActions() {
     const duplicateTable = useCallback((nodeId: string) => {
         const nodes = useCanvasStore.getState().nodes;
         const addNode = useCanvasStore.getState().addNode;
-        const node = nodes.find((n) => n.id === nodeId);
+        const node = nodes.find((node) => node.id === nodeId);
         if (!node) return;
 
         const data = node.data as TableNodeData;
@@ -94,6 +95,23 @@ export function useTableActions() {
         addNode(duplicated as any);
     }, []);
 
+    const copyInsertSql = useCallback((nodeId: string) => {
+        const data = getTableData(nodeId);
+        if (!data) return;
+
+        if (!data.columns || data.columns.length === 0) {
+            toast.error("Add some columns first!");
+            return;
+        }
+
+        const columnNames = data.columns.map((column) => column.name).join(", ");
+        const values = data.columns.map(() => "?").join(", ");
+        const sql = `INSERT INTO ${data.name} (${columnNames}) VALUES (${values});`;
+
+        navigator.clipboard.writeText(sql);
+        toast.success(`Insert SQL for ${data.name} copied!`);
+    }, [getTableData]);
+
     return {
         addColumn,
         updateColumn,
@@ -101,6 +119,7 @@ export function useTableActions() {
         updateTable,
         deleteTable,
         duplicateTable,
+        copyInsertSql,
         getTableData,
     };
 }

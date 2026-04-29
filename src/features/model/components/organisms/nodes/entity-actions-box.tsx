@@ -31,17 +31,25 @@ import { PropertiesPopover } from "./entity-actions-box/properties-popover";
 
 
 
+
+
+
+
 interface EntityActionsBoxProps {
     nodeId: string;
     data: TableNodeData;
 }
 
 export function EntityActionsBox({ nodeId, data }: EntityActionsBoxProps) {
-    const { duplicateTable } = useTableActions();
+    const { duplicateTable, copyInsertSql } = useTableActions();
     const [openPopover, setOpenPopover] = useState<"column" | "notes" | "properties" | "delete" | null>(null);
 
     const handleDuplicate = () => {
         duplicateTable(nodeId);
+    };
+
+    const handleCopyInsert = () => {
+        copyInsertSql(nodeId);
     };
 
     return (
@@ -51,6 +59,7 @@ export function EntityActionsBox({ nodeId, data }: EntityActionsBoxProps) {
                     "nopan nodrag absolute right-[-35px] top-[-26px] z-[-1]",
                     "h-[90px] w-[120px] rounded opacity-95",
                     "shadow-[0_4px_15px_hsl(var(--foreground)/0.12)]",
+                    "transition-all duration-300 ease-in-out",
                     !data.color && "bg-primary"
                 )}
                 style={data.color ? { backgroundColor: data.color } : {}}
@@ -80,6 +89,7 @@ export function EntityActionsBox({ nodeId, data }: EntityActionsBoxProps) {
                     tooltip="Copy Insert"
                     className="absolute left-[50px] top-[5px]"
                     icon={<CopyPlusIcon className="size-[18px]" />}
+                    onClick={handleCopyInsert}
                 />
 
                 <BoxIconButton

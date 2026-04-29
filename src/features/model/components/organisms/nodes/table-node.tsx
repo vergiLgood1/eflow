@@ -1,11 +1,11 @@
-import { memo } from "react";
-import { Handle, Position, NodeProps } from "@xyflow/react";
-import { Table2, Pencil, Trash2, Link2, Database, Zap, Plus } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
-import { TableNodeData, ColumnData } from "@/features/model/types/canvas";
-import { cn } from "@/shared/lib/utils";
-import { EntityActionsBox } from "./entity-actions-box";
 import { useTableActions } from "@/features/model/hooks/use-table-actions";
+import { ColumnData, TableNodeData } from "@/features/model/types/canvas";
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/utils";
+import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Database, Link2, Pencil, Table2, Trash2, Zap } from "lucide-react";
+import { memo } from "react";
+import { EntityActionsBox } from "./entity-actions-box";
 
 // --- Subcomponents ---
 
@@ -95,7 +95,7 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
     return (
         <div
             className={cn(
-                "group/node relative flex flex-col rounded-[6px] bg-card text-card-foreground text-[12px] transition-all duration-200",
+                "group/node relative flex flex-col rounded-[6px] bg-card text-card-foreground text-[12px] transition-all",
                 selected ? "border-primary shadow-[0_0_20px_hsl(var(--primary)/0.15),0_4px_20px_hsl(var(--foreground)/0.12)]" : "border-border shadow-md"
             )}
             style={{
@@ -109,7 +109,9 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
             {/* Header */}
             <div
-                className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-[5px] border-b border-border/40 bg-primary transition-colors duration-200"
+                className={cn(
+                    "flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-[5px] border-b border-border/40 bg-primary transition-all duration-300 ease-in-out"
+                )}
                 style={data.color ? { backgroundColor: data.color } : undefined}
             >
                 <span className="text-primary-foreground/90">

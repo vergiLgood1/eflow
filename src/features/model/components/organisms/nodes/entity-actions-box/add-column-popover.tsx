@@ -65,10 +65,6 @@ export function AddColumnPopover({ nodeId, onClose }: { nodeId: string; onClose:
         });
     }, [name, type, isPk, isNullable, nodeId, columnId, updateColumn]);
 
-    const filteredTypes = DB_TYPES.filter((t) =>
-        t.toLowerCase().includes(search.toLowerCase())
-    );
-
     return (
         <div className="p-1">
             <PopoverHeader title="New Column" description={`Configuring for ${data?.name}`} />

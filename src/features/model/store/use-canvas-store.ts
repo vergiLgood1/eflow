@@ -136,7 +136,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
         }),
 
     duplicateNode: (id) => {
-        const node = get().nodes.find((n) => n.id === id);
+        const node = get().nodes.find((node) => node.id === id);
         if (!node) return;
 
         const newId = crypto.randomUUID();
