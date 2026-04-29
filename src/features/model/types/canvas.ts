@@ -60,7 +60,10 @@ export interface NoteNodeData extends Record<string, unknown> {
 
 export interface GroupNodeData extends Record<string, unknown> {
     name: string;
+    description?: string;
     color?: string;
+    isCollapsed?: boolean;
+    expandedHeight?: number;
 }
 
 // ---------------------------------------------------------------------------

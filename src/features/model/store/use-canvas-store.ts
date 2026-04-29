@@ -23,6 +23,7 @@ export type CanvasTool =
     | "table"
     | "view"
     | "note"
+    | "group"
     | "rel-1-1"
     | "rel-1-n"
     | "rel-0-1"

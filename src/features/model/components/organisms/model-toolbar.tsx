@@ -197,7 +197,12 @@ export function ModelToolbar() {
                         className={activeTool === "note" ? ACTIVE_TOOL_CLASS : undefined}
                         onClick={() => handleToolClick("note")}
                     />
-                    <ModelToolbarButton tooltip="Group" icon={<Layers className="h-4 w-4" />} />
+                    <ModelToolbarButton
+                        tooltip="Group (click canvas to place)"
+                        icon={<Layers className="h-4 w-4" />}
+                        className={activeTool === "group" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("group")}
+                    />
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
 

@@ -17,23 +17,24 @@ import { useCallback, useEffect } from "react";
 import colors from "tailwindcss/colors";
 
 import { useCanvasStore } from "../../store/use-canvas-store";
+import { useWorkspaceStore } from "../../store/use-workspace-store";
 import type {
     RelationshipEdgeData,
     TableNodeData,
 } from "../../types/canvas";
-import { CanvasContextMenu } from "./canvas-context-menu";
-import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
 import { ModelEdgeMarkers } from "../atoms/model-edge-markers";
+import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
+import { CanvasContextMenu } from "./canvas-context-menu";
+import { GroupNodeComponent } from "./nodes/group-node";
 import { NoteNodeComponent } from "./nodes/note-node";
 import { TableNodeComponent } from "./nodes/table-node";
 import { ViewNodeComponent } from "./nodes/view-node";
-import { useWorkspaceStore } from "../../store/use-workspace-store";
-import { useRef } from "react";
 
 const nodeTypes = {
     table: TableNodeComponent,
     view: ViewNodeComponent,
     note: NoteNodeComponent,
+    group: GroupNodeComponent,
 };
 
 const edgeTypes = {
@@ -90,6 +91,7 @@ const TOOL_CURSOR: Record<string, string> = {
     table: "crosshair",
     view: "crosshair",
     note: "crosshair",
+    group: "crosshair",
 };
 
 // ---- Component ----
@@ -188,6 +190,18 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         position,
                         data: {
                             content: "New note...\nDouble click to edit.",
+                        },
+                    });
+                    break;
+                case "group":
+                    addNode({
+                        id: crypto.randomUUID(),
+                        type: "group",
+                        position,
+                        style: { width: 800, height: 400, backgroundColor: "transparent" },
+                        data: {
+                            name: "New Group",
+                            description: "Logical grouping",
                         },
                     });
                     break;
