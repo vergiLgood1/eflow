@@ -1,16 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Color from "color";
-import colors from "tailwindcss/colors";
-import { Palette, RotateCcw } from "lucide-react";
-import { useCanvasStore } from "@/features/model/store/use-canvas-store";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 import { TableNodeData } from "@/features/model/types/canvas";
-import { PopoverHeader } from "./popover-header";
-import { Label } from "@/shared/components/ui/label";
-import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/utils";
 import {
     ColorPicker,
     ColorPickerAlpha,
@@ -19,6 +10,15 @@ import {
     ColorPickerOutput,
     ColorPickerSelection,
 } from "@/shared/components/color-picker";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { cn } from "@/shared/lib/utils";
+import Color from "color";
+import { Palette, RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
+import colors from "tailwindcss/colors";
+import { PopoverHeader } from "../../../atoms/popover-header";
 
 const PRESET_COLORS = [
     colors.blue[500],
@@ -29,7 +29,7 @@ const PRESET_COLORS = [
 ];
 
 export function PropertiesPopover({ nodeId, data, onClose }: { nodeId: string; data: TableNodeData; onClose: () => void }) {
-    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
+    const { updateTable } = useTableActions();
 
     const [name, setName] = useState(data.name);
     const [color, setColor] = useState(data.color ?? colors.blue[500]);
@@ -38,9 +38,9 @@ export function PropertiesPopover({ nodeId, data, onClose }: { nodeId: string; d
     // Real-time synchronization
     useEffect(() => {
         if (name !== data.name || color !== data.color) {
-            updateNodeData(nodeId, { ...data, name, color });
+            updateTable(nodeId, { name, color });
         }
-    }, [name, color, nodeId, data, updateNodeData]);
+    }, [name, color, nodeId, updateTable]);
 
     const handleReset = () => {
         setColor(colors.blue[500]);
@@ -128,14 +128,6 @@ export function PropertiesPopover({ nodeId, data, onClose }: { nodeId: string; d
                             </ColorPicker>
                         </div>
                     )}
-                </div>
-                <div className="flex justify-end gap-2 pt-1 border-t border-border mt-2 pt-2">
-                    <Button type="button" variant="ghost" size="sm" className="h-7 text-xs" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" size="sm" className="h-7 text-xs">
-                        Save Changes
-                    </Button>
                 </div>
             </form>
         </div>

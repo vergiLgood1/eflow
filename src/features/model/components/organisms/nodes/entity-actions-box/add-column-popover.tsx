@@ -1,20 +1,23 @@
 "use client";
 
-import { useCanvasStore } from "@/features/model/store/use-canvas-store";
-import { TableNodeData, ColumnData } from "@/features/model/types/canvas";
-import { useState } from "react";
-import { PopoverHeader } from "./popover-header";
-import { Label } from "@/shared/components/ui/label";
-import { Input } from "@/shared/components/ui/input";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 import { Button } from "@/shared/components/ui/button";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import {
     Combobox,
     ComboboxContent,
+    ComboboxEmpty,
     ComboboxInput,
     ComboboxItem,
     ComboboxList,
+    ComboboxTrigger,
+    ComboboxValue,
 } from "@/shared/components/ui/combobox";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { ChevronsUpDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { PopoverHeader } from "../../../atoms/popover-header";
 
 const DB_TYPES = [
     "uuid", "varchar", "text", "int", "bigint", "boolean", "timestamp",
@@ -23,35 +26,44 @@ const DB_TYPES = [
 ];
 
 export function AddColumnPopover({ nodeId, onClose }: { nodeId: string; onClose: () => void }) {
-    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
-    const nodes = useCanvasStore((s) => s.nodes);
-    const node = nodes.find((n) => n.id === nodeId);
-    const data = node?.data as TableNodeData | undefined;
+    const { addColumn, updateColumn, getTableData } = useTableActions();
+    const data = getTableData(nodeId);
 
-    const [name, setName] = useState("new_column");
+    // Track the ID of the column we're currently "adding" (editing)
+    const [columnId, setColumnId] = useState<string | null>(null);
+
+    const [name, setName] = useState(`col_${(data?.columns?.length ?? 0) + 1}`);
     const [type, setType] = useState("varchar");
     const [search, setSearch] = useState("");
     const [isPk, setIsPk] = useState(false);
     const [isNullable, setIsNullable] = useState(true);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!data) return;
+    const hasAddedRef = useRef(false);
 
-        const newColumn: ColumnData = {
-            id: crypto.randomUUID(),
+    // 1. Add the column immediately on mount
+    useEffect(() => {
+        if (hasAddedRef.current) return;
+        hasAddedRef.current = true;
+
+        const id = addColumn(nodeId, {
+            name: `col_${(data?.columns?.length ?? 0) + 1}`,
+            type: "varchar",
+            isPk: false,
+            nullable: true,
+        });
+        setColumnId(id);
+    }, [addColumn, nodeId]);
+
+
+    useEffect(() => {
+        if (!columnId) return;
+        updateColumn(nodeId, columnId, {
             name,
             type,
             isPk,
             nullable: isNullable,
-        };
-
-        updateNodeData(nodeId, {
-            ...data,
-            columns: [...(data.columns ?? []), newColumn],
         });
-        onClose();
-    };
+    }, [name, type, isPk, isNullable, nodeId, columnId, updateColumn]);
 
     const filteredTypes = DB_TYPES.filter((t) =>
         t.toLowerCase().includes(search.toLowerCase())
@@ -59,8 +71,8 @@ export function AddColumnPopover({ nodeId, onClose }: { nodeId: string; onClose:
 
     return (
         <div className="p-1">
-            <PopoverHeader title="Add New Column" description={`Adding to ${data?.name}`} />
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <PopoverHeader title="New Column" description={`Configuring for ${data?.name}`} />
+            <div className="space-y-3">
                 <div className="space-y-1.5">
                     <Label className="text-xs font-semibold">Column Name</Label>
                     <Input
@@ -73,24 +85,27 @@ export function AddColumnPopover({ nodeId, onClose }: { nodeId: string; onClose:
                 </div>
                 <div className="space-y-1.5">
                     <Label className="text-xs font-semibold">Type</Label>
-                    <Combobox
-                        value={type}
-                        onValueChange={(val) => setType(val ?? "")}
-                        onInputValueChange={setSearch}
-                    >
-                        <ComboboxInput placeholder="Search type..." className="h-8 text-xs font-mono" />
+                    <Combobox items={DB_TYPES} defaultValue={DB_TYPES[1]}>
+                        <ComboboxTrigger render={
+                            <ComboboxTrigger
+                                render={
+                                    <Button variant="outline" className="w-64 justify-between font-normal relative">
+                                        <ComboboxValue />
+                                        <ChevronsUpDown className="absolute right-2 top-1/2 -translate-y-1/2" size={16} />
+                                    </Button>
+                                }
+                            />
+                        }>
+                        </ComboboxTrigger>
                         <ComboboxContent>
-                            <ComboboxList className="max-h-48 overflow-y-auto">
-                                {filteredTypes.map((t) => (
-                                    <ComboboxItem key={t} value={t} className="font-mono text-xs">
-                                        {t}
+                            <ComboboxInput showTrigger={false} placeholder="Search" />
+                            <ComboboxEmpty>No items found.</ComboboxEmpty>
+                            <ComboboxList>
+                                {DB_TYPES.map((item) => (
+                                    <ComboboxItem key={item} value={item}>
+                                        {item}
                                     </ComboboxItem>
                                 ))}
-                                {filteredTypes.length === 0 && (
-                                    <div className="p-4 text-xs text-center text-muted-foreground">
-                                        No results found for "{search}"
-                                    </div>
-                                )}
                             </ComboboxList>
                         </ComboboxContent>
                     </Combobox>
@@ -105,15 +120,7 @@ export function AddColumnPopover({ nodeId, onClose }: { nodeId: string; onClose:
                         <Label htmlFor="is-nullable" className="text-xs cursor-pointer font-medium">Nullable</Label>
                     </div>
                 </div>
-                <div className="flex justify-end gap-2 pt-1 border-t border-border mt-2 pt-2">
-                    <Button type="button" variant="ghost" size="sm" className="h-7 text-xs" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" size="sm" className="h-7 text-xs">
-                        Add Column
-                    </Button>
-                </div>
-            </form>
+            </div>
         </div>
     );
 }

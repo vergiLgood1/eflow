@@ -77,19 +77,44 @@ export function ModelToolbar() {
                         onClick={() => handleToolClick("view")}
                     />
 
-                    <ModelToolbarButton tooltip="One to One" label="1:1">
+                    <ModelToolbarButton
+                        tooltip="One to One"
+                        label="1:1"
+                        className={activeTool === "rel-1-1" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-1-1")}
+                    >
                         <ModelRelationIcon type="1:1" />
                     </ModelToolbarButton>
-                    <ModelToolbarButton tooltip="One to Many" label="1:n">
+                    <ModelToolbarButton
+                        tooltip="One to Many"
+                        label="1:n"
+                        className={activeTool === "rel-1-n" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-1-n")}
+                    >
                         <ModelRelationIcon type="1:n" />
                     </ModelToolbarButton>
-                    <ModelToolbarButton tooltip="One to One (optional)" label="0..1">
+                    <ModelToolbarButton
+                        tooltip="One to One (optional)"
+                        label="0..1"
+                        className={activeTool === "rel-0-1" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-0-1")}
+                    >
                         <ModelRelationIcon type="0..1" />
                     </ModelToolbarButton>
-                    <ModelToolbarButton tooltip="One to Many (optional)" label="0..n">
+                    <ModelToolbarButton
+                        tooltip="One to Many (optional)"
+                        label="0..n"
+                        className={activeTool === "rel-0-n" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-0-n")}
+                    >
                         <ModelRelationIcon type="0..n" />
                     </ModelToolbarButton>
-                    <ModelToolbarButton tooltip="Many to Many" label="n:n">
+                    <ModelToolbarButton
+                        tooltip="Many to Many"
+                        label="n:n"
+                        className={activeTool === "rel-n-n" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-n-n")}
+                    >
                         <ModelRelationIcon type="n:n" />
                     </ModelToolbarButton>
 

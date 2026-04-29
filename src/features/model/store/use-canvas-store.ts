@@ -16,11 +16,16 @@ import type { CanvasNode } from "../types/canvas";
 // Active tool — determines what happens on the next canvas click
 // ---------------------------------------------------------------------------
 
-export type CanvasTool = "select" | "table" | "view" | "note";
-
-// ---------------------------------------------------------------------------
-// State shape
-// ---------------------------------------------------------------------------
+export type CanvasTool =
+    | "select"
+    | "table"
+    | "view"
+    | "note"
+    | "rel-1-1"
+    | "rel-1-n"
+    | "rel-0-1"
+    | "rel-0-n"
+    | "rel-n-n";
 
 interface CanvasState {
     /**
@@ -70,17 +75,35 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     isDirty: false,
     activeTool: "select",
 
-    // applyNodeChanges returns Node[] — perfectly assignable, no cast needed.
     onNodesChange: (changes) =>
         set({ nodes: applyNodeChanges(changes, get().nodes), isDirty: true }),
 
-    // applyEdgeChanges returns Edge[] — same reasoning.
     onEdgesChange: (changes) =>
         set({ edges: applyEdgeChanges(changes, get().edges), isDirty: true }),
 
-    // addEdge returns Edge[] — same reasoning.
-    onConnect: (connection) =>
-        set({ edges: addEdge(connection, get().edges), isDirty: true }),
+    onConnect: (connection) => {
+        const { activeTool, edges } = get();
+        let cardinality = "1:n"; // Default
+
+        if (activeTool.startsWith("rel-")) {
+            cardinality = activeTool.replace("rel-", "").replace("-", ":");
+            if (cardinality === "0:1") cardinality = "0..1";
+            if (cardinality === "0:n") cardinality = "0..n";
+        }
+
+        set({
+            edges: addEdge(
+                {
+                    ...connection,
+                    type: "relationship",
+                    data: { cardinality },
+                },
+                edges
+            ),
+            isDirty: true,
+            activeTool: "select", // Reset to select after connecting
+        });
+    },
 
     setNodes: (nodes) => set({ nodes }),
     setEdges: (edges) => set({ edges }),

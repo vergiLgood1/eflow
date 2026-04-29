@@ -1,10 +1,11 @@
 import { memo } from "react";
 import { Handle, Position, NodeProps } from "@xyflow/react";
-import { Table2, Pencil, Trash2, Link2, Database, Zap } from "lucide-react";
+import { Table2, Pencil, Trash2, Link2, Database, Zap, Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { TableNodeData, ColumnData } from "@/features/model/types/canvas";
 import { cn } from "@/shared/lib/utils";
 import { EntityActionsBox } from "./entity-actions-box";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 
 // --- Subcomponents ---
 
@@ -49,15 +50,27 @@ const ColumnRow = ({ column }: { column: ColumnData }) => (
 
 const TableFooter = () => (
     <div className="w-full border-t border-border/50 bg-foreground/5 rounded-b-[6px]">
-        <div className="flex h-9 items-center gap-1 px-2">
-            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground">
-                <Link2 className="h-3 w-3 mr-1.5" /> FK
+        <div className="flex h-9 items-center justify-between gap-1 px-2">
+            <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
+            >
+                <Link2 className="h-3 w-3 mr-1" /> FK
             </Button>
-            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground">
-                <Database className="h-3 w-3 mr-1.5" /> IDX
+            <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
+            >
+                <Database className="h-3 w-3 mr-1" /> IDX
             </Button>
-            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground">
-                <Zap className="h-3 w-3 mr-1.5" /> TRG
+            <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
+            >
+                <Zap className="h-3 w-3 mr-1" /> TRG
             </Button>
         </div>
     </div>
@@ -70,6 +83,14 @@ const TableFooter = () => (
 // React Flow always passes the correct data shape for the registered node type.
 export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
     const data = rawData as TableNodeData;
+    const { addColumn } = useTableActions();
+
+    const handleAddColumn = () => {
+        addColumn(id, {
+            name: `col_${(data.columns?.length ?? 0) + 1}`,
+            type: "varchar",
+        });
+    };
 
     return (
         <div
@@ -88,19 +109,19 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
             {/* Header */}
             <div
-                className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-[5px] border-b border-border/40 bg-primary"
+                className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-[5px] border-b border-border/40 bg-primary transition-colors duration-200"
                 style={data.color ? { backgroundColor: data.color } : undefined}
             >
                 <span className="text-primary-foreground/90">
                     <Table2 className="h-4 w-4" />
                 </span>
-                <span className="min-w-0 flex-1 truncate">
+                <span className="min-w-0 flex-1 truncate tracking-tight">
                     {data.name}
                 </span>
             </div>
 
             {/* Columns List */}
-            <div className="flex-1 py-1 overflow-y-auto max-h-[300px]">
+            <div className="flex-1 py-1 overflow-y-auto max-h-[300px] scrollbar-thin scrollbar-thumb-border/50">
                 {data.columns?.map((col) => (
                     <ColumnRow key={col.id} column={col} />
                 ))}

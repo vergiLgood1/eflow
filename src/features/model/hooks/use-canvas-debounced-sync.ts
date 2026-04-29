@@ -1,9 +1,9 @@
 "use client";
 
+import { saveDiagram } from "@/features/workspace/applications/workspace.action";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
-import { saveDiagram } from "../applications/workspace.action";
 import { isTableNode } from "../types/canvas";
 
 const DEBOUNCE_DELAY_MS = 2500;

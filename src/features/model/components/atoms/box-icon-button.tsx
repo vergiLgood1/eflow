@@ -21,7 +21,6 @@ export const BoxIconButton = forwardRef<HTMLButtonElement, BoxIconButtonProps>(
                             className
                         )}
                         onClick={(e) => {
-                            // We don't stop propagation here to allow Popover triggers to work
                             onClick?.(e);
                         }}
                         {...props}

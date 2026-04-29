@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useCanvasStore } from "@/features/model/store/use-canvas-store";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 import { TableNodeData } from "@/features/model/types/canvas";
-import { Label } from "@/shared/components/ui/label";
 import { Button } from "@/shared/components/ui/button";
+import { Label } from "@/shared/components/ui/label";
+import { useEffect, useState } from "react";
 
 export function NotesPopover({ nodeId, data, onClose }: { nodeId: string; data: TableNodeData; onClose: () => void }) {
-    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
+    const { updateTable } = useTableActions();
     const [notes, setNotes] = useState(data.notes ?? "");
 
     // Real-time synchronization
     useEffect(() => {
         if (notes !== data.notes) {
-            updateNodeData(nodeId, { ...data, notes });
+            updateTable(nodeId, { notes });
         }
-    }, [notes, nodeId, data, updateNodeData]);
+    }, [notes, nodeId, updateTable]);
 
     return (
         <div className="grid gap-2 min-w-[280px]">

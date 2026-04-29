@@ -1,23 +1,21 @@
 "use client";
 
-import { useCanvasStore } from "@/features/model/store/use-canvas-store";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 import { TableNodeData } from "@/features/model/types/canvas";
-import { Button } from "@/shared/components/ui/button";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+    TooltipProvider
 } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
 import {
+    BookCopy,
     ClipboardEdit,
     Copy,
+    CopyPlusIcon,
     Database,
     Plus,
     Settings,
@@ -25,8 +23,8 @@ import {
     Trash2
 } from "lucide-react";
 import { useState } from "react";
+import { BoxIconButton } from "../../atoms/box-icon-button";
 import { AddColumnPopover } from "./entity-actions-box/add-column-popover";
-import { BoxIconButton } from "./entity-actions-box/box-icon-button";
 import { DeletePopover } from "./entity-actions-box/delete-popover";
 import { NotesPopover } from "./entity-actions-box/notes-popover";
 import { PropertiesPopover } from "./entity-actions-box/properties-popover";
@@ -39,11 +37,11 @@ interface EntityActionsBoxProps {
 }
 
 export function EntityActionsBox({ nodeId, data }: EntityActionsBoxProps) {
-    const duplicateNode = useCanvasStore((s) => s.duplicateNode);
+    const { duplicateTable } = useTableActions();
     const [openPopover, setOpenPopover] = useState<"column" | "notes" | "properties" | "delete" | null>(null);
 
     const handleDuplicate = () => {
-        duplicateNode(nodeId);
+        duplicateTable(nodeId);
     };
 
     return (
@@ -79,13 +77,13 @@ export function EntityActionsBox({ nodeId, data }: EntityActionsBoxProps) {
                 />
 
                 <BoxIconButton
-                    tooltip="Table View"
+                    tooltip="Copy Insert"
                     className="absolute left-[50px] top-[5px]"
-                    icon={<Table2 className="size-[18px]" />}
+                    icon={<CopyPlusIcon className="size-[18px]" />}
                 />
 
                 <BoxIconButton
-                    tooltip="Database"
+                    tooltip="Insert Data"
                     className="absolute left-[72px] top-2"
                     icon={<Database className="size-3.5" />}
                 />

@@ -1,20 +1,18 @@
 "use client";
 
-import { useCanvasStore } from "@/features/model/store/use-canvas-store";
-import { PopoverHeader } from "./popover-header";
+import { useTableActions } from "@/features/model/hooks/use-table-actions";
 import { Button } from "@/shared/components/ui/button";
 
 export function DeletePopover({ nodeId, tableName, onClose }: { nodeId: string; tableName: string; onClose: () => void }) {
-    const removeNode = useCanvasStore((s) => s.removeNode);
+    const { deleteTable } = useTableActions();
 
     const handleDelete = () => {
-        removeNode(nodeId);
+        deleteTable(nodeId);
         onClose();
     };
 
     return (
         <div className="p-1">
-            <PopoverHeader title="Delete Table" description="This action cannot be undone" />
             <div className="space-y-3">
                 <p className="text-sm">
                     Are you sure you want to delete table <span className="font-semibold text-destructive">{tableName}</span>?
