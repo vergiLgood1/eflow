@@ -43,6 +43,7 @@ interface CanvasState {
     activeTool: CanvasTool;
     isAnimated: boolean;
     pendingConnectionSourceId: string | null;
+    dragOverGroupId: string | null;
 
     /** 
      * Storage for all open workspaces. 
@@ -81,9 +82,11 @@ interface CanvasState {
      */
     updateNodeData: (id: string, data: Record<string, unknown>) => void;
     removeNode: (id: string) => void;
+    removeNodes: (ids: string[]) => void;
     updateNode: (id: string, updates: Partial<Node>) => void;
+    batchUpdateNodes: (updates: Record<string, Partial<Node>>) => void;
     duplicateNode: (id: string) => void;
-
+    setDragOverGroupId: (id: string | null) => void;
     /**
      * Saves current state into 'fromId' and loads state from 'toId'.
      * If 'toId' doesn't exist in workspaces, it initializes with empty.
@@ -103,6 +106,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     activeTool: "select",
     isAnimated: false,
     pendingConnectionSourceId: null,
+    dragOverGroupId: null,
     workspaces: {},
     history: [],
     future: [],
@@ -159,6 +163,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
         set({ viewport: v });
     },
     setActiveTool: (tool) => set({ activeTool: tool, pendingConnectionSourceId: null }),
+    setDragOverGroupId: (id) => set({ dragOverGroupId: id }),
     toggleAnimation: () => set((state) => ({ isAnimated: !state.isAnimated })),
     markSaved: () => set({ isDirty: false }),
 
@@ -280,12 +285,71 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
             isDirty: true,
         }),
 
+    batchUpdateNodes: (updates) =>
+        set({
+            nodes: get().nodes.map((node) => {
+                const nodeUpdates = updates[node.id];
+                return nodeUpdates ? { ...node, ...nodeUpdates } : node;
+            }),
+            isDirty: true,
+        }),
+
     removeNode: (id) => {
         get().saveToHistory();
+        const nodes = get().nodes;
+        const parent = nodes.find(n => n.id === id);
+        
         set({
-            nodes: get().nodes.filter((node) => node.id !== id),
+            nodes: nodes
+                .filter((node) => node.id !== id)
+                .map((node) => {
+                    if (node.parentId === id && parent) {
+                        return {
+                            ...node,
+                            parentId: undefined,
+                            extent: undefined,
+                            position: {
+                                x: node.position.x + parent.position.x,
+                                y: node.position.y + parent.position.y,
+                            },
+                            hidden: false // Ensure they are visible if the parent was collapsed
+                        };
+                    }
+                    return node;
+                }),
             edges: get().edges.filter(
                 (edge) => edge.source !== id && edge.target !== id
+            ),
+            isDirty: true,
+        });
+    },
+
+    removeNodes: (ids) => {
+        get().saveToHistory();
+        const currentNodes = get().nodes;
+        
+        set({
+            nodes: currentNodes
+                .filter((node) => !ids.includes(node.id))
+                .map((node) => {
+                    // If this node was a child of any removed node, unparent it
+                    if (node.parentId && ids.includes(node.parentId)) {
+                        const parent = currentNodes.find(n => n.id === node.parentId);
+                        return {
+                            ...node,
+                            parentId: undefined,
+                            extent: undefined,
+                            position: {
+                                x: node.position.x + (parent?.position.x || 0),
+                                y: node.position.y + (parent?.position.y || 0),
+                            },
+                            hidden: false
+                        };
+                    }
+                    return node;
+                }),
+            edges: get().edges.filter(
+                (edge) => !ids.includes(edge.source) && !ids.includes(edge.target)
             ),
             isDirty: true,
         });

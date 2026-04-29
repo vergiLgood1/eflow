@@ -198,7 +198,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         id: crypto.randomUUID(),
                         type: "group",
                         position,
-                        style: { width: 800, height: 400, backgroundColor: "transparent" },
+                        style: { width: 600, height: 400, backgroundColor: "transparent" },
                         data: {
                             name: "New Group",
                             description: "Logical grouping",
@@ -226,6 +226,104 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
 
     const handleNodeClick = useCanvasStore((s) => s.handleNodeClick);
     const pendingSourceId = useCanvasStore((s) => s.pendingConnectionSourceId);
+    const updateNode = useCanvasStore((s) => s.updateNode);
+    const setDragOverGroupId = useCanvasStore((s) => s.setDragOverGroupId);
+
+    const onNodeDrag = useCallback(
+        (_: any, node: Node) => {
+            if (node.type === 'group') return;
+
+            const centerX = node.position.x + (node.measured?.width ?? 0) / 2;
+            const centerY = node.position.y + (node.measured?.height ?? 0) / 2;
+
+            let absCenterX = centerX;
+            let absCenterY = centerY;
+
+            if (node.parentId) {
+                const parent = nodes.find(n => n.id === node.parentId);
+                if (parent) {
+                    absCenterX += parent.position.x;
+                    absCenterY += parent.position.y;
+                }
+            }
+
+            const groupNode = nodes.find(
+                (n) =>
+                    n.type === 'group' &&
+                    n.id !== node.id &&
+                    absCenterX >= n.position.x &&
+                    absCenterX <= n.position.x + (n.measured?.width ?? 0) &&
+                    absCenterY >= n.position.y &&
+                    absCenterY <= n.position.y + (n.measured?.height ?? 0)
+            );
+
+            setDragOverGroupId(groupNode?.id ?? null);
+        },
+        [nodes, setDragOverGroupId]
+    );
+
+    const onNodeDragStop = useCallback(
+        (_: any, node: Node) => {
+            setDragOverGroupId(null); // Clear feedback
+            if (node.type === 'group') return;
+
+            // Find if dropped inside a group
+            // We use the center of the node for detection
+            const centerX = node.position.x + (node.measured?.width ?? 0) / 2;
+            const centerY = node.position.y + (node.measured?.height ?? 0) / 2;
+
+            // If node ALREADY has a parent, centerX/Y are relative to that parent.
+            // We need absolute coordinates for comparison with all group nodes.
+            let absCenterX = centerX;
+            let absCenterY = centerY;
+
+            if (node.parentId) {
+                const parent = nodes.find(n => n.id === node.parentId);
+                if (parent) {
+                    absCenterX += parent.position.x;
+                    absCenterY += parent.position.y;
+                }
+            }
+
+            const groupNode = nodes.find(
+                (n) =>
+                    n.type === 'group' &&
+                    n.id !== node.id &&
+                    absCenterX >= n.position.x &&
+                    absCenterX <= n.position.x + (n.measured?.width ?? 0) &&
+                    absCenterY >= n.position.y &&
+                    absCenterY <= n.position.y + (n.measured?.height ?? 0)
+            );
+
+            if (groupNode && node.parentId !== groupNode.id) {
+                // Parented to a (new) group
+                const relativeX = absCenterX - (node.measured?.width ?? 0) / 2 - groupNode.position.x;
+                const relativeY = absCenterY - (node.measured?.height ?? 0) / 2 - groupNode.position.y;
+                
+                const isGroupCollapsed = (groupNode.data as any)?.isCollapsed || false;
+
+                updateNode(node.id, {
+                    parentId: groupNode.id,
+                    position: { x: relativeX, y: relativeY },
+                    hidden: isGroupCollapsed
+                });
+            } else if (!groupNode && node.parentId) {
+                // Dragged out of group
+                const parent = nodes.find(n => n.id === node.parentId);
+                if (parent) {
+                    const globalX = node.position.x + parent.position.x;
+                    const globalY = node.position.y + parent.position.y;
+                    
+                    updateNode(node.id, {
+                        parentId: undefined,
+                        position: { x: globalX, y: globalY },
+                        extent: undefined,
+                    });
+                }
+            }
+        },
+        [nodes, updateNode, setDragOverGroupId]
+    );
 
     return (
         <div className="w-full h-full bg-muted/5 relative">
@@ -242,6 +340,8 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                     onConnect={onConnect}
                     onPaneClick={handlePaneClick}
                     onNodeClick={(_, node) => handleNodeClick(node.id)}
+                    onNodeDrag={onNodeDrag}
+                    onNodeDragStop={onNodeDragStop}
                     onMoveEnd={(_, vp) => setViewportStore(vp)}
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}

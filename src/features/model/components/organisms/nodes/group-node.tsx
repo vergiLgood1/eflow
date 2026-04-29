@@ -6,16 +6,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
-import { NodeProps, NodeResizer } from "@xyflow/react";
-import { ChevronDown, ChevronRight, Pencil, Trash2 } from "lucide-react";
+import { NodeProps, NodeResizer, NodeResizeControl } from "@xyflow/react";
+import { ChevronDown, ChevronRight, Pencil, Trash2, ArrowDownRight } from "lucide-react";
 import { memo, useState } from "react";
 import { GroupPropertiesPopover } from "./group-properties-popover";
 
 export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
     const data = rawData as GroupNodeData;
-    const { nodes, removeNode, updateNodeData, updateNode } = useCanvasStore();
+    const { nodes, removeNode, removeNodes, updateNodeData, updateNode } = useCanvasStore();
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isColorOpen, setIsColorOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+    const childNodes = nodes.filter(n => n.parentId === id);
 
     // In-place editing state
     const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -23,6 +26,8 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
     const groupColor = data.color || "#a855f7"; // Default purple-500
     const isCollapsed = data.isCollapsed || false;
+    const dragOverGroupId = useCanvasStore((s) => s.dragOverGroupId);
+    const isDragOver = dragOverGroupId === id;
 
     const PRESET_COLORS = [
         { name: "Blue", value: "#3b82f6" },
@@ -37,10 +42,33 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
         setIsEditingDescription(false);
     };
 
+    const handleDeleteOnlyGroup = () => {
+        removeNode(id);
+        setIsDeleteOpen(false);
+    };
+
+    const handleDeleteAll = () => {
+        const idsToDelete = [id, ...childNodes.map(n => n.id)];
+        removeNodes(idsToDelete);
+        setIsDeleteOpen(false);
+    };
+
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (childNodes.length === 0) {
+            removeNode(id);
+        } else {
+            setIsDeleteOpen(true);
+        }
+    };
+
     const handleToggleCollapse = (e: React.MouseEvent) => {
         e.stopPropagation();
         const node = nodes.find((n) => n.id === id);
         if (!node) return;
+
+        const { batchUpdateNodes } = useCanvasStore.getState();
+        const childNodes = nodes.filter(n => n.parentId === id);
 
         if (!isCollapsed) {
             // Collapsing
@@ -54,6 +82,13 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                 isCollapsed: true,
                 expandedHeight: currentHeight,
             });
+
+            // Hide children
+            const updates: Record<string, any> = {};
+            childNodes.forEach(child => {
+                updates[child.id] = { hidden: true };
+            });
+            batchUpdateNodes(updates);
         } else {
             // Expanding
             const targetHeight = data.expandedHeight || 400;
@@ -63,6 +98,13 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
             updateNodeData(id, {
                 isCollapsed: false,
             });
+
+            // Show children
+            const updates: Record<string, any> = {};
+            childNodes.forEach(child => {
+                updates[child.id] = { hidden: false };
+            });
+            batchUpdateNodes(updates);
         }
     };
 
@@ -71,11 +113,13 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
             <div
                 className={cn(
                     "group/node relative h-full w-full overflow-hidden rounded-md border-2 transition-all duration-200",
-                    selected ? "border-primary ring-2 ring-primary/20" : ""
+                    selected ? "border-primary ring-2 ring-primary/20" : "",
+                    isDragOver && "ring-4 scale-[1.01] shadow-2xl z-50"
                 )}
                 style={{
-                    borderColor: selected ? undefined : groupColor,
-                    backgroundColor: `${groupColor}1f` // ~12% opacity in hex (1f is 31/255)
+                    borderColor: selected ? undefined : (isDragOver ? groupColor : groupColor),
+                    backgroundColor: isDragOver ? `${groupColor}3d` : `${groupColor}1f`, // ~24% vs ~12% opacity
+                    boxShadow: isDragOver ? `0 0 20px ${groupColor}4d` : undefined,
                 }}
             >
                 {!isCollapsed && (
@@ -173,20 +217,48 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                         </PopoverContent>
                     </Popover>
 
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeNode(id);
-                                }}
-                                className="rounded-sm p-1 hover:bg-red-500/20 group transition-colors"
-                            >
-                                <Trash2 className="h-4 w-4 text-red-500/80 group-hover:text-red-500" />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">Delete</TooltipContent>
-                    </Tooltip>
+                    <Popover open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <PopoverTrigger asChild>
+                                    <button
+                                        onClick={handleDeleteClick}
+                                        className={cn(
+                                            "rounded-sm p-1 hover:bg-red-500/20 group transition-colors",
+                                            isDeleteOpen && "bg-red-500/20"
+                                        )}
+                                    >
+                                        <Trash2 className="h-4 w-4 text-red-500/80 group-hover:text-red-500" />
+                                    </button>
+                                </PopoverTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">Delete</TooltipContent>
+                        </Tooltip>
+                        <PopoverContent side="top" align="end" className="w-[280px] p-4 shadow-2xl border-red-500/20 bg-zinc-950/95 backdrop-blur-md">
+                            <div className="space-y-4">
+                                <div className="space-y-1.5">
+                                    <p className="text-[14px] font-semibold text-foreground">Delete Group</p>
+                                    <p className="text-[12px] text-muted-foreground leading-relaxed">
+                                        This group contains <span className="text-foreground font-medium">{childNodes.length} items</span>. How would you like to proceed?
+                                    </p>
+                                </div>
+                                <div className="grid gap-2">
+                                    <button
+                                        onClick={handleDeleteAll}
+                                        className="flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-[12px] font-medium text-white hover:bg-red-700 transition-all active:scale-[0.98]"
+                                    >
+                                        Delete Group & All Items
+                                    </button>
+                                    <button
+                                        onClick={handleDeleteOnlyGroup}
+                                        className="flex w-full items-center justify-center rounded-md border border-white/10 bg-white/5 px-3 py-2 text-[12px] font-medium text-foreground hover:bg-white/10 transition-all active:scale-[0.98]"
+                                    >
+                                        Delete Only Group
+                                    </button>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <div className="group-box-title px-3 pt-3 select-none flex items-start">
@@ -241,7 +313,20 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                 </div>
 
                 {/* Content area for nested nodes handled by React Flow */}
-                {!isCollapsed && <div className="flex-1 h-full w-full" />}
+                {!isCollapsed && (
+                    <>
+                        <div className="flex-1 h-full w-full" />
+                        <NodeResizeControl 
+                            position="bottom-right"
+                            className="bg-transparent! border-none! flex items-center justify-center"
+                            style={{ width: 20, height: 20 }}
+                        >
+                            <div className="opacity-30 transition-opacity group-hover/node:opacity-60">
+                                <ArrowDownRight className="h-4 w-4" style={{ color: groupColor }} />
+                            </div>
+                        </NodeResizeControl>
+                    </>
+                )}
             </div>
         </TooltipProvider>
     );
