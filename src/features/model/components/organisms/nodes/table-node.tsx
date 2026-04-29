@@ -14,8 +14,8 @@ import {
 } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
 import { Handle, NodeProps, Position } from "@xyflow/react";
-import { Database, Link2, Pencil, Table2, Trash2, Zap } from "lucide-react";
-import { memo } from "react";
+import { Database, Link2, Pencil, Plus, Table2, Trash2, Zap } from "lucide-react";
+import { memo, useState } from "react";
 import { EntityActionsBox } from "./entity-actions-box";
 import { ColumnConfigPopover } from "./entity-actions-box/add-column-popover";
 
@@ -96,33 +96,82 @@ const ColumnRow = ({ nodeId, column }: { nodeId: string; column: ColumnData }) =
     );
 };
 
-const TableFooter = () => (
-    <div className="w-full border-t border-border/50 bg-foreground/5 rounded-b-[6px]">
-        <div className="flex h-9 items-center justify-between gap-1 px-2">
-            <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
+type FooterTab = "fk" | "idx" | "trg";
+
+const FOOTER_TABS = [
+    { id: "fk", label: "FK", icon: Link2, title: "Foreign keys" },
+    { id: "idx", label: "IDX", icon: Database, title: "Indexes" },
+    { id: "trg", label: "TRG", icon: Zap, title: "Triggers" },
+] as const;
+
+const TableFooter = () => {
+    const [activeTab, setActiveTab] = useState<FooterTab | null>(null);
+    const activeTabData = FOOTER_TABS.find(tab => tab.id === activeTab);
+
+    const handleTabClick = (tabId: FooterTab) => {
+        setActiveTab(prev => prev === tabId ? null : tabId);
+    };
+
+    return (
+        <div className="w-full border-t border-border/50 bg-foreground/5 rounded-b-[6px] flex flex-col overflow-hidden transition-all duration-300 ease-in-out">
+            {/* Tabs Header */}
+            <div className="flex h-9 items-center gap-1 px-2 bg-background/5 border-b border-border/10">
+                {FOOTER_TABS.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <Button
+                            key={tab.id}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleTabClick(tab.id)}
+                            className={cn(
+                                "h-7 px-2 text-[10px] font-bold transition-all duration-200 gap-1.5",
+                                isActive
+                                    ? "bg-foreground/20 text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
+                            )}
+                        >
+                            <Icon className="h-3 w-3 opacity-80" /> {tab.label}
+                        </Button>
+                    );
+                })}
+
+                <div className="flex-1" />
+
+                {activeTab && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors animate-in fade-in zoom-in duration-200"
+                        title={`Add ${activeTabData?.label}`}
+                    >
+                        <Plus className="h-4 w-4" />
+                    </Button>
+                )}
+            </div>
+
+            {/* Collapsible Content Area (In-flow) */}
+            <div 
+                className={cn(
+                    "transition-all duration-300 ease-in-out overflow-hidden bg-background/20",
+                    activeTab 
+                        ? "max-h-[200px] opacity-100 border-t border-border/20"
+                        : "max-h-0 opacity-0 border-t-0 pointer-events-none"
+                )}
             >
-                <Link2 className="h-3 w-3 mr-1" /> FK
-            </Button>
-            <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
-            >
-                <Database className="h-3 w-3 mr-1" /> IDX
-            </Button>
-            <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground transition-all duration-200"
-            >
-                <Zap className="h-3 w-3 mr-1" /> TRG
-            </Button>
-        </div>
-    </div>
-);
+                <div className="px-3 py-2.5 text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-80">
+                            {activeTabData?.title}
+                        </div>
+                        <div className="px-1 pb-3">
+                    <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
+                                No {activeTabData?.title.toLowerCase()} yet.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    );
+};
 
 // --- Main Node Component ---
 
@@ -188,3 +237,4 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 });
 
 TableNodeComponent.displayName = "TableNode";
+
