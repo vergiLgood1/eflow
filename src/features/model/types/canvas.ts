@@ -23,8 +23,12 @@ export interface ColumnData {
     isPk?: boolean;
     isFk?: boolean;
     isIdx?: boolean;
+    isUnique?: boolean;
+    isAutoIncrement?: boolean;
+    isUuid?: boolean;
     nullable?: boolean;
     defaultValue?: string;
+    notes?: string;
 }
 
 // ---------------------------------------------------------------------------
