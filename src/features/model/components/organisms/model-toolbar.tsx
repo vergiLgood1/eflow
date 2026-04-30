@@ -1,12 +1,12 @@
 "use client";
 
+import { ImportSchemaDialog } from "@/shared/components/ui/import-schema-dialog";
 import { Separator } from "@/shared/components/ui/separator";
 import { TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useReactFlow } from "@xyflow/react";
 import {
     Activity,
     ChevronLeft,
-    Clock,
     CodeXml,
     Download,
     FileCode,
@@ -14,22 +14,24 @@ import {
     MousePointer2,
     Plus,
     Redo2,
-    Settings,
     Square,
     Table2,
     Undo2,
     Upload,
-    Users,
     X,
     ZoomIn,
     ZoomOut
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { generateSQL } from "../../lib/sql-generator";
 import { useCanvasStore, type CanvasTool } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
+import type { CanvasNode } from "../../types/canvas";
 import { ModelRelationIcon } from "../atoms/model-relation-icon";
 import { ModelToolbarButton } from "../atoms/model-toolbar-button";
 import { ModelUserAvatar } from "../molecules/model-user-avatar";
+import { ModelSettingsDialog } from "./model-settings-dialog";
 
 const ACTIVE_TOOL_CLASS =
     "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80";
@@ -48,8 +50,16 @@ export function ModelToolbar() {
         toggleAnimation, 
         isAnimated, 
         history, 
-        future 
+        future,
+        nodes,
+        edges,
+        setNodes,
+        setEdges,
+        isDbmlModeOpen,
+        toggleDbmlMode
     } = useCanvasStore();
+
+    const [importMode, setImportMode] = useState<"sql" | "dbml" | null>(null);
 
     const [editingTabId, setEditingTabId] = useState<string | null>(null);
     const [editingName, setEditingName] = useState("");
@@ -63,6 +73,18 @@ export function ModelToolbar() {
             renameTab(id, editingName.trim());
         }
         setEditingTabId(null);
+    };
+
+    const handleExportSQL = () => {
+        const sql = generateSQL(nodes as CanvasNode[], edges as any);
+        const blob = new Blob([sql], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "schema.sql";
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success("SQL Schema exported successfully");
     };
 
     return (
@@ -134,7 +156,7 @@ export function ModelToolbar() {
             {/* ================= ACTION BAR ================= */}
             <div className="flex h-12 items-center gap-2 bg-background px-2 text-foreground overflow-x-auto no-scrollbar">
                 <div className="flex min-w-0 flex-1 items-center gap-1">
-                    <ModelToolbarButton tooltip="Settings" icon={<Settings className="h-4 w-4" />} />
+                    <ModelSettingsDialog />
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
                     <ModelToolbarButton
@@ -206,10 +228,28 @@ export function ModelToolbar() {
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
-                    <ModelToolbarButton tooltip="Import SQL" icon={<Upload className="h-4 w-4" />} />
-                    <ModelToolbarButton tooltip="Export SQL" icon={<Download className="h-4 w-4" />} />
-                    <ModelToolbarButton tooltip="Import DBML" icon={<FileCode className="h-4 w-4" />} />
-                    <ModelToolbarButton tooltip="DBML Mode" icon={<CodeXml className="h-4 w-4" />} />
+                    <ModelToolbarButton
+                        tooltip="Import SQL"
+                        icon={<Upload className="h-4 w-4" />}
+                        onClick={() => setImportMode("sql")}
+                    />
+
+                    <ModelToolbarButton
+                        tooltip="Export SQL"
+                        icon={<Download className="h-4 w-4" />}
+                        onClick={handleExportSQL}
+                    />
+                    <ModelToolbarButton
+                        tooltip="Import DBML"
+                        icon={<FileCode className="h-4 w-4" />}
+                        onClick={() => setImportMode("dbml")}
+                    />
+                    <ModelToolbarButton
+                        tooltip="DBML Panel"
+                        icon={<CodeXml className="h-4 w-4" />}
+                        onClick={toggleDbmlMode}
+                        className={isDbmlModeOpen ? ACTIVE_TOOL_CLASS : undefined}
+                    />
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
@@ -250,12 +290,20 @@ export function ModelToolbar() {
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1">
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    {/* <Separator orientation="vertical" className="mx-1 h-6" />
                     <ModelToolbarButton tooltip="Share" icon={<Users className="h-4 w-4" />} />
-                    <ModelToolbarButton tooltip="Activity" icon={<Clock className="h-4 w-4" />} />
-                    <ModelUserAvatar name="Diyo Anggara" />
+                    <ModelToolbarButton tooltip="Activity" icon={<Clock className="h-4 w-4" />} /> */}
+                    {/* <ModelUserAvatar name="Diyo Anggara" /> */}
                 </div>
             </div>
+
+            {/* ================= IMPORT DIALOG ================= */}
+            <ImportSchemaDialog
+                key={importMode}
+                open={importMode !== null}
+                defaultMode={importMode ?? "sql"}
+                onClose={() => setImportMode(null)}
+            />
         </div>
     );
 }

@@ -22,10 +22,9 @@ interface WorkspaceState {
 
 export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
     tabs: [
-        { id: "default", name: "main_schema", type: "diagram" },
-        { id: "client", name: "client_v2", type: "diagram" },
+        { id: "main", name: "main", type: "diagram" },
     ],
-    activeTabId: "client",
+    activeTabId: "main",
 
     addTab: (tab) => {
         const id = crypto.randomUUID();

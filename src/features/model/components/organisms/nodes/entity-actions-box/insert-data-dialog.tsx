@@ -14,7 +14,7 @@ interface InsertDataDialogProps {
     onClose: () => void;
 }
 
-export function InsertDataDialog({ data, onClose }: InsertDataDialogProps) {
+export function InsertDataDialog({ nodeId, data, onClose }: InsertDataDialogProps) {
     const {
         rows,
         handleAddRow,
@@ -22,7 +22,7 @@ export function InsertDataDialog({ data, onClose }: InsertDataDialogProps) {
         handleInputChange,
         handleClearAll,
         handleSave,
-    } = useInsertData(data, onClose);
+    } = useInsertData(data, nodeId, onClose);
 
     return (
         <DialogContent className="flex h-[80vh] w-[1100px] max-w-[calc(100vw-2rem)] sm:max-w-none flex-col overflow-hidden p-0">

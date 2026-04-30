@@ -92,6 +92,29 @@ interface CanvasState {
      * If 'toId' doesn't exist in workspaces, it initializes with empty.
      */
     swapWorkspace: (fromId: string | null, toId: string) => void;
+
+    // ---- Settings ----
+    modelSettings: ModelSettings;
+    updateModelSettings: (settings: Partial<ModelSettings>) => void;
+
+    // ---- DBML Mode ----
+    isDbmlModeOpen: boolean;
+    toggleDbmlMode: () => void;
+}
+
+export interface ModelSettings {
+    showFkName: boolean;
+    showRelType: boolean;
+    idColumnType: string;
+    varcharDefaultLength: number;
+    decimalDefaultPrecision: number;
+    decimalDefaultScale: number;
+    defaultColumns: {
+        id: string;
+        name: string;
+        type: string;
+        nullable: boolean;
+    }[];
 }
 
 // ---------------------------------------------------------------------------
@@ -110,6 +133,22 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     workspaces: {},
     history: [],
     future: [],
+    modelSettings: {
+        showFkName: true,
+        showRelType: true,
+        idColumnType: "int",
+        varcharDefaultLength: 255,
+        decimalDefaultPrecision: 10,
+        decimalDefaultScale: 2,
+        defaultColumns: []
+    },
+
+    updateModelSettings: (settings) => set((state) => ({
+        modelSettings: { ...state.modelSettings, ...settings }
+    })),
+    
+    isDbmlModeOpen: false,
+    toggleDbmlMode: () => set((state) => ({ isDbmlModeOpen: !state.isDbmlModeOpen })),
 
     onNodesChange: (changes) =>
         set({ nodes: applyNodeChanges(changes, get().nodes), isDirty: true }),

@@ -4,24 +4,18 @@ import {
     Background,
     BackgroundVariant,
     ConnectionMode,
-    Controls,
     MiniMap,
     ReactFlow,
     ReactFlowProvider,
     useReactFlow,
-    type Edge,
-    type Node,
+    type Node
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";
-import colors from "tailwindcss/colors";
 
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
-import type {
-    RelationshipEdgeData,
-    TableNodeData,
-} from "../../types/canvas";
+import type { TableNodeData } from "../../types/canvas";
 import { ModelEdgeMarkers } from "../atoms/model-edge-markers";
 import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
 import { CanvasContextMenu } from "./canvas-context-menu";
@@ -41,48 +35,7 @@ const edgeTypes = {
     relationship: RelationshipEdgeComponent,
 };
 
-// ---- Mock data (temporary — replaced once DB loading is wired) ----
-
-const INITIAL_NODES: Node[] = [
-    {
-        id: "1",
-        position: { x: 100, y: 100 },
-        type: "table",
-        data: {
-            name: "users",
-            color: colors.blue[500],
-            columns: [
-                { id: "c1", name: "id", type: "uuid", isPk: true },
-                { id: "c2", name: "email", type: "varchar" },
-                { id: "c3", name: "created_at", type: "timestamp" },
-            ],
-        } satisfies TableNodeData,
-    },
-    {
-        id: "2",
-        position: { x: 500, y: 100 },
-        type: "table",
-        data: {
-            name: "profiles",
-            color: colors.blue[500],
-            columns: [
-                { id: "c4", name: "id", type: "uuid", isPk: true },
-                { id: "c5", name: "user_id", type: "uuid", isFk: true },
-                { id: "c6", name: "bio", type: "text" },
-            ],
-        } satisfies TableNodeData,
-    },
-];
-
-const INITIAL_EDGES: Edge[] = [
-    {
-        id: "e1-2",
-        source: "1",
-        target: "2",
-        type: "relationship",
-        data: { cardinality: "1:1" } satisfies RelationshipEdgeData,
-    },
-];
+// Canvas starts empty — users build their schema from scratch
 
 // ---- Cursor styles per active tool ----
 
@@ -139,13 +92,6 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
         }
     }, [activeTabId, setViewport, viewport]);
 
-    // Initialize mock data if store is empty
-    useEffect(() => {
-        if (nodes.length === 0) {
-            setNodes(INITIAL_NODES);
-            setEdges(INITIAL_EDGES);
-        }
-    }, [nodes.length, setNodes, setEdges]);
 
     // Handle pane click — place node at cursor when a tool is active
     const handlePaneClick = useCallback(
@@ -158,28 +104,58 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
             });
 
             switch (activeTool) {
-                case "table":
+                case "table": {
+                    const settings = useCanvasStore.getState().modelSettings;
+
+                    // Create default columns based on settings
+                    const defaultCols = settings.defaultColumns.map(col => ({
+                        id: crypto.randomUUID(),
+                        name: col.name,
+                        type: col.type,
+                        nullable: col.nullable,
+                        isPrimary: false,
+                        isUnique: false,
+                        isIndex: false,
+                    }));
+
+                    // Complete column list starting with ID
+                    const columns = [
+                        {
+                            id: crypto.randomUUID(),
+                            name: "id",
+                            type: settings.idColumnType,
+                            isPrimary: true,
+                            isUnique: true,
+                            isIndex: true,
+                            nullable: false,
+                        },
+                        ...defaultCols
+                    ];
+
                     addNode({
                         id: crypto.randomUUID(),
                         type: "table",
                         position,
                         data: {
-                            name: "new_table",
-                            color: colors.blue[500],
-                            columns: [
-                                { id: crypto.randomUUID(), name: "id", type: "uuid", isPk: true },
-                            ],
+                            name: `table_${nodes.filter((n) => n.type === "table").length + 1}`,
+                            color: "#3b82f6", // Default blue
+                            columns,
+                            isNew: true,
+                            isEditing: true,
                         },
                     });
                     break;
+                }
                 case "view":
                     addNode({
                         id: crypto.randomUUID(),
                         type: "view",
                         position,
                         data: {
-                            name: "new_view",
+                            name: `view_${nodes.filter((n) => n.type === "view").length + 1}`,
                             query: "SELECT * FROM ...;",
+                            isNew: true,
+                            isEditing: true,
                         },
                     });
                     break;
@@ -189,7 +165,8 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         type: "note",
                         position,
                         data: {
-                            content: "New note...\nDouble click to edit.",
+                            content: "",
+                            isNew: true,
                         },
                     });
                     break;
@@ -201,7 +178,9 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         style: { width: 600, height: 400, backgroundColor: "transparent" },
                         data: {
                             name: "New Group",
-                            description: "Logical grouping",
+                            description: "",
+                            isNew: true,
+                            isEditing: true,
                         },
                     });
                     break;
@@ -325,6 +304,8 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
         [nodes, updateNode, setDragOverGroupId]
     );
 
+    const proOptions = { hideAttribution: true };
+
     return (
         <div className="w-full h-full bg-muted/5 relative">
             <ModelEdgeMarkers />
@@ -349,9 +330,10 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                     fitView
                     className="bg-dot-pattern"
                     style={{ cursor: TOOL_CURSOR[activeTool] ?? "default" }}
+                    proOptions={proOptions}
                 >
-                    <Controls />
-                    <MiniMap position="top-right" />
+                    {/* <Controls /> */}
+                    <MiniMap bgColor="bg-background" position="top-right" />
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
                 </ReactFlow>
             </CanvasContextMenu>

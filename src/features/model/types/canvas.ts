@@ -37,20 +37,37 @@ export interface ColumnData {
 // the @xyflow/react `Node<TData extends Record<string, unknown>>` constraint.
 // ---------------------------------------------------------------------------
 
+export interface TableIndex {
+    id: string;
+    name: string;
+    columns: string[]; // column names
+    isUnique?: boolean;
+    type?: "btree" | "hash" | "gist" | "gin";
+}
+
+export type TableRecord = Record<string, string>;
+
 export interface TableNodeData extends Record<string, unknown> {
     name: string;
     columns: ColumnData[];
+    indexes?: TableIndex[];
+    /** Seed / sample data rows parsed from Records blocks */
+    records?: TableRecord[];
     /** e.g. "postgres" | "mysql" – drives visual badge */
     dbType?: string;
     /** Hex or CSS colour for the header bar */
     color?: string;
     /** Optional notes for the table */
     notes?: string;
+    isNew?: boolean;
+    isEditing?: boolean;
 }
 
 export interface ViewNodeData extends Record<string, unknown> {
     name: string;
     query: string;
+    isNew?: boolean;
+    isEditing?: boolean;
 }
 
 export interface NoteNodeData extends Record<string, unknown> {
@@ -64,6 +81,8 @@ export interface GroupNodeData extends Record<string, unknown> {
     color?: string;
     isCollapsed?: boolean;
     expandedHeight?: number;
+    isNew?: boolean;
+    isEditing?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -85,6 +104,7 @@ export type CardinalityType = "1:1" | "1:n" | "n:1" | "n:m";
 
 export interface RelationshipEdgeData extends Record<string, unknown> {
     cardinality: CardinalityType;
+    fkName?: string;
     onDelete?: "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION";
     onUpdate?: "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION";
 }

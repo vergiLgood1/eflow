@@ -8,6 +8,7 @@ import { useWorkspaceStore } from "../../store/use-workspace-store";
 import { ModelSidebar } from "../organisms/model-sidebar";
 import { ModelToolbar } from "../organisms/model-toolbar";
 
+import { DbmlPanel } from "../organisms/dbml-panel";
 import { WorkspaceChatPanel } from "@/features/workspace/components/organisms/workspace-chat-panel";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 
@@ -50,16 +51,19 @@ export function ModelLayoutTemplate({
                         <ModelToolbar />
 
                         {/* Canvas / Editor View Area */}
-                        <div className="flex-1 relative overflow-hidden">
-                            {activeTabId ? (
-                                <div className="h-full w-full">
-                                    {children}
-                                </div>
-                            ) : (
-                                <div className="flex h-full items-center justify-center text-muted-foreground italic">
-                                    No active workspace. Create one from the toolbar.
-                                </div>
-                            )}
+                        <div className="flex-1 flex relative overflow-hidden">
+                            <DbmlPanel />
+                            <div className="flex-1 relative overflow-hidden">
+                                {activeTabId ? (
+                                    <div className="h-full w-full">
+                                        {children}
+                                    </div>
+                                ) : (
+                                    <div className="flex h-full items-center justify-center text-muted-foreground italic">
+                                        No active workspace. Create one from the toolbar.
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </Tabs>
                 </ReactFlowProvider>

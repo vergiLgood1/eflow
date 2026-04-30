@@ -26,7 +26,7 @@ import {
     Table2,
     Trash2
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BoxIconButton } from "../../atoms/box-icon-button";
 import { ColumnConfigPopover } from "./entity-actions-box/add-column-popover";
 import { DeletePopover } from "./entity-actions-box/delete-popover";

@@ -8,10 +8,9 @@ import {
 } from "lucide-react";
 import { WorkspaceEmptyIllustration } from "../atoms/workspace-empty-illustration";
 import { WorkspaceDashboardCard } from "../molecules/workspace-dashboard-card";
+import { ImportSchemaDialog } from "@/shared/components/ui/import-schema-dialog";
 import { ConnectDbDialog } from "./connect-db-dialog";
 import { CreateDiagramDialog } from "./create-diagram-dialog";
-import { ImportFileDialog } from "./import-file-dialog";
-import { ImportSqlDialog } from "./import-sql-dialog";
 
 const TEMPLATES = [
     "E-commerce",
@@ -47,13 +46,13 @@ export function WorkspaceDashboardEmptyState() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-                    <ImportSqlDialog>
+                    <ImportSchemaDialog defaultMode="sql">
                         <WorkspaceDashboardCard
                             icon={<Upload className="h-6 w-6 text-blue-500" />}
                             title="Import SQL"
                             description="From .sql files"
                         />
-                    </ImportSqlDialog>
+                    </ImportSchemaDialog>
                     <ConnectDbDialog>
                         <WorkspaceDashboardCard
                             icon={<Link2 className="h-6 w-6 text-purple-500" />}
@@ -61,13 +60,13 @@ export function WorkspaceDashboardEmptyState() {
                             description="PostgreSQL, MySQL"
                         />
                     </ConnectDbDialog>
-                    <ImportFileDialog>
+                    <ImportSchemaDialog defaultMode="dbml">
                         <WorkspaceDashboardCard
                             icon={<FileCode className="h-6 w-6 text-emerald-500" />}
                             title="Import file"
-                            description=".dbml, .json"
+                            description=".dbml, .sql"
                         />
-                    </ImportFileDialog>
+                    </ImportSchemaDialog>
                 </div>
 
                 <div className="mt-16 pt-10 border-t border-border/50">

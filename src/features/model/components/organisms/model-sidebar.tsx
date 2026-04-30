@@ -66,7 +66,7 @@ export function ModelSidebar() {
                     ) : (
                         filteredTables.map((node) => {
                             const hiddenColumns = (node.data.hiddenColumns as string[]) || [];
-                            const isExpanded = expandedTables[node.id] ?? true;
+                            const isExpanded = expandedTables[node.id] ?? false;
 
                             return (
                                 <ModelSidebarTable 

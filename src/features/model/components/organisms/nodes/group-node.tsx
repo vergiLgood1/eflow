@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shar
 import { cn } from "@/shared/lib/utils";
 import { NodeProps, NodeResizer, NodeResizeControl } from "@xyflow/react";
 import { ChevronDown, ChevronRight, Pencil, Trash2, ArrowDownRight } from "lucide-react";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { GroupPropertiesPopover } from "./group-properties-popover";
 
 export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
@@ -23,6 +23,34 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
     // In-place editing state
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const [tempDescription, setTempDescription] = useState(data.description || "");
+
+    // In-place editing name
+    const [isEditingName, setIsEditingName] = useState(data.isEditing || false);
+    const [editName, setEditName] = useState(data.name);
+
+    // Auto-focus logic for new groups
+    useEffect(() => {
+        if (data.isEditing) {
+            setIsEditOpen(true);
+            // Clear the flag after picking it up
+            updateNodeData(id, { isEditing: false, isNew: false });
+        }
+    }, [data.isEditing, id, updateNodeData]);
+
+    const handleNameSave = () => {
+        setIsEditingName(false);
+        if (editName.trim() && editName !== data.name) {
+            updateNodeData(id, { name: editName.trim() });
+        }
+    };
+
+    const handleNameKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") handleNameSave();
+        if (e.key === "Escape") {
+            setIsEditingName(false);
+            setEditName(data.name);
+        }
+    };
 
     const groupColor = data.color || "#a855f7"; // Default purple-500
     const isCollapsed = data.isCollapsed || false;
@@ -261,16 +289,34 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                     </Popover>
                 </div>
 
-                <div className="group-box-title px-3 pt-3 select-none flex items-start">
-                    <div className="min-w-0">
+                <div className="group-box-title px-3 pt-3 select-none flex items-start w-full">
+                    <div className="flex-1 min-w-0">
                         <div
                             className={cn(
                                 "cursor-move truncate font-semibold text-foreground",
                                 isCollapsed ? "text-[13px]" : "text-[14px]"
                             )}
                             title={data.name || "Group"}
+                            onDoubleClick={(e) => {
+                                e.stopPropagation();
+                                setIsEditingName(true);
+                            }}
                         >
-                            <span className="cursor-text line-clamp-2 items-start flex">{data.name || "Group"}</span>
+                            {isEditingName ? (
+                                <input
+                                    autoFocus
+                                    className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/50 w-full font-semibold p-0 h-auto nodrag"
+                                    value={editName}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                    onBlur={handleNameSave}
+                                    onKeyDown={handleNameKeyDown}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            ) : (
+                                <span className="cursor-text line-clamp-2 items-start flex">
+                                    {data.name || "Group"}
+                                </span>
+                            )}
                         </div>
 
                         {!isCollapsed && (
@@ -279,7 +325,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                                     <div className="mt-1 nodrag">
                                         <Textarea
                                             autoFocus
-                                            className="h-20 w-full resize-none bg-muted/20 text-[12px] focus-visible:ring-1"
+                                            className="h-20 w-full resize-none bg-muted/20 text-[12px] focus-visible:ring-1 flex items-start"
                                             value={tempDescription}
                                             onChange={(e) => setTempDescription(e.target.value)}
                                             onBlur={handleDescriptionSubmit}
@@ -297,7 +343,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                                     </div>
                                 ) : (
                                     <div
-                                        className="mt-0.5 line-clamp-2 cursor-text text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                                        className="mt-0.5 line-clamp-2 cursor-text text-[12px] text-muted-foreground hover:text-foreground transition-colors flex items-start"
                                         onDoubleClick={(e) => {
                                             e.stopPropagation();
                                             setIsEditingDescription(true);

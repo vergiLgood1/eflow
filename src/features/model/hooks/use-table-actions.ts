@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
-import { ColumnData, TableNode, TableNodeData } from "../types/canvas";
+import { ColumnData, TableIndex, TableNode, TableNodeData } from "../types/canvas";
 
 /**
  * Reusable hook for table-specific canvas actions.
@@ -95,6 +95,45 @@ export function useTableActions() {
         addNode(duplicated as any);
     }, []);
 
+    const addIndex = useCallback((nodeId: string, index: Omit<TableIndex, "id">) => {
+        const data = getTableData(nodeId);
+        if (!data) return null;
+
+        const newIndex: TableIndex = {
+            id: crypto.randomUUID(),
+            ...index,
+        };
+
+        updateNodeData(nodeId, {
+            ...data,
+            indexes: [...(data.indexes ?? []), newIndex],
+        });
+
+        return newIndex.id;
+    }, [getTableData, updateNodeData]);
+
+    const updateIndex = useCallback((nodeId: string, indexId: string, updates: Partial<TableIndex>) => {
+        const data = getTableData(nodeId);
+        if (!data) return;
+
+        updateNodeData(nodeId, {
+            ...data,
+            indexes: (data.indexes ?? []).map((idx) =>
+                idx.id === indexId ? { ...idx, ...updates } : idx
+            ),
+        });
+    }, [getTableData, updateNodeData]);
+
+    const removeIndex = useCallback((nodeId: string, indexId: string) => {
+        const data = getTableData(nodeId);
+        if (!data) return;
+
+        updateNodeData(nodeId, {
+            ...data,
+            indexes: (data.indexes ?? []).filter((idx) => idx.id !== indexId),
+        });
+    }, [getTableData, updateNodeData]);
+
     const copyInsertSql = useCallback((nodeId: string) => {
         const data = getTableData(nodeId);
         if (!data) return;
@@ -127,5 +166,8 @@ export function useTableActions() {
         copyInsertSql,
         getTableData,
         getAllTables,
+        addIndex,
+        updateIndex,
+        removeIndex,
     };
 }

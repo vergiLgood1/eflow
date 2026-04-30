@@ -1,15 +1,16 @@
 import { useTableActions } from "@/features/model/hooks/use-table-actions";
+import { useCanvasStore } from "@/features/model/store/use-canvas-store";
 import { ColumnData, TableNodeData } from "@/features/model/types/canvas";
 import { Button } from "@/shared/components/ui/button";
+import {
+    Dialog,
+    DialogTrigger,
+} from "@/shared/components/ui/dialog";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/shared/components/ui/popover";
-import {
-    Dialog,
-    DialogTrigger,
-} from "@/shared/components/ui/dialog";
 import {
     Tooltip,
     TooltipContent,
@@ -19,11 +20,13 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Database, Link2, Pencil, Plus, Table2, Trash2, Zap } from "lucide-react";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { EntityActionsBox } from "./entity-actions-box";
 import { ColumnConfigPopover } from "./entity-actions-box/add-column-popover";
 import { FKConfigPopover } from "./entity-actions-box/fk-config-popover";
 import { IDXConfigPopover } from "./entity-actions-box/idx-config-popover";
+import { InsertDataDialog } from "./entity-actions-box/insert-data-dialog";
+import { PropertiesPopover } from "./entity-actions-box/properties-popover";
 import { TRGConfigDialog } from "./entity-actions-box/trg-config-dialog";
 
 // --- Subcomponents ---
@@ -254,12 +257,42 @@ const TableFooter = ({ nodeId }: { nodeId: string }) => {
 // --- Main Node Component ---
 export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
     const data = rawData as TableNodeData;
+    const { updateNodeData } = useCanvasStore();
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState(data.name);
+    const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
+
+    // Auto-open logic for new tables
+    useEffect(() => {
+        if (data.isEditing) {
+            setIsPropertiesOpen(true);
+            // Clear the flag after picking it up
+            updateNodeData(id, { isEditing: false, isNew: false });
+        }
+    }, [data.isEditing, id, updateNodeData]);
+
+    const handleSave = () => {
+        setIsEditing(false);
+        if (editName.trim() && editName !== data.name) {
+            updateNodeData(id, { name: editName.trim() });
+        }
+    };
+
+    const [isDataOpen, setIsDataOpen] = useState(false);
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") handleSave();
+        if (e.key === "Escape") {
+            setIsEditing(false);
+            setEditName(data.name);
+        }
+    };
 
     return (
         <TooltipProvider delayDuration={0}>
             <div
                 className={cn(
-                    "group/node relative flex flex-col w-[240px] rounded-md border bg-card text-[12px]",
+                    "group/node relative flex flex-col w-[240px] min-h-52 rounded-md border bg-card text-[12px]",
                     selected
                         ? "border-primary shadow-[0_0_20px_hsl(var(--primary)/0.15),0_4px_20px_hsl(var(--foreground)/0.12)]"
                         : "border-border shadow-md"
@@ -269,13 +302,45 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                 {selected && <EntityActionsBox nodeId={id} data={data} />}
 
                 {/* Header */}
-                <div
-                    className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-md border-b border-border/40 bg-primary"
-                    style={data.color ? { backgroundColor: data.color } : undefined}
-                >
-                    <Table2 className="h-4 w-4 opacity-90" />
-                    <span className="truncate">{data.name}</span>
-                </div>
+                <Popover open={isPropertiesOpen} onOpenChange={setIsPropertiesOpen}>
+                    <div
+                        className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-md border-b border-border/40 bg-primary cursor-pointer"
+                        style={data.color ? { backgroundColor: data.color } : undefined}
+                        onDoubleClick={() => setIsEditing(true)}
+                    >
+                        {/* Table2 icon opens the Insert / View Data dialog */}
+                        <Dialog open={isDataOpen} onOpenChange={setIsDataOpen}>
+                            <DialogTrigger asChild>
+                                <button
+                                    className="shrink-0 flex items-center justify-center rounded hover:bg-black/20 transition-colors p-0.5 -ml-0.5"
+                                    title={data.records?.length ? `View data (${data.records.length} rows)` : "Insert data"}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <Table2 className="h-4 w-4 opacity-90" />
+                                    {data.records && data.records.length > 0 && (
+                                        <span className="ml-1 text-[9px] font-semibold opacity-80">{data.records.length}</span>
+                                    )}
+                                </button>
+                            </DialogTrigger>
+                            <InsertDataDialog
+                                nodeId={id}
+                                data={data}
+                                onClose={() => setIsDataOpen(false)}
+                            />
+                        </Dialog>
+
+                        <PopoverTrigger asChild>
+                            <span className="truncate">{data.name}</span>
+                        </PopoverTrigger>
+                    </div>
+                    <PopoverContent className="shadow-xl border-border/50" side="right" align="start">
+                        <PropertiesPopover
+                            nodeId={id}
+                            data={data}
+                            onClose={() => setIsPropertiesOpen(false)}
+                        />
+                    </PopoverContent>
+                </Popover>
 
                 {/* Columns */}
                 <div className="flex-1 py-1 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-border/50">

@@ -1,18 +1,38 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { TableNodeData } from "@/features/model/types/canvas";
+import { TableNodeData, TableRecord } from "@/features/model/types/canvas";
+import { useCanvasStore } from "@/features/model/store/use-canvas-store";
 
 export type RowData = Record<string, string>;
 
-export function useInsertData(data: TableNodeData, onClose: () => void) {
+export function useInsertData(data: TableNodeData, nodeId: string, onClose: () => void) {
+    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
+
+    // Seed rows from existing records on the node (populated from DBML Records blocks)
+    const seedRows = (): RowData[] => {
+        if (data.records && data.records.length > 0) {
+            return data.records.map((r) => {
+                const row: RowData = {};
+                data.columns?.forEach((col) => {
+                    row[col.name] = r[col.name] ?? "";
+                });
+                return row;
+            });
+        }
+        return [getDefaultValues(0)];
+    };
+
     const getDefaultValues = (rowIndex: number): RowData => {
         const defaults: RowData = {};
         data.columns?.forEach((column) => {
             const type = column.type.toLowerCase();
             if (type === "uuid") {
                 defaults[column.name] = crypto.randomUUID();
-            } else if ((type === "int" || type === "integer" || type === "serial") && (column.isPk || column.name.toLowerCase() === "id")) {
-                defaults[column.name] = (rowIndex + 1).toString();
+            } else if (
+                (type === "int" || type === "integer" || type === "serial") &&
+                (column.isPk || column.name.toLowerCase() === "id")
+            ) {
+                defaults[column.name] = rowIndex.toString();
             } else if (type === "boolean") {
                 defaults[column.name] = "false";
             }
@@ -20,7 +40,7 @@ export function useInsertData(data: TableNodeData, onClose: () => void) {
         return defaults;
     };
 
-    const [rows, setRows] = useState<RowData[]>([getDefaultValues(0)]);
+    const [rows, setRows] = useState<RowData[]>(seedRows);
 
     const handleAddRow = () => {
         setRows((prev) => [...prev, getDefaultValues(prev.length)]);
@@ -49,30 +69,46 @@ export function useInsertData(data: TableNodeData, onClose: () => void) {
             return;
         }
 
-        const columnNames = data.columns.map((column) => column.name).join(", ");
+        // 1. Persist records back to the node so DBML roundtrip works
+        const records: TableRecord[] = rows.map((row) => {
+            const record: TableRecord = {};
+            data.columns.forEach((col) => {
+                record[col.name] = row[col.name] ?? "";
+            });
+            return record;
+        });
+        updateNodeData(nodeId, { records });
 
-        const allSql = rows.map((row) => {
-            const formattedValues = data.columns.map((column) => {
-                const val = row[column.name];
-                
-                if (val === undefined || val === "") {
-                    return column.nullable ? "NULL" : "''";
-                }
+        // 2. Build SQL INSERT statements and copy to clipboard
+        const columnNames = data.columns.map((col) => col.name).join(", ");
+        const allSql = rows
+            .map((row) => {
+                const formattedValues = data.columns
+                    .map((column) => {
+                        const val = row[column.name];
 
-                const type = column.type.toLowerCase();
-                
-                if (["int", "bigint", "smallint", "decimal", "double precision", "real", "boolean"].includes(type)) {
-                    return val;
-                }
-                
-                return `'${val.replace(/'/g, "''")}'`;
-            }).join(", ");
+                        if (val === undefined || val === "") {
+                            return column.nullable ? "NULL" : "''";
+                        }
 
-            return `INSERT INTO ${data.name} (${columnNames}) VALUES (${formattedValues});`;
-        }).join("\n");
+                        const type = column.type.toLowerCase();
+                        if (
+                            ["int", "integer", "bigint", "smallint", "decimal", "numeric",
+                             "float", "real", "double precision", "boolean"].includes(type)
+                        ) {
+                            return val;
+                        }
+
+                        return `'${val.replace(/'/g, "''")}'`;
+                    })
+                    .join(", ");
+
+                return `INSERT INTO ${data.name} (${columnNames}) VALUES (${formattedValues});`;
+            })
+            .join("\n");
 
         navigator.clipboard.writeText(allSql);
-        toast.success(`${rows.length} rows of Insert SQL copied to clipboard!`);
+        toast.success(`Saved ${rows.length} row(s) · INSERT SQL copied to clipboard`);
         onClose();
     };
 
