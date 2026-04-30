@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
+import { columnSchema, indexSchema, tableSchema } from "../lib/schema";
 import { ColumnData, TableIndex, TableNode, TableNodeData } from "../types/canvas";
 
 /**
@@ -23,9 +24,12 @@ export function useTableActions() {
         const data = getTableData(nodeId);
         if (!data) return null;
 
+        const parsed = columnSchema.safeParse(column);
+        if (!parsed.success) return null;
+
         const newColumn: ColumnData = {
             id: crypto.randomUUID(),
-            ...column,
+            ...parsed.data,
         };
 
         updateNodeData(nodeId, {
@@ -40,10 +44,26 @@ export function useTableActions() {
         const data = getTableData(nodeId);
         if (!data) return;
 
+        const target = data.columns.find((column) => column.id === columnId);
+        if (!target) return;
+
+        const parsed = columnSchema.safeParse({
+            name: updates.name ?? target.name,
+            type: updates.type ?? target.type,
+            isPk: updates.isPk ?? target.isPk,
+            isUnique: updates.isUnique ?? target.isUnique,
+            isAutoIncrement: updates.isAutoIncrement ?? target.isAutoIncrement,
+            isUuid: updates.isUuid ?? target.isUuid,
+            nullable: updates.nullable ?? target.nullable,
+            defaultValue: updates.defaultValue ?? target.defaultValue,
+            notes: updates.notes ?? target.notes,
+        });
+        if (!parsed.success) return;
+
         updateNodeData(nodeId, {
             ...data,
             columns: data.columns.map((column) =>
-                column.id === columnId ? { ...column, ...updates } : column
+                column.id === columnId ? { ...column, ...parsed.data } : column
             ),
         });
     }, [getTableData, updateNodeData]);
@@ -62,9 +82,17 @@ export function useTableActions() {
         const data = getTableData(nodeId);
         if (!data) return;
 
+        const parsed = tableSchema.safeParse({
+            name: updates.name ?? data.name,
+            color: updates.color ?? data.color,
+        });
+        if (!parsed.success) return;
+
         updateNodeData(nodeId, {
             ...data,
             ...updates,
+            name: parsed.data.name,
+            color: parsed.data.color,
         });
     }, [getTableData, updateNodeData]);
 
@@ -81,8 +109,9 @@ export function useTableActions() {
         const data = node.data as TableNodeData;
         const newId = crypto.randomUUID();
 
-        const duplicated = {
+        const duplicated: TableNode = {
             ...node,
+            type: "table",
             id: newId,
             position: { x: node.position.x + 40, y: node.position.y + 40 },
             selected: true,
@@ -92,16 +121,19 @@ export function useTableActions() {
             },
         };
 
-        addNode(duplicated as any);
+        addNode(duplicated as TableNode);
     }, []);
 
     const addIndex = useCallback((nodeId: string, index: Omit<TableIndex, "id">) => {
         const data = getTableData(nodeId);
         if (!data) return null;
 
+        const parsed = indexSchema.safeParse(index);
+        if (!parsed.success) return null;
+
         const newIndex: TableIndex = {
             id: crypto.randomUUID(),
-            ...index,
+            ...parsed.data,
         };
 
         updateNodeData(nodeId, {
@@ -116,10 +148,21 @@ export function useTableActions() {
         const data = getTableData(nodeId);
         if (!data) return;
 
+        const nextIndex = (data.indexes ?? []).find((idx) => idx.id === indexId);
+        if (!nextIndex) return;
+
+        const parsed = indexSchema.safeParse({
+            name: updates.name ?? nextIndex.name,
+            columns: updates.columns ?? nextIndex.columns,
+            type: updates.type ?? nextIndex.type,
+            isUnique: updates.isUnique ?? nextIndex.isUnique,
+        });
+        if (!parsed.success) return;
+
         updateNodeData(nodeId, {
             ...data,
             indexes: (data.indexes ?? []).map((idx) =>
-                idx.id === indexId ? { ...idx, ...updates } : idx
+                idx.id === indexId ? { ...idx, ...parsed.data } : idx
             ),
         });
     }, [getTableData, updateNodeData]);

@@ -15,7 +15,7 @@ import { useCallback, useEffect } from "react";
 
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
-import type { TableNodeData } from "../../types/canvas";
+import type { GroupNodeData } from "../../types/canvas";
 import { ModelEdgeMarkers } from "../atoms/model-edge-markers";
 import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
 import { CanvasContextMenu } from "./canvas-context-menu";
@@ -56,6 +56,7 @@ interface ModelCanvasProps {
 /**
  * Inner component runs inside ReactFlowProvider so we can use context hooks.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
@@ -63,12 +64,12 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     const onNodesChange = useCanvasStore((s) => s.onNodesChange);
     const onEdgesChange = useCanvasStore((s) => s.onEdgesChange);
     const onConnect = useCanvasStore((s) => s.onConnect);
-    const setNodes = useCanvasStore((s) => s.setNodes);
-    const setEdges = useCanvasStore((s) => s.setEdges);
     const addNode = useCanvasStore((s) => s.addNode);
     const activeTool = useCanvasStore((s) => s.activeTool);
     const setActiveTool = useCanvasStore((s) => s.setActiveTool);
     const isAnimated = useCanvasStore((s) => s.isAnimated);
+    const getTableCount = useCanvasStore((s) => s.getTableCount);
+    const getViewCount = useCanvasStore((s) => s.getViewCount);
 
     const { screenToFlowPosition, setViewport } = useReactFlow();
 
@@ -137,7 +138,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         type: "table",
                         position,
                         data: {
-                            name: `table_${nodes.filter((n) => n.type === "table").length + 1}`,
+                            name: `table_${getTableCount() + 1}`,
                             color: "#3b82f6", // Default blue
                             columns,
                             isNew: true,
@@ -152,7 +153,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         type: "view",
                         position,
                         data: {
-                            name: `view_${nodes.filter((n) => n.type === "view").length + 1}`,
+                            name: `view_${getViewCount() + 1}`,
                             query: "SELECT * FROM ...;",
                             isNew: true,
                             isEditing: true,
@@ -189,7 +190,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
             // Reset to select after placing
             setActiveTool("select");
         },
-        [activeTool, addNode, screenToFlowPosition, setActiveTool]
+        [activeTool, addNode, screenToFlowPosition, setActiveTool, getTableCount, getViewCount]
     );
 
     // Allow Escape to cancel the active tool
@@ -209,7 +210,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     const setDragOverGroupId = useCanvasStore((s) => s.setDragOverGroupId);
 
     const onNodeDrag = useCallback(
-        (_: any, node: Node) => {
+        (_event: React.MouseEvent, node: Node) => {
             if (node.type === 'group') return;
 
             const centerX = node.position.x + (node.measured?.width ?? 0) / 2;
@@ -242,7 +243,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     );
 
     const onNodeDragStop = useCallback(
-        (_: any, node: Node) => {
+        (_event: React.MouseEvent, node: Node) => {
             setDragOverGroupId(null); // Clear feedback
             if (node.type === 'group') return;
 
@@ -279,7 +280,7 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                 const relativeX = absCenterX - (node.measured?.width ?? 0) / 2 - groupNode.position.x;
                 const relativeY = absCenterY - (node.measured?.height ?? 0) / 2 - groupNode.position.y;
                 
-                const isGroupCollapsed = (groupNode.data as any)?.isCollapsed || false;
+                const isGroupCollapsed = (groupNode.data as GroupNodeData | undefined)?.isCollapsed || false;
 
                 updateNode(node.id, {
                     parentId: groupNode.id,

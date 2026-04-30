@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Plus } from "lucide-react";
 import { useCanvasStore } from "../../store/use-canvas-store";
-import { isTableNode, TableNode } from "../../types/canvas";
+import { isTableNode } from "../../types/canvas";
 import { ModelSearchInput } from "../molecules/model-search-input";
 import { ModelSidebarColumn, ModelSidebarSection } from "../molecules/model-sidebar-column";
 import { ModelSidebarTable } from "../molecules/model-sidebar-table";
@@ -61,7 +61,7 @@ export function ModelSidebar() {
                         </div>
                     ) : filteredTables.length === 0 ? (
                         <div className="py-6 text-center text-xs text-muted-foreground italic">
-                            No tables matching "{searchQuery}"
+                            No tables matching &quot;{searchQuery}&quot;
                         </div>
                     ) : (
                         filteredTables.map((node) => {

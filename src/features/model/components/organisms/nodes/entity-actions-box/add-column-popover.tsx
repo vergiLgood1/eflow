@@ -19,6 +19,7 @@ import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { cn } from "@/shared/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
+import { columnSchema } from "@/features/model/lib/schema";
 import { useEffect, useRef, useState } from "react";
 import { PopoverHeader } from "../../../atoms/popover-header";
 
@@ -72,12 +73,24 @@ export function ColumnConfigPopover({
             notes,
         });
         setAddedColumnId(id);
-    }, [addColumn, nodeId, column]);
+    }, [
+        addColumn,
+        nodeId,
+        column,
+        name,
+        type,
+        isPk,
+        isNullable,
+        isUnique,
+        isAutoIncrement,
+        defaultValue,
+        notes,
+    ]);
 
 
     useEffect(() => {
         if (!columnId) return;
-        updateColumn(nodeId, columnId, {
+        const parsed = columnSchema.safeParse({
             name,
             type,
             isPk,
@@ -88,7 +101,15 @@ export function ColumnConfigPopover({
             defaultValue,
             notes,
         });
+        if (!parsed.success) return;
+        updateColumn(nodeId, columnId, parsed.data);
     }, [name, type, isPk, isNullable, isUnique, isAutoIncrement, defaultValue, notes, nodeId, columnId, updateColumn]);
+
+    useEffect(() => {
+        if (columnId && !column) {
+            onClose();
+        }
+    }, [columnId, column, onClose]);
 
     return (
         <div className="p-1">

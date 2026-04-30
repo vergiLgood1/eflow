@@ -16,17 +16,15 @@ import {
 } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
 import {
-    BookCopy,
     ClipboardEdit,
     Copy,
     CopyPlusIcon,
     Database,
     Plus,
     Settings,
-    Table2,
     Trash2
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BoxIconButton } from "../../atoms/box-icon-button";
 import { ColumnConfigPopover } from "./entity-actions-box/add-column-popover";
 import { DeletePopover } from "./entity-actions-box/delete-popover";

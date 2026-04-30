@@ -59,6 +59,8 @@ export interface TableNodeData extends Record<string, unknown> {
     color?: string;
     /** Optional notes for the table */
     notes?: string;
+    /** Column IDs hidden in sidebar and canvas list */
+    hiddenColumns?: string[];
     isNew?: boolean;
     isEditing?: boolean;
 }
@@ -100,7 +102,7 @@ export type CanvasNode = TableNode | ViewNode | NoteNode | GroupNode;
 // Edge data
 // ---------------------------------------------------------------------------
 
-export type CardinalityType = "1:1" | "1:n" | "n:1" | "n:m";
+export type CardinalityType = "1:1" | "1:n" | "n:1" | "n:m" | "0..1" | "0..n";
 
 export interface RelationshipEdgeData extends Record<string, unknown> {
     cardinality: CardinalityType;
@@ -133,4 +135,31 @@ export function isGroupNode(node: Node): node is GroupNode {
 
 export function isRelationshipEdge(edge: Edge): edge is RelationshipEdge {
     return edge.type === "relationship";
+}
+
+export type CanvasTool =
+    | "select"
+    | "table"
+    | "view"
+    | "note"
+    | "group"
+    | "rel-1-1"
+    | "rel-1-n"
+    | "rel-0-1"
+    | "rel-0-n"
+    | "rel-n-n";
+
+export interface ModelSettings {
+    showFkName: boolean;
+    showRelType: boolean;
+    idColumnType: string;
+    varcharDefaultLength: number;
+    decimalDefaultPrecision: number;
+    decimalDefaultScale: number;
+    defaultColumns: {
+        id: string;
+        name: string;
+        type: string;
+        nullable: boolean;
+    }[];
 }

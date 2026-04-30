@@ -14,17 +14,14 @@ const NodeHandle = ({ type, position, id }: { type: "source" | "target"; positio
     />
 );
 
-export const ViewNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
+export const ViewNodeComponent = memo(function ViewNodeComponent({ id, data: rawData, selected }: NodeProps) {
     const data = rawData as ViewNodeData;
     const updateNodeData = useCanvasStore((s) => s.updateNodeData);
     const [isEditing, setIsEditing] = useState(data.isEditing || false);
     const [editName, setEditName] = useState(data.name);
 
-    // Auto-focus logic for new views
     useEffect(() => {
         if (data.isEditing) {
-            setIsEditing(true);
-            // Clear the flag after picking it up
             updateNodeData(id, { isEditing: false, isNew: false });
         }
     }, [data.isEditing, id, updateNodeData]);

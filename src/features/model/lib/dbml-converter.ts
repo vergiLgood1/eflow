@@ -11,7 +11,7 @@ export function generateDBML(nodes: CanvasNode[], edges: RelationshipEdge[]): st
 
     // 1. Tables
     tableNodes.forEach((node) => {
-        const { name, columns, indexes, notes, records } = node.data;
+        const { name, columns, indexes, notes } = node.data;
 
         // Skip tables without a valid name to avoid parser errors
         if (!name || !name.trim()) return;

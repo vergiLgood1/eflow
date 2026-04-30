@@ -3,7 +3,7 @@
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { generateDBML } from "../../lib/dbml-converter";
 import { dbmlToCanvas, syncCanvasData } from "../../lib/import-utils";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Copy, X, Download, AlertCircle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
@@ -16,19 +16,12 @@ export function DbmlPanel() {
     const [error, setError] = useState<string | null>(null);
     const [isDirty, setIsDirty] = useState(false);
 
-    // Internal flag to prevent recursive canvas→editor→canvas loops
-    const isUpdatingFromCanvas = useRef(false);
+    const syncedCode = useMemo(() => {
+        if (!isDbmlModeOpen) return "";
+        return generateDBML(nodes as CanvasNode[], edges as RelationshipEdge[]);
+    }, [nodes, edges, isDbmlModeOpen]);
 
-    // Sync canvas → editor whenever the diagram changes (and user hasn't made unsaved edits)
-    useEffect(() => {
-        if (isDbmlModeOpen && !isDirty) {
-            isUpdatingFromCanvas.current = true;
-            const content = generateDBML(nodes as CanvasNode[], edges as RelationshipEdge[]);
-            setCode(content);
-            setError(null);
-            setTimeout(() => { isUpdatingFromCanvas.current = false; }, 100);
-        }
-    }, [nodes, edges, isDbmlModeOpen, isDirty]);
+    const displayCode = isDirty ? code : syncedCode;
 
     const handleApply = useCallback((silent = false) => {
         try {
@@ -45,14 +38,15 @@ export function DbmlPanel() {
             setIsDirty(false);
             setError(null);
             if (!silent) toast.success("Changes applied to diagram");
-        } catch (e: any) {
-            setError(e.message || "Invalid DBML syntax");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Invalid DBML syntax";
+            setError(message);
         }
     }, [code, nodes, edges, setNodes, setEdges]);
 
     // Just-In-Time (JIT) Auto-apply with 800 ms debounce
     useEffect(() => {
-        if (!isDirty || isUpdatingFromCanvas.current) return;
+        if (!isDirty) return;
 
         const timer = setTimeout(() => {
             handleApply(true);
@@ -79,7 +73,6 @@ export function DbmlPanel() {
     };
 
     const handleChange = (value: string) => {
-        if (isUpdatingFromCanvas.current) return;
         setCode(value);
         setIsDirty(true);
     };
@@ -132,7 +125,7 @@ export function DbmlPanel() {
 
             {/* CodeMirror editor — fills all remaining space */}
             <div className="flex-1 overflow-hidden text-[13px]">
-                <DbmlEditor value={code} onChange={handleChange} />
+                <DbmlEditor value={displayCode} onChange={handleChange} />
             </div>
 
             {/* Status Bar */}

@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
-import { NodeProps, NodeResizer, NodeResizeControl } from "@xyflow/react";
+import { NodeProps, NodeResizer, NodeResizeControl, type Node } from "@xyflow/react";
 import { ChevronDown, ChevronRight, Pencil, Trash2, ArrowDownRight } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { GroupPropertiesPopover } from "./group-properties-popover";
@@ -112,7 +112,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
             });
 
             // Hide children
-            const updates: Record<string, any> = {};
+            const updates: Record<string, Partial<Node>> = {};
             childNodes.forEach(child => {
                 updates[child.id] = { hidden: true };
             });
@@ -128,7 +128,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
             });
 
             // Show children
-            const updates: Record<string, any> = {};
+            const updates: Record<string, Partial<Node>> = {};
             childNodes.forEach(child => {
                 updates[child.id] = { hidden: false };
             });

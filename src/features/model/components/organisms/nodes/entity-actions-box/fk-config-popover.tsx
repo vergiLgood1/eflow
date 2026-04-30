@@ -1,9 +1,7 @@
 "use client";
 
 import { useTableActions } from "@/features/model/hooks/use-table-actions";
-import { TableNodeData } from "@/features/model/types/canvas";
 import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { useState } from "react";

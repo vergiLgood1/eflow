@@ -40,7 +40,7 @@ export function PropertiesPopover({ nodeId, data, onClose }: { nodeId: string; d
         if (name !== data.name || color !== data.color) {
             updateTable(nodeId, { name, color });
         }
-    }, [name, color, nodeId, updateTable]);
+    }, [name, color, data.name, data.color, nodeId, updateTable]);
 
     const handleReset = () => {
         setColor(colors.blue[500]);

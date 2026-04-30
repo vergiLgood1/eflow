@@ -21,7 +21,7 @@ const NOTE_COLORS = [
 
 export const NoteNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
     const data = rawData as NoteNodeData;
-    const { nodes, updateNodeData, removeNode } = useCanvasStore();
+    const { updateNodeData, removeNode } = useCanvasStore();
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     
     // Auto-enter edit mode if the note is newly created
@@ -44,7 +44,7 @@ export const NoteNodeComponent = memo(({ id, data: rawData, selected }: NodeProp
             textareaRef.current.focus();
             textareaRef.current.setSelectionRange(tempContent.length, tempContent.length);
         }
-    }, [isEditing]);
+    }, [isEditing, tempContent.length]);
 
     const handleContentSubmit = () => {
         updateNodeData(id, { content: tempContent });

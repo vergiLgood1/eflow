@@ -28,7 +28,7 @@ export function GroupPropertiesPopover({
         if (name !== data.name || description !== (data.description || "")) {
             updateNodeData(nodeId, { name, description });
         }
-    }, [name, description, nodeId, updateNodeData]);
+    }, [name, description, data.name, data.description, nodeId, updateNodeData]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

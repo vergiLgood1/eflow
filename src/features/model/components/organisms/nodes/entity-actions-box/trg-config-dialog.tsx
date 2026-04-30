@@ -28,8 +28,6 @@ export function TRGConfigDialog({ nodeId, onClose }: { nodeId: string; onClose: 
     const [name, setName] = useState("");
     const [timing, setTiming] = useState("BEFORE");
     const [event, setEvent] = useState("INSERT");
-    const [isTemplate, setIsTemplate] = useState(false);
-    const [template, setTemplate] = useState("SOFT_DELETE");
     const [forEach, setForEach] = useState("ROW");
     const [unique, setUnique] = useState("NON UNIQUE");
     const [definition, setDefinition] = useState("");

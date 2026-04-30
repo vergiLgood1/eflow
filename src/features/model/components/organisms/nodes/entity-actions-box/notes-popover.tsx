@@ -15,7 +15,7 @@ export function NotesPopover({ nodeId, data, onClose }: { nodeId: string; data: 
         if (notes !== data.notes) {
             updateTable(nodeId, { notes });
         }
-    }, [notes, nodeId, updateTable]);
+    }, [notes, data.notes, nodeId, updateTable]);
 
     return (
         <div className="grid gap-2 min-w-[280px]">

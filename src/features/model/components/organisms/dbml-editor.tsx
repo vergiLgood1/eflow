@@ -3,12 +3,13 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { autocompletion, CompletionContext, CompletionResult } from "@codemirror/autocomplete";
-import { LanguageSupport, LRLanguage, syntaxHighlighting, HighlightStyle } from "@codemirror/language";
+import { syntaxHighlighting, HighlightStyle } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { indentWithTab } from "@codemirror/commands";
 import { keymap, EditorView } from "@codemirror/view";
 import { bracketMatching } from "@codemirror/language";
 import { StreamLanguage } from "@codemirror/language";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 
 // ── DBML Column Types ────────────────────────────────────────────────────────
 const COLUMN_TYPES = [
@@ -24,32 +25,24 @@ const COLUMN_TYPES = [
     "enum",
 ];
 
-// ── DBML Keywords ────────────────────────────────────────────────────────────
-const DBML_KEYWORDS = [
-    "Table", "Ref", "Enum", "Project", "indexes", "Note", "TableGroup",
-];
-
 const COLUMN_SETTINGS = ["pk", "unique", "not null", "null", "increment", "default", "note", "ref"];
 
 const REF_ACTIONS = ["no action", "restrict", "cascade", "set null", "set default"];
 
 const INDEX_TYPES = ["btree", "hash", "gin", "gist", "spgist", "brin"];
 
-const REF_OPTIONS = ["delete", "update"];
-
 // ── Stream Language for DBML ─────────────────────────────────────────────────
 const dbmlStreamLanguage = StreamLanguage.define({
     name: "dbml",
     startState: () => ({ inTable: false, inEnum: false, inIndexes: false, inProject: false }),
-    token(stream, state) {
+    token(stream) {
         // Single-line comments
         if (stream.match(/\/\/.*/)) return "lineComment";
 
         // Multi-line comments
         if (stream.match("/*")) {
-            let found = false;
             while (!stream.eol()) {
-                if (stream.match("*/")) { found = true; break; }
+                if (stream.match("*/")) { break; }
                 stream.next();
             }
             return "blockComment";
@@ -246,26 +239,28 @@ interface DbmlEditorProps {
 
 export function DbmlEditor({ value, onChange }: DbmlEditorProps) {
     return (
-        <CodeMirror
-            value={value}
-            height="100%"
-            theme={oneDark}
-            extensions={dbmlExtensions}
-            onChange={onChange}
-            basicSetup={{
-                lineNumbers: true,
-                highlightActiveLineGutter: true,
-                highlightActiveLine: true,
-                foldGutter: true,
-                indentOnInput: true,
-                closeBrackets: true,
-                history: true,
-                drawSelection: true,
-                dropCursor: true,
-                allowMultipleSelections: false,
-                syntaxHighlighting: false, // We use our own
-                searchKeymap: true,
-            }}
-        />
+        <ScrollArea className="h-full w-full" data-vaul-no-drag>
+            <CodeMirror
+                value={value}
+                height="100%"
+                theme={oneDark}
+                extensions={dbmlExtensions}
+                onChange={onChange}
+                basicSetup={{
+                    lineNumbers: true,
+                    highlightActiveLineGutter: true,
+                    highlightActiveLine: true,
+                    foldGutter: true,
+                    indentOnInput: true,
+                    closeBrackets: true,
+                    history: true,
+                    drawSelection: true,
+                    dropCursor: true,
+                    allowMultipleSelections: false,
+                    syntaxHighlighting: false,
+                    searchKeymap: true,
+                }}
+            />
+        </ScrollArea>
     );
 }

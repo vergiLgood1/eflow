@@ -25,12 +25,11 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { generateSQL } from "../../lib/sql-generator";
-import { useCanvasStore, type CanvasTool } from "../../store/use-canvas-store";
+import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
-import type { CanvasNode } from "../../types/canvas";
+import type { CanvasNode, CanvasTool, RelationshipEdge } from "../../types/canvas";
 import { ModelRelationIcon } from "../atoms/model-relation-icon";
 import { ModelToolbarButton } from "../atoms/model-toolbar-button";
-import { ModelUserAvatar } from "../molecules/model-user-avatar";
 import { ModelSettingsDialog } from "./model-settings-dialog";
 
 const ACTIVE_TOOL_CLASS =
@@ -40,7 +39,7 @@ export function ModelToolbar() {
     const activeTool = useCanvasStore((s) => s.activeTool);
     const setActiveTool = useCanvasStore((s) => s.setActiveTool);
 
-    const { tabs, activeTabId, setActiveTab, closeTab, addTab, renameTab } =
+    const { tabs, closeTab, addTab, renameTab } =
         useWorkspaceStore();
 
     const { zoomIn, zoomOut } = useReactFlow();
@@ -53,8 +52,6 @@ export function ModelToolbar() {
         future,
         nodes,
         edges,
-        setNodes,
-        setEdges,
         isDbmlModeOpen,
         toggleDbmlMode
     } = useCanvasStore();
@@ -76,7 +73,7 @@ export function ModelToolbar() {
     };
 
     const handleExportSQL = () => {
-        const sql = generateSQL(nodes as CanvasNode[], edges as any);
+        const sql = generateSQL(nodes as CanvasNode[], edges as RelationshipEdge[]);
         const blob = new Blob([sql], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");

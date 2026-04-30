@@ -16,7 +16,7 @@ export function IDXConfigPopover({ nodeId, onClose }: { nodeId: string; onClose:
     const table = getTableData(nodeId);
 
     const [name, setName] = useState("");
-    const [type, setType] = useState<any>("btree");
+    const [type, setType] = useState<"btree" | "hash" | "gist" | "gin">("btree");
     const [isUnique, setIsUnique] = useState(false);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
 
@@ -84,7 +84,7 @@ export function IDXConfigPopover({ nodeId, onClose }: { nodeId: string; onClose:
                 <div className="flex flex-col gap-4">
                     <div className="space-y-1.5 w-full">
                         <Label className="text-xs">Method</Label>
-                        <Select value={type} onValueChange={setType}>
+                        <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
                             <SelectTrigger className="w-full h-8 text-xs">
                                 <SelectValue />
                             </SelectTrigger>

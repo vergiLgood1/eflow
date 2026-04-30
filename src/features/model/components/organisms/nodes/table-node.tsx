@@ -255,38 +255,19 @@ const TableFooter = ({ nodeId }: { nodeId: string }) => {
 };
 
 // --- Main Node Component ---
-export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodeProps) => {
+export const TableNodeComponent = memo(function TableNodeComponent({ id, data: rawData, selected }: NodeProps) {
     const data = rawData as TableNodeData;
     const { updateNodeData } = useCanvasStore();
-    const [isEditing, setIsEditing] = useState(false);
-    const [editName, setEditName] = useState(data.name);
-    const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
+    const [isPropertiesOpen, setIsPropertiesOpen] = useState(data.isEditing ?? false);
 
-    // Auto-open logic for new tables
+    // Clear the flag after picking it up
     useEffect(() => {
         if (data.isEditing) {
-            setIsPropertiesOpen(true);
-            // Clear the flag after picking it up
             updateNodeData(id, { isEditing: false, isNew: false });
         }
     }, [data.isEditing, id, updateNodeData]);
 
-    const handleSave = () => {
-        setIsEditing(false);
-        if (editName.trim() && editName !== data.name) {
-            updateNodeData(id, { name: editName.trim() });
-        }
-    };
-
     const [isDataOpen, setIsDataOpen] = useState(false);
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") handleSave();
-        if (e.key === "Escape") {
-            setIsEditing(false);
-            setEditName(data.name);
-        }
-    };
 
     return (
         <TooltipProvider delayDuration={0}>
@@ -306,7 +287,7 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                     <div
                         className="flex h-9 items-center gap-2 px-3 font-bold text-primary-foreground rounded-t-md border-b border-border/40 bg-primary cursor-pointer"
                         style={data.color ? { backgroundColor: data.color } : undefined}
-                        onDoubleClick={() => setIsEditing(true)}
+                        onDoubleClick={() => setIsPropertiesOpen(true)}
                     >
                         {/* Table2 icon opens the Insert / View Data dialog */}
                         <Dialog open={isDataOpen} onOpenChange={setIsDataOpen}>
@@ -360,3 +341,5 @@ export const TableNodeComponent = memo(({ id, data: rawData, selected }: NodePro
         </TooltipProvider>
     );
 });
+
+TableNodeComponent.displayName = "TableNode";

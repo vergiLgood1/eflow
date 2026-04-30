@@ -1,16 +1,20 @@
 import { importer, Parser } from "@dbml/core";
-import { CanvasNode, ColumnData, RelationshipEdge, TableIndex, TableRecord } from "../types/canvas";
+import { CanvasNode, ColumnData, RelationshipEdge, TableIndex, TableRecord, CardinalityType } from "../types/canvas";
 
 /**
  * Converts SQL to the internal Canvas format (nodes and edges).
  */
-export function sqlToCanvas(sql: string, type: "postgres" | "mysql" | "mssql" = "postgres"): { nodes: CanvasNode[], edges: RelationshipEdge[] } {
+export function sqlToCanvas(
+    sql: string,
+    type: "postgres" | "mysql" | "mssql" = "postgres"
+): { nodes: CanvasNode[]; edges: RelationshipEdge[] } {
     try {
         const dbml = importer.import(sql, type);
         return dbmlToCanvas(dbml);
-    } catch (e: any) {
-        console.error("SQL Import failed:", e.message || e);
-        throw e;
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("SQL Import failed:", message);
+        throw error;
     }
 }
 
@@ -76,7 +80,7 @@ function parseRecordsBlocks(dbml: string): RecordsParseResult {
 /**
  * Converts DBML string to the internal Canvas format.
  */
-export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: RelationshipEdge[] } {
+export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[]; edges: RelationshipEdge[] } {
     if (!dbml.trim()) return { nodes: [], edges: [] };
 
     const { cleanedDbml, recordsMap } = parseRecordsBlocks(dbml);
@@ -118,7 +122,7 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: Relati
                     name: idx.name || "",
                     columns: idx.columns.map(c => c.value as string),
                     isUnique: idx.unique,
-                    type: idx.type as any
+                    type: idx.type as TableIndex["type"]
                 }));
 
                 nodes.push({
@@ -130,7 +134,7 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: Relati
                         columns,
                         indexes,
                         notes: table.note,
-                        color: table.headerColor,
+                        color: table.headerColor || "#3b82f6",
                         // Attach seed records if the DBML had a matching Records block
                         ...(recordsMap[table.name] ? { records: recordsMap[table.name] } : {}),
                     }
@@ -149,7 +153,7 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: Relati
                 const target = ref.endpoints[1];
                 if (!source || !target) return;
 
-                let cardinality: any = "1:n";
+                let cardinality: CardinalityType = "1:n";
                 if (source.relation === "1" && target.relation === "1") cardinality = "1:1";
                 if (source.relation === "*" && target.relation === "1") cardinality = "1:n";
                 if (source.relation === "1" && target.relation === "*") cardinality = "1:n";
@@ -163,8 +167,8 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: Relati
                     data: {
                         cardinality,
                         fkName: ref.name,
-                        onDelete: ref.onDelete?.toUpperCase() as any,
-                        onUpdate: ref.onUpdate?.toUpperCase() as any
+                        onDelete: normalizeRefAction(ref.onDelete),
+                        onUpdate: normalizeRefAction(ref.onUpdate)
                     }
                 });
             });
@@ -179,17 +183,17 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[], edges: Relati
             message = e || message;
         } else if (Array.isArray(e) && e.length > 0) {
             // Array of diagnostic objects
-            const first = e[0] as any;
+            const first = e[0] as { message?: string; diag?: { message?: string } };
             message = first?.message || first?.diag?.message || message;
         } else if (e && typeof e === "object") {
-            const err = e as any;
-            if (err.message) {
-                message = err.message;
-            } else if (Array.isArray(err.errors) && err.errors.length > 0) {
-                message = err.errors[0]?.message || message;
-            } else if (Array.isArray(err.diags) && err.diags.length > 0) {
-                // @dbml/core v7: diags items have non-enumerable properties — read them directly
-                message = err.diags[0]?.message || message;
+            if ("message" in e && typeof e.message === "string") {
+                message = e.message;
+            } else if ("errors" in e && Array.isArray(e.errors) && e.errors.length > 0) {
+                const firstError = e.errors[0] as { message?: string };
+                message = firstError?.message || message;
+            } else if ("diags" in e && Array.isArray(e.diags) && e.diags.length > 0) {
+                const firstDiag = e.diags[0] as { message?: string };
+                message = firstDiag?.message || message;
             } else {
                 // Last resort — stringify everything so the console shows something useful
                 try {
@@ -214,7 +218,7 @@ export function syncCanvasData(
     currentEdges: RelationshipEdge[],
     newNodes: CanvasNode[],
     newEdges: RelationshipEdge[]
-): { nodes: CanvasNode[], edges: RelationshipEdge[] } {
+): { nodes: CanvasNode[]; edges: RelationshipEdge[] } {
     const updatedNodes = newNodes.map(newNode => {
         const existingNode = currentNodes.find(n => n.data.name === newNode.data.name);
         if (existingNode) {
@@ -232,4 +236,16 @@ export function syncCanvasData(
     // However, if we move to UUIDs, we'd need a mapping table here.
 
     return { nodes: updatedNodes, edges: newEdges };
+}
+
+type RefAction = "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION" | undefined;
+
+function normalizeRefAction(action: string | undefined): RefAction | undefined {
+    if (!action) return undefined;
+    const normalized = action.toUpperCase();
+    if (normalized === "CASCADE") return "CASCADE";
+    if (normalized === "SET NULL") return "SET NULL";
+    if (normalized === "RESTRICT") return "RESTRICT";
+    if (normalized === "NO ACTION") return "NO ACTION";
+    return undefined;
 }

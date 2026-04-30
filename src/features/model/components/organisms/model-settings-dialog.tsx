@@ -35,7 +35,7 @@ export function ModelSettingsDialog() {
         });
     };
 
-    const updateColumn = (id: string, updates: any) => {
+    const updateColumn = (id: string, updates: { name?: string; type?: string; nullable?: boolean }) => {
         updateSettings({
             defaultColumns: settings.defaultColumns.map(c => c.id === id ? { ...c, ...updates } : c)
         });

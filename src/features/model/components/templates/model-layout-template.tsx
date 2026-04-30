@@ -1,7 +1,7 @@
 "use client"
 
 import { WorkspaceHeader } from "@/features/workspace/components/organisms/workspace-header";
-import { Tabs, TabsContent } from "@/shared/components/ui/tabs";
+import { Tabs } from "@/shared/components/ui/tabs";
 import { ReactFlowProvider } from "@xyflow/react";
 import React from "react";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
@@ -25,7 +25,7 @@ export function ModelLayoutTemplate({
     workspaces,
     models,
 }: ModelLayoutTemplateProps) {
-    const { activeTabId, setActiveTab, tabs } = useWorkspaceStore();
+    const { activeTabId, setActiveTab } = useWorkspaceStore();
 
     return (
         <div className="h-screen flex flex-col min-w-0 overflow-hidden bg-background">
