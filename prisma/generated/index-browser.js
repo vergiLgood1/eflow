@@ -184,6 +184,8 @@ exports.Prisma.TableScalarFieldEnum = {
   id: 'id',
   name: 'name',
   dataModelId: 'dataModelId',
+  color: 'color',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -211,7 +213,9 @@ exports.Prisma.RelationshipScalarFieldEnum = {
   sourceColumnId: 'sourceColumnId',
   targetColumnId: 'targetColumnId',
   onDelete: 'onDelete',
-  onUpdate: 'onUpdate'
+  onUpdate: 'onUpdate',
+  cardinality: 'cardinality',
+  fkName: 'fkName'
 };
 
 exports.Prisma.IndexScalarFieldEnum = {
@@ -219,7 +223,8 @@ exports.Prisma.IndexScalarFieldEnum = {
   tableId: 'tableId',
   name: 'name',
   type: 'type',
-  columns: 'columns'
+  columns: 'columns',
+  isUnique: 'isUnique'
 };
 
 exports.Prisma.ViewScalarFieldEnum = {
@@ -227,6 +232,8 @@ exports.Prisma.ViewScalarFieldEnum = {
   dataModelId: 'dataModelId',
   name: 'name',
   sql: 'sql',
+  x: 'x',
+  y: 'y',
   primaryIdentifier: 'primaryIdentifier',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -273,7 +280,8 @@ exports.Prisma.TableNodeScalarFieldEnum = {
   diagramId: 'diagramId',
   tableId: 'tableId',
   x: 'x',
-  y: 'y'
+  y: 'y',
+  hiddenColumns: 'hiddenColumns'
 };
 
 exports.Prisma.GroupScalarFieldEnum = {
@@ -293,6 +301,19 @@ exports.Prisma.NoteScalarFieldEnum = {
   content: 'content',
   x: 'x',
   y: 'y'
+};
+
+exports.Prisma.TableRecordScalarFieldEnum = {
+  id: 'id',
+  tableId: 'tableId',
+  order: 'order'
+};
+
+exports.Prisma.RecordValueScalarFieldEnum = {
+  id: 'id',
+  recordId: 'recordId',
+  columnName: 'columnName',
+  value: 'value'
 };
 
 exports.Prisma.CheckpointScalarFieldEnum = {
@@ -384,6 +405,8 @@ exports.Prisma.ModelName = {
   TableNode: 'TableNode',
   Group: 'Group',
   Note: 'Note',
+  TableRecord: 'TableRecord',
+  RecordValue: 'RecordValue',
   Checkpoint: 'Checkpoint',
   ActivityLog: 'ActivityLog',
   VersionHistory: 'VersionHistory'

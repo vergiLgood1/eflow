@@ -104,6 +104,16 @@ export type Group = $Result.DefaultSelection<Prisma.$GroupPayload>
  */
 export type Note = $Result.DefaultSelection<Prisma.$NotePayload>
 /**
+ * Model TableRecord
+ * 
+ */
+export type TableRecord = $Result.DefaultSelection<Prisma.$TableRecordPayload>
+/**
+ * Model RecordValue
+ * 
+ */
+export type RecordValue = $Result.DefaultSelection<Prisma.$RecordValuePayload>
+/**
  * Model Checkpoint
  * 
  */
@@ -451,6 +461,26 @@ export class PrismaClient<
     * ```
     */
   get note(): Prisma.NoteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tableRecord`: Exposes CRUD operations for the **TableRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TableRecords
+    * const tableRecords = await prisma.tableRecord.findMany()
+    * ```
+    */
+  get tableRecord(): Prisma.TableRecordDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.recordValue`: Exposes CRUD operations for the **RecordValue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RecordValues
+    * const recordValues = await prisma.recordValue.findMany()
+    * ```
+    */
+  get recordValue(): Prisma.RecordValueDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.checkpoint`: Exposes CRUD operations for the **Checkpoint** model.
@@ -933,6 +963,8 @@ export namespace Prisma {
     TableNode: 'TableNode',
     Group: 'Group',
     Note: 'Note',
+    TableRecord: 'TableRecord',
+    RecordValue: 'RecordValue',
     Checkpoint: 'Checkpoint',
     ActivityLog: 'ActivityLog',
     VersionHistory: 'VersionHistory'
@@ -951,7 +983,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "workspace" | "workspaceSlug" | "workspaceMember" | "dataModel" | "tag" | "dataModelTag" | "table" | "column" | "relationship" | "index" | "view" | "trigger" | "procedure" | "diagram" | "tableNode" | "group" | "note" | "checkpoint" | "activityLog" | "versionHistory"
+      modelProps: "user" | "workspace" | "workspaceSlug" | "workspaceMember" | "dataModel" | "tag" | "dataModelTag" | "table" | "column" | "relationship" | "index" | "view" | "trigger" | "procedure" | "diagram" | "tableNode" | "group" | "note" | "tableRecord" | "recordValue" | "checkpoint" | "activityLog" | "versionHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2287,6 +2319,154 @@ export namespace Prisma {
           }
         }
       }
+      TableRecord: {
+        payload: Prisma.$TableRecordPayload<ExtArgs>
+        fields: Prisma.TableRecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TableRecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TableRecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          findFirst: {
+            args: Prisma.TableRecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TableRecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          findMany: {
+            args: Prisma.TableRecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>[]
+          }
+          create: {
+            args: Prisma.TableRecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          createMany: {
+            args: Prisma.TableRecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TableRecordCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>[]
+          }
+          delete: {
+            args: Prisma.TableRecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          update: {
+            args: Prisma.TableRecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.TableRecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TableRecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TableRecordUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>[]
+          }
+          upsert: {
+            args: Prisma.TableRecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TableRecordPayload>
+          }
+          aggregate: {
+            args: Prisma.TableRecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTableRecord>
+          }
+          groupBy: {
+            args: Prisma.TableRecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TableRecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TableRecordCountArgs<ExtArgs>
+            result: $Utils.Optional<TableRecordCountAggregateOutputType> | number
+          }
+        }
+      }
+      RecordValue: {
+        payload: Prisma.$RecordValuePayload<ExtArgs>
+        fields: Prisma.RecordValueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RecordValueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RecordValueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          findFirst: {
+            args: Prisma.RecordValueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RecordValueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          findMany: {
+            args: Prisma.RecordValueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>[]
+          }
+          create: {
+            args: Prisma.RecordValueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          createMany: {
+            args: Prisma.RecordValueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RecordValueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>[]
+          }
+          delete: {
+            args: Prisma.RecordValueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          update: {
+            args: Prisma.RecordValueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          deleteMany: {
+            args: Prisma.RecordValueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RecordValueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RecordValueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>[]
+          }
+          upsert: {
+            args: Prisma.RecordValueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecordValuePayload>
+          }
+          aggregate: {
+            args: Prisma.RecordValueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRecordValue>
+          }
+          groupBy: {
+            args: Prisma.RecordValueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RecordValueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RecordValueCountArgs<ExtArgs>
+            result: $Utils.Optional<RecordValueCountAggregateOutputType> | number
+          }
+        }
+      }
       Checkpoint: {
         payload: Prisma.$CheckpointPayload<ExtArgs>
         fields: Prisma.CheckpointFieldRefs
@@ -2635,6 +2815,8 @@ export namespace Prisma {
     tableNode?: TableNodeOmit
     group?: GroupOmit
     note?: NoteOmit
+    tableRecord?: TableRecordOmit
+    recordValue?: RecordValueOmit
     checkpoint?: CheckpointOmit
     activityLog?: ActivityLogOmit
     versionHistory?: VersionHistoryOmit
@@ -2927,6 +3109,7 @@ export namespace Prisma {
     indexes: number
     triggers: number
     nodes: number
+    records: number
   }
 
   export type TableCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2934,6 +3117,7 @@ export namespace Prisma {
     indexes?: boolean | TableCountOutputTypeCountIndexesArgs
     triggers?: boolean | TableCountOutputTypeCountTriggersArgs
     nodes?: boolean | TableCountOutputTypeCountNodesArgs
+    records?: boolean | TableCountOutputTypeCountRecordsArgs
   }
 
   // Custom InputTypes
@@ -2973,6 +3157,13 @@ export namespace Prisma {
    */
   export type TableCountOutputTypeCountNodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TableNodeWhereInput
+  }
+
+  /**
+   * TableCountOutputType without action
+   */
+  export type TableCountOutputTypeCountRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TableRecordWhereInput
   }
 
 
@@ -3155,6 +3346,37 @@ export namespace Prisma {
    */
   export type DiagramCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NoteWhereInput
+  }
+
+
+  /**
+   * Count Type TableRecordCountOutputType
+   */
+
+  export type TableRecordCountOutputType = {
+    values: number
+  }
+
+  export type TableRecordCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    values?: boolean | TableRecordCountOutputTypeCountValuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TableRecordCountOutputType without action
+   */
+  export type TableRecordCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecordCountOutputType
+     */
+    select?: TableRecordCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TableRecordCountOutputType without action
+   */
+  export type TableRecordCountOutputTypeCountValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecordValueWhereInput
   }
 
 
@@ -10974,6 +11196,8 @@ export namespace Prisma {
     id: string | null
     name: string | null
     dataModelId: string | null
+    color: string | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10982,6 +11206,8 @@ export namespace Prisma {
     id: string | null
     name: string | null
     dataModelId: string | null
+    color: string | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10990,6 +11216,8 @@ export namespace Prisma {
     id: number
     name: number
     dataModelId: number
+    color: number
+    notes: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11000,6 +11228,8 @@ export namespace Prisma {
     id?: true
     name?: true
     dataModelId?: true
+    color?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11008,6 +11238,8 @@ export namespace Prisma {
     id?: true
     name?: true
     dataModelId?: true
+    color?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11016,6 +11248,8 @@ export namespace Prisma {
     id?: true
     name?: true
     dataModelId?: true
+    color?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11097,6 +11331,8 @@ export namespace Prisma {
     id: string
     name: string
     dataModelId: string
+    color: string | null
+    notes: string | null
     createdAt: Date
     updatedAt: Date
     _count: TableCountAggregateOutputType | null
@@ -11122,6 +11358,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     dataModelId?: boolean
+    color?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
@@ -11129,6 +11367,7 @@ export namespace Prisma {
     indexes?: boolean | Table$indexesArgs<ExtArgs>
     triggers?: boolean | Table$triggersArgs<ExtArgs>
     nodes?: boolean | Table$nodesArgs<ExtArgs>
+    records?: boolean | Table$recordsArgs<ExtArgs>
     _count?: boolean | TableCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["table"]>
 
@@ -11136,6 +11375,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     dataModelId?: boolean
+    color?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
@@ -11145,6 +11386,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     dataModelId?: boolean
+    color?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
@@ -11154,17 +11397,20 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     dataModelId?: boolean
+    color?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "dataModelId" | "createdAt" | "updatedAt", ExtArgs["result"]["table"]>
+  export type TableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "dataModelId" | "color" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["table"]>
   export type TableInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     columns?: boolean | Table$columnsArgs<ExtArgs>
     indexes?: boolean | Table$indexesArgs<ExtArgs>
     triggers?: boolean | Table$triggersArgs<ExtArgs>
     nodes?: boolean | Table$nodesArgs<ExtArgs>
+    records?: boolean | Table$recordsArgs<ExtArgs>
     _count?: boolean | TableCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TableIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11182,11 +11428,14 @@ export namespace Prisma {
       indexes: Prisma.$IndexPayload<ExtArgs>[]
       triggers: Prisma.$TriggerPayload<ExtArgs>[]
       nodes: Prisma.$TableNodePayload<ExtArgs>[]
+      records: Prisma.$TableRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       dataModelId: string
+      color: string | null
+      notes: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["table"]>
@@ -11588,6 +11837,7 @@ export namespace Prisma {
     indexes<T extends Table$indexesArgs<ExtArgs> = {}>(args?: Subset<T, Table$indexesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IndexPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     triggers<T extends Table$triggersArgs<ExtArgs> = {}>(args?: Subset<T, Table$triggersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TriggerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     nodes<T extends Table$nodesArgs<ExtArgs> = {}>(args?: Subset<T, Table$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TableNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    records<T extends Table$recordsArgs<ExtArgs> = {}>(args?: Subset<T, Table$recordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11620,6 +11870,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Table", 'String'>
     readonly name: FieldRef<"Table", 'String'>
     readonly dataModelId: FieldRef<"Table", 'String'>
+    readonly color: FieldRef<"Table", 'String'>
+    readonly notes: FieldRef<"Table", 'String'>
     readonly createdAt: FieldRef<"Table", 'DateTime'>
     readonly updatedAt: FieldRef<"Table", 'DateTime'>
   }
@@ -12116,6 +12368,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TableNodeScalarFieldEnum | TableNodeScalarFieldEnum[]
+  }
+
+  /**
+   * Table.records
+   */
+  export type Table$recordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    where?: TableRecordWhereInput
+    orderBy?: TableRecordOrderByWithRelationInput | TableRecordOrderByWithRelationInput[]
+    cursor?: TableRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TableRecordScalarFieldEnum | TableRecordScalarFieldEnum[]
   }
 
   /**
@@ -13434,6 +13710,8 @@ export namespace Prisma {
     targetColumnId: string | null
     onDelete: string | null
     onUpdate: string | null
+    cardinality: string | null
+    fkName: string | null
   }
 
   export type RelationshipMaxAggregateOutputType = {
@@ -13443,6 +13721,8 @@ export namespace Prisma {
     targetColumnId: string | null
     onDelete: string | null
     onUpdate: string | null
+    cardinality: string | null
+    fkName: string | null
   }
 
   export type RelationshipCountAggregateOutputType = {
@@ -13452,6 +13732,8 @@ export namespace Prisma {
     targetColumnId: number
     onDelete: number
     onUpdate: number
+    cardinality: number
+    fkName: number
     _all: number
   }
 
@@ -13463,6 +13745,8 @@ export namespace Prisma {
     targetColumnId?: true
     onDelete?: true
     onUpdate?: true
+    cardinality?: true
+    fkName?: true
   }
 
   export type RelationshipMaxAggregateInputType = {
@@ -13472,6 +13756,8 @@ export namespace Prisma {
     targetColumnId?: true
     onDelete?: true
     onUpdate?: true
+    cardinality?: true
+    fkName?: true
   }
 
   export type RelationshipCountAggregateInputType = {
@@ -13481,6 +13767,8 @@ export namespace Prisma {
     targetColumnId?: true
     onDelete?: true
     onUpdate?: true
+    cardinality?: true
+    fkName?: true
     _all?: true
   }
 
@@ -13563,6 +13851,8 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality: string
+    fkName: string | null
     _count: RelationshipCountAggregateOutputType | null
     _min: RelationshipMinAggregateOutputType | null
     _max: RelationshipMaxAggregateOutputType | null
@@ -13589,6 +13879,8 @@ export namespace Prisma {
     targetColumnId?: boolean
     onDelete?: boolean
     onUpdate?: boolean
+    cardinality?: boolean
+    fkName?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     sourceColumn?: boolean | ColumnDefaultArgs<ExtArgs>
     targetColumn?: boolean | ColumnDefaultArgs<ExtArgs>
@@ -13601,6 +13893,8 @@ export namespace Prisma {
     targetColumnId?: boolean
     onDelete?: boolean
     onUpdate?: boolean
+    cardinality?: boolean
+    fkName?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     sourceColumn?: boolean | ColumnDefaultArgs<ExtArgs>
     targetColumn?: boolean | ColumnDefaultArgs<ExtArgs>
@@ -13613,6 +13907,8 @@ export namespace Prisma {
     targetColumnId?: boolean
     onDelete?: boolean
     onUpdate?: boolean
+    cardinality?: boolean
+    fkName?: boolean
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     sourceColumn?: boolean | ColumnDefaultArgs<ExtArgs>
     targetColumn?: boolean | ColumnDefaultArgs<ExtArgs>
@@ -13625,9 +13921,11 @@ export namespace Prisma {
     targetColumnId?: boolean
     onDelete?: boolean
     onUpdate?: boolean
+    cardinality?: boolean
+    fkName?: boolean
   }
 
-  export type RelationshipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "sourceColumnId" | "targetColumnId" | "onDelete" | "onUpdate", ExtArgs["result"]["relationship"]>
+  export type RelationshipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "sourceColumnId" | "targetColumnId" | "onDelete" | "onUpdate" | "cardinality" | "fkName", ExtArgs["result"]["relationship"]>
   export type RelationshipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     sourceColumn?: boolean | ColumnDefaultArgs<ExtArgs>
@@ -13658,6 +13956,8 @@ export namespace Prisma {
       targetColumnId: string
       onDelete: string
       onUpdate: string
+      cardinality: string
+      fkName: string | null
     }, ExtArgs["result"]["relationship"]>
     composites: {}
   }
@@ -14090,6 +14390,8 @@ export namespace Prisma {
     readonly targetColumnId: FieldRef<"Relationship", 'String'>
     readonly onDelete: FieldRef<"Relationship", 'String'>
     readonly onUpdate: FieldRef<"Relationship", 'String'>
+    readonly cardinality: FieldRef<"Relationship", 'String'>
+    readonly fkName: FieldRef<"Relationship", 'String'>
   }
     
 
@@ -14524,6 +14826,7 @@ export namespace Prisma {
     tableId: string | null
     name: string | null
     type: string | null
+    isUnique: boolean | null
   }
 
   export type IndexMaxAggregateOutputType = {
@@ -14531,6 +14834,7 @@ export namespace Prisma {
     tableId: string | null
     name: string | null
     type: string | null
+    isUnique: boolean | null
   }
 
   export type IndexCountAggregateOutputType = {
@@ -14539,6 +14843,7 @@ export namespace Prisma {
     name: number
     type: number
     columns: number
+    isUnique: number
     _all: number
   }
 
@@ -14548,6 +14853,7 @@ export namespace Prisma {
     tableId?: true
     name?: true
     type?: true
+    isUnique?: true
   }
 
   export type IndexMaxAggregateInputType = {
@@ -14555,6 +14861,7 @@ export namespace Prisma {
     tableId?: true
     name?: true
     type?: true
+    isUnique?: true
   }
 
   export type IndexCountAggregateInputType = {
@@ -14563,6 +14870,7 @@ export namespace Prisma {
     name?: true
     type?: true
     columns?: true
+    isUnique?: true
     _all?: true
   }
 
@@ -14644,6 +14952,7 @@ export namespace Prisma {
     name: string
     type: string
     columns: string[]
+    isUnique: boolean
     _count: IndexCountAggregateOutputType | null
     _min: IndexMinAggregateOutputType | null
     _max: IndexMaxAggregateOutputType | null
@@ -14669,6 +14978,7 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     columns?: boolean
+    isUnique?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["index"]>
 
@@ -14678,6 +14988,7 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     columns?: boolean
+    isUnique?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["index"]>
 
@@ -14687,6 +14998,7 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     columns?: boolean
+    isUnique?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["index"]>
 
@@ -14696,9 +15008,10 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     columns?: boolean
+    isUnique?: boolean
   }
 
-  export type IndexOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tableId" | "name" | "type" | "columns", ExtArgs["result"]["index"]>
+  export type IndexOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tableId" | "name" | "type" | "columns" | "isUnique", ExtArgs["result"]["index"]>
   export type IndexInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     table?: boolean | TableDefaultArgs<ExtArgs>
   }
@@ -14720,6 +15033,7 @@ export namespace Prisma {
       name: string
       type: string
       columns: string[]
+      isUnique: boolean
     }, ExtArgs["result"]["index"]>
     composites: {}
   }
@@ -15149,6 +15463,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Index", 'String'>
     readonly type: FieldRef<"Index", 'String'>
     readonly columns: FieldRef<"Index", 'String[]'>
+    readonly isUnique: FieldRef<"Index", 'Boolean'>
   }
     
 
@@ -15574,8 +15889,20 @@ export namespace Prisma {
 
   export type AggregateView = {
     _count: ViewCountAggregateOutputType | null
+    _avg: ViewAvgAggregateOutputType | null
+    _sum: ViewSumAggregateOutputType | null
     _min: ViewMinAggregateOutputType | null
     _max: ViewMaxAggregateOutputType | null
+  }
+
+  export type ViewAvgAggregateOutputType = {
+    x: number | null
+    y: number | null
+  }
+
+  export type ViewSumAggregateOutputType = {
+    x: number | null
+    y: number | null
   }
 
   export type ViewMinAggregateOutputType = {
@@ -15583,6 +15910,8 @@ export namespace Prisma {
     dataModelId: string | null
     name: string | null
     sql: string | null
+    x: number | null
+    y: number | null
     primaryIdentifier: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -15593,6 +15922,8 @@ export namespace Prisma {
     dataModelId: string | null
     name: string | null
     sql: string | null
+    x: number | null
+    y: number | null
     primaryIdentifier: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -15603,6 +15934,8 @@ export namespace Prisma {
     dataModelId: number
     name: number
     sql: number
+    x: number
+    y: number
     primaryIdentifier: number
     createdAt: number
     updatedAt: number
@@ -15610,11 +15943,23 @@ export namespace Prisma {
   }
 
 
+  export type ViewAvgAggregateInputType = {
+    x?: true
+    y?: true
+  }
+
+  export type ViewSumAggregateInputType = {
+    x?: true
+    y?: true
+  }
+
   export type ViewMinAggregateInputType = {
     id?: true
     dataModelId?: true
     name?: true
     sql?: true
+    x?: true
+    y?: true
     primaryIdentifier?: true
     createdAt?: true
     updatedAt?: true
@@ -15625,6 +15970,8 @@ export namespace Prisma {
     dataModelId?: true
     name?: true
     sql?: true
+    x?: true
+    y?: true
     primaryIdentifier?: true
     createdAt?: true
     updatedAt?: true
@@ -15635,6 +15982,8 @@ export namespace Prisma {
     dataModelId?: true
     name?: true
     sql?: true
+    x?: true
+    y?: true
     primaryIdentifier?: true
     createdAt?: true
     updatedAt?: true
@@ -15679,6 +16028,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ViewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ViewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ViewMinAggregateInputType
@@ -15709,6 +16070,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ViewCountAggregateInputType | true
+    _avg?: ViewAvgAggregateInputType
+    _sum?: ViewSumAggregateInputType
     _min?: ViewMinAggregateInputType
     _max?: ViewMaxAggregateInputType
   }
@@ -15718,10 +16081,14 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    x: number
+    y: number
     primaryIdentifier: string | null
     createdAt: Date
     updatedAt: Date
     _count: ViewCountAggregateOutputType | null
+    _avg: ViewAvgAggregateOutputType | null
+    _sum: ViewSumAggregateOutputType | null
     _min: ViewMinAggregateOutputType | null
     _max: ViewMaxAggregateOutputType | null
   }
@@ -15745,6 +16112,8 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    x?: boolean
+    y?: boolean
     primaryIdentifier?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15758,6 +16127,8 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    x?: boolean
+    y?: boolean
     primaryIdentifier?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15769,6 +16140,8 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    x?: boolean
+    y?: boolean
     primaryIdentifier?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15780,12 +16153,14 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    x?: boolean
+    y?: boolean
     primaryIdentifier?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ViewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "name" | "sql" | "primaryIdentifier" | "createdAt" | "updatedAt", ExtArgs["result"]["view"]>
+  export type ViewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "name" | "sql" | "x" | "y" | "primaryIdentifier" | "createdAt" | "updatedAt", ExtArgs["result"]["view"]>
   export type ViewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     versions?: boolean | View$versionsArgs<ExtArgs>
@@ -15809,6 +16184,8 @@ export namespace Prisma {
       dataModelId: string
       name: string
       sql: string
+      x: number
+      y: number
       primaryIdentifier: string | null
       createdAt: Date
       updatedAt: Date
@@ -16241,6 +16618,8 @@ export namespace Prisma {
     readonly dataModelId: FieldRef<"View", 'String'>
     readonly name: FieldRef<"View", 'String'>
     readonly sql: FieldRef<"View", 'String'>
+    readonly x: FieldRef<"View", 'Float'>
+    readonly y: FieldRef<"View", 'Float'>
     readonly primaryIdentifier: FieldRef<"View", 'String'>
     readonly createdAt: FieldRef<"View", 'DateTime'>
     readonly updatedAt: FieldRef<"View", 'DateTime'>
@@ -20218,6 +20597,7 @@ export namespace Prisma {
     tableId: number
     x: number
     y: number
+    hiddenColumns: number
     _all: number
   }
 
@@ -20254,6 +20634,7 @@ export namespace Prisma {
     tableId?: true
     x?: true
     y?: true
+    hiddenColumns?: true
     _all?: true
   }
 
@@ -20349,6 +20730,7 @@ export namespace Prisma {
     tableId: string
     x: number
     y: number
+    hiddenColumns: string[]
     _count: TableNodeCountAggregateOutputType | null
     _avg: TableNodeAvgAggregateOutputType | null
     _sum: TableNodeSumAggregateOutputType | null
@@ -20376,6 +20758,7 @@ export namespace Prisma {
     tableId?: boolean
     x?: boolean
     y?: boolean
+    hiddenColumns?: boolean
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tableNode"]>
@@ -20386,6 +20769,7 @@ export namespace Prisma {
     tableId?: boolean
     x?: boolean
     y?: boolean
+    hiddenColumns?: boolean
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tableNode"]>
@@ -20396,6 +20780,7 @@ export namespace Prisma {
     tableId?: boolean
     x?: boolean
     y?: boolean
+    hiddenColumns?: boolean
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
     table?: boolean | TableDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tableNode"]>
@@ -20406,9 +20791,10 @@ export namespace Prisma {
     tableId?: boolean
     x?: boolean
     y?: boolean
+    hiddenColumns?: boolean
   }
 
-  export type TableNodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "tableId" | "x" | "y", ExtArgs["result"]["tableNode"]>
+  export type TableNodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "tableId" | "x" | "y" | "hiddenColumns", ExtArgs["result"]["tableNode"]>
   export type TableNodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
     table?: boolean | TableDefaultArgs<ExtArgs>
@@ -20434,6 +20820,7 @@ export namespace Prisma {
       tableId: string
       x: number
       y: number
+      hiddenColumns: string[]
     }, ExtArgs["result"]["tableNode"]>
     composites: {}
   }
@@ -20864,6 +21251,7 @@ export namespace Prisma {
     readonly tableId: FieldRef<"TableNode", 'String'>
     readonly x: FieldRef<"TableNode", 'Float'>
     readonly y: FieldRef<"TableNode", 'Float'>
+    readonly hiddenColumns: FieldRef<"TableNode", 'String[]'>
   }
     
 
@@ -23529,6 +23917,2157 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: NoteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TableRecord
+   */
+
+  export type AggregateTableRecord = {
+    _count: TableRecordCountAggregateOutputType | null
+    _avg: TableRecordAvgAggregateOutputType | null
+    _sum: TableRecordSumAggregateOutputType | null
+    _min: TableRecordMinAggregateOutputType | null
+    _max: TableRecordMaxAggregateOutputType | null
+  }
+
+  export type TableRecordAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type TableRecordSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type TableRecordMinAggregateOutputType = {
+    id: string | null
+    tableId: string | null
+    order: number | null
+  }
+
+  export type TableRecordMaxAggregateOutputType = {
+    id: string | null
+    tableId: string | null
+    order: number | null
+  }
+
+  export type TableRecordCountAggregateOutputType = {
+    id: number
+    tableId: number
+    order: number
+    _all: number
+  }
+
+
+  export type TableRecordAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type TableRecordSumAggregateInputType = {
+    order?: true
+  }
+
+  export type TableRecordMinAggregateInputType = {
+    id?: true
+    tableId?: true
+    order?: true
+  }
+
+  export type TableRecordMaxAggregateInputType = {
+    id?: true
+    tableId?: true
+    order?: true
+  }
+
+  export type TableRecordCountAggregateInputType = {
+    id?: true
+    tableId?: true
+    order?: true
+    _all?: true
+  }
+
+  export type TableRecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TableRecord to aggregate.
+     */
+    where?: TableRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TableRecords to fetch.
+     */
+    orderBy?: TableRecordOrderByWithRelationInput | TableRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TableRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TableRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TableRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TableRecords
+    **/
+    _count?: true | TableRecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TableRecordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TableRecordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TableRecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TableRecordMaxAggregateInputType
+  }
+
+  export type GetTableRecordAggregateType<T extends TableRecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateTableRecord]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTableRecord[P]>
+      : GetScalarType<T[P], AggregateTableRecord[P]>
+  }
+
+
+
+
+  export type TableRecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TableRecordWhereInput
+    orderBy?: TableRecordOrderByWithAggregationInput | TableRecordOrderByWithAggregationInput[]
+    by: TableRecordScalarFieldEnum[] | TableRecordScalarFieldEnum
+    having?: TableRecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TableRecordCountAggregateInputType | true
+    _avg?: TableRecordAvgAggregateInputType
+    _sum?: TableRecordSumAggregateInputType
+    _min?: TableRecordMinAggregateInputType
+    _max?: TableRecordMaxAggregateInputType
+  }
+
+  export type TableRecordGroupByOutputType = {
+    id: string
+    tableId: string
+    order: number
+    _count: TableRecordCountAggregateOutputType | null
+    _avg: TableRecordAvgAggregateOutputType | null
+    _sum: TableRecordSumAggregateOutputType | null
+    _min: TableRecordMinAggregateOutputType | null
+    _max: TableRecordMaxAggregateOutputType | null
+  }
+
+  type GetTableRecordGroupByPayload<T extends TableRecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TableRecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TableRecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TableRecordGroupByOutputType[P]>
+            : GetScalarType<T[P], TableRecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TableRecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tableId?: boolean
+    order?: boolean
+    table?: boolean | TableDefaultArgs<ExtArgs>
+    values?: boolean | TableRecord$valuesArgs<ExtArgs>
+    _count?: boolean | TableRecordCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tableRecord"]>
+
+  export type TableRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tableId?: boolean
+    order?: boolean
+    table?: boolean | TableDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tableRecord"]>
+
+  export type TableRecordSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tableId?: boolean
+    order?: boolean
+    table?: boolean | TableDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tableRecord"]>
+
+  export type TableRecordSelectScalar = {
+    id?: boolean
+    tableId?: boolean
+    order?: boolean
+  }
+
+  export type TableRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tableId" | "order", ExtArgs["result"]["tableRecord"]>
+  export type TableRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    table?: boolean | TableDefaultArgs<ExtArgs>
+    values?: boolean | TableRecord$valuesArgs<ExtArgs>
+    _count?: boolean | TableRecordCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TableRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    table?: boolean | TableDefaultArgs<ExtArgs>
+  }
+  export type TableRecordIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    table?: boolean | TableDefaultArgs<ExtArgs>
+  }
+
+  export type $TableRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TableRecord"
+    objects: {
+      table: Prisma.$TablePayload<ExtArgs>
+      values: Prisma.$RecordValuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      tableId: string
+      order: number
+    }, ExtArgs["result"]["tableRecord"]>
+    composites: {}
+  }
+
+  type TableRecordGetPayload<S extends boolean | null | undefined | TableRecordDefaultArgs> = $Result.GetResult<Prisma.$TableRecordPayload, S>
+
+  type TableRecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TableRecordFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TableRecordCountAggregateInputType | true
+    }
+
+  export interface TableRecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TableRecord'], meta: { name: 'TableRecord' } }
+    /**
+     * Find zero or one TableRecord that matches the filter.
+     * @param {TableRecordFindUniqueArgs} args - Arguments to find a TableRecord
+     * @example
+     * // Get one TableRecord
+     * const tableRecord = await prisma.tableRecord.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TableRecordFindUniqueArgs>(args: SelectSubset<T, TableRecordFindUniqueArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TableRecord that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TableRecordFindUniqueOrThrowArgs} args - Arguments to find a TableRecord
+     * @example
+     * // Get one TableRecord
+     * const tableRecord = await prisma.tableRecord.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TableRecordFindUniqueOrThrowArgs>(args: SelectSubset<T, TableRecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TableRecord that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordFindFirstArgs} args - Arguments to find a TableRecord
+     * @example
+     * // Get one TableRecord
+     * const tableRecord = await prisma.tableRecord.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TableRecordFindFirstArgs>(args?: SelectSubset<T, TableRecordFindFirstArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TableRecord that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordFindFirstOrThrowArgs} args - Arguments to find a TableRecord
+     * @example
+     * // Get one TableRecord
+     * const tableRecord = await prisma.tableRecord.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TableRecordFindFirstOrThrowArgs>(args?: SelectSubset<T, TableRecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TableRecords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TableRecords
+     * const tableRecords = await prisma.tableRecord.findMany()
+     * 
+     * // Get first 10 TableRecords
+     * const tableRecords = await prisma.tableRecord.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tableRecordWithIdOnly = await prisma.tableRecord.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TableRecordFindManyArgs>(args?: SelectSubset<T, TableRecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TableRecord.
+     * @param {TableRecordCreateArgs} args - Arguments to create a TableRecord.
+     * @example
+     * // Create one TableRecord
+     * const TableRecord = await prisma.tableRecord.create({
+     *   data: {
+     *     // ... data to create a TableRecord
+     *   }
+     * })
+     * 
+     */
+    create<T extends TableRecordCreateArgs>(args: SelectSubset<T, TableRecordCreateArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TableRecords.
+     * @param {TableRecordCreateManyArgs} args - Arguments to create many TableRecords.
+     * @example
+     * // Create many TableRecords
+     * const tableRecord = await prisma.tableRecord.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TableRecordCreateManyArgs>(args?: SelectSubset<T, TableRecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TableRecords and returns the data saved in the database.
+     * @param {TableRecordCreateManyAndReturnArgs} args - Arguments to create many TableRecords.
+     * @example
+     * // Create many TableRecords
+     * const tableRecord = await prisma.tableRecord.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TableRecords and only return the `id`
+     * const tableRecordWithIdOnly = await prisma.tableRecord.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TableRecordCreateManyAndReturnArgs>(args?: SelectSubset<T, TableRecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TableRecord.
+     * @param {TableRecordDeleteArgs} args - Arguments to delete one TableRecord.
+     * @example
+     * // Delete one TableRecord
+     * const TableRecord = await prisma.tableRecord.delete({
+     *   where: {
+     *     // ... filter to delete one TableRecord
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TableRecordDeleteArgs>(args: SelectSubset<T, TableRecordDeleteArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TableRecord.
+     * @param {TableRecordUpdateArgs} args - Arguments to update one TableRecord.
+     * @example
+     * // Update one TableRecord
+     * const tableRecord = await prisma.tableRecord.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TableRecordUpdateArgs>(args: SelectSubset<T, TableRecordUpdateArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TableRecords.
+     * @param {TableRecordDeleteManyArgs} args - Arguments to filter TableRecords to delete.
+     * @example
+     * // Delete a few TableRecords
+     * const { count } = await prisma.tableRecord.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TableRecordDeleteManyArgs>(args?: SelectSubset<T, TableRecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TableRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TableRecords
+     * const tableRecord = await prisma.tableRecord.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TableRecordUpdateManyArgs>(args: SelectSubset<T, TableRecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TableRecords and returns the data updated in the database.
+     * @param {TableRecordUpdateManyAndReturnArgs} args - Arguments to update many TableRecords.
+     * @example
+     * // Update many TableRecords
+     * const tableRecord = await prisma.tableRecord.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TableRecords and only return the `id`
+     * const tableRecordWithIdOnly = await prisma.tableRecord.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TableRecordUpdateManyAndReturnArgs>(args: SelectSubset<T, TableRecordUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TableRecord.
+     * @param {TableRecordUpsertArgs} args - Arguments to update or create a TableRecord.
+     * @example
+     * // Update or create a TableRecord
+     * const tableRecord = await prisma.tableRecord.upsert({
+     *   create: {
+     *     // ... data to create a TableRecord
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TableRecord we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TableRecordUpsertArgs>(args: SelectSubset<T, TableRecordUpsertArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TableRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordCountArgs} args - Arguments to filter TableRecords to count.
+     * @example
+     * // Count the number of TableRecords
+     * const count = await prisma.tableRecord.count({
+     *   where: {
+     *     // ... the filter for the TableRecords we want to count
+     *   }
+     * })
+    **/
+    count<T extends TableRecordCountArgs>(
+      args?: Subset<T, TableRecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TableRecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TableRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TableRecordAggregateArgs>(args: Subset<T, TableRecordAggregateArgs>): Prisma.PrismaPromise<GetTableRecordAggregateType<T>>
+
+    /**
+     * Group by TableRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TableRecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TableRecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TableRecordGroupByArgs['orderBy'] }
+        : { orderBy?: TableRecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TableRecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTableRecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TableRecord model
+   */
+  readonly fields: TableRecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TableRecord.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TableRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    table<T extends TableDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TableDefaultArgs<ExtArgs>>): Prisma__TableClient<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    values<T extends TableRecord$valuesArgs<ExtArgs> = {}>(args?: Subset<T, TableRecord$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TableRecord model
+   */
+  interface TableRecordFieldRefs {
+    readonly id: FieldRef<"TableRecord", 'String'>
+    readonly tableId: FieldRef<"TableRecord", 'String'>
+    readonly order: FieldRef<"TableRecord", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TableRecord findUnique
+   */
+  export type TableRecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TableRecord to fetch.
+     */
+    where: TableRecordWhereUniqueInput
+  }
+
+  /**
+   * TableRecord findUniqueOrThrow
+   */
+  export type TableRecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TableRecord to fetch.
+     */
+    where: TableRecordWhereUniqueInput
+  }
+
+  /**
+   * TableRecord findFirst
+   */
+  export type TableRecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TableRecord to fetch.
+     */
+    where?: TableRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TableRecords to fetch.
+     */
+    orderBy?: TableRecordOrderByWithRelationInput | TableRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TableRecords.
+     */
+    cursor?: TableRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TableRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TableRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TableRecords.
+     */
+    distinct?: TableRecordScalarFieldEnum | TableRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TableRecord findFirstOrThrow
+   */
+  export type TableRecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TableRecord to fetch.
+     */
+    where?: TableRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TableRecords to fetch.
+     */
+    orderBy?: TableRecordOrderByWithRelationInput | TableRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TableRecords.
+     */
+    cursor?: TableRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TableRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TableRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TableRecords.
+     */
+    distinct?: TableRecordScalarFieldEnum | TableRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TableRecord findMany
+   */
+  export type TableRecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TableRecords to fetch.
+     */
+    where?: TableRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TableRecords to fetch.
+     */
+    orderBy?: TableRecordOrderByWithRelationInput | TableRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TableRecords.
+     */
+    cursor?: TableRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TableRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TableRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TableRecords.
+     */
+    distinct?: TableRecordScalarFieldEnum | TableRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TableRecord create
+   */
+  export type TableRecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TableRecord.
+     */
+    data: XOR<TableRecordCreateInput, TableRecordUncheckedCreateInput>
+  }
+
+  /**
+   * TableRecord createMany
+   */
+  export type TableRecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TableRecords.
+     */
+    data: TableRecordCreateManyInput | TableRecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TableRecord createManyAndReturn
+   */
+  export type TableRecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * The data used to create many TableRecords.
+     */
+    data: TableRecordCreateManyInput | TableRecordCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TableRecord update
+   */
+  export type TableRecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TableRecord.
+     */
+    data: XOR<TableRecordUpdateInput, TableRecordUncheckedUpdateInput>
+    /**
+     * Choose, which TableRecord to update.
+     */
+    where: TableRecordWhereUniqueInput
+  }
+
+  /**
+   * TableRecord updateMany
+   */
+  export type TableRecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TableRecords.
+     */
+    data: XOR<TableRecordUpdateManyMutationInput, TableRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which TableRecords to update
+     */
+    where?: TableRecordWhereInput
+    /**
+     * Limit how many TableRecords to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TableRecord updateManyAndReturn
+   */
+  export type TableRecordUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * The data used to update TableRecords.
+     */
+    data: XOR<TableRecordUpdateManyMutationInput, TableRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which TableRecords to update
+     */
+    where?: TableRecordWhereInput
+    /**
+     * Limit how many TableRecords to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TableRecord upsert
+   */
+  export type TableRecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TableRecord to update in case it exists.
+     */
+    where: TableRecordWhereUniqueInput
+    /**
+     * In case the TableRecord found by the `where` argument doesn't exist, create a new TableRecord with this data.
+     */
+    create: XOR<TableRecordCreateInput, TableRecordUncheckedCreateInput>
+    /**
+     * In case the TableRecord was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TableRecordUpdateInput, TableRecordUncheckedUpdateInput>
+  }
+
+  /**
+   * TableRecord delete
+   */
+  export type TableRecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+    /**
+     * Filter which TableRecord to delete.
+     */
+    where: TableRecordWhereUniqueInput
+  }
+
+  /**
+   * TableRecord deleteMany
+   */
+  export type TableRecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TableRecords to delete
+     */
+    where?: TableRecordWhereInput
+    /**
+     * Limit how many TableRecords to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TableRecord.values
+   */
+  export type TableRecord$valuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    where?: RecordValueWhereInput
+    orderBy?: RecordValueOrderByWithRelationInput | RecordValueOrderByWithRelationInput[]
+    cursor?: RecordValueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecordValueScalarFieldEnum | RecordValueScalarFieldEnum[]
+  }
+
+  /**
+   * TableRecord without action
+   */
+  export type TableRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TableRecord
+     */
+    select?: TableRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TableRecord
+     */
+    omit?: TableRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TableRecordInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RecordValue
+   */
+
+  export type AggregateRecordValue = {
+    _count: RecordValueCountAggregateOutputType | null
+    _min: RecordValueMinAggregateOutputType | null
+    _max: RecordValueMaxAggregateOutputType | null
+  }
+
+  export type RecordValueMinAggregateOutputType = {
+    id: string | null
+    recordId: string | null
+    columnName: string | null
+    value: string | null
+  }
+
+  export type RecordValueMaxAggregateOutputType = {
+    id: string | null
+    recordId: string | null
+    columnName: string | null
+    value: string | null
+  }
+
+  export type RecordValueCountAggregateOutputType = {
+    id: number
+    recordId: number
+    columnName: number
+    value: number
+    _all: number
+  }
+
+
+  export type RecordValueMinAggregateInputType = {
+    id?: true
+    recordId?: true
+    columnName?: true
+    value?: true
+  }
+
+  export type RecordValueMaxAggregateInputType = {
+    id?: true
+    recordId?: true
+    columnName?: true
+    value?: true
+  }
+
+  export type RecordValueCountAggregateInputType = {
+    id?: true
+    recordId?: true
+    columnName?: true
+    value?: true
+    _all?: true
+  }
+
+  export type RecordValueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecordValue to aggregate.
+     */
+    where?: RecordValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecordValues to fetch.
+     */
+    orderBy?: RecordValueOrderByWithRelationInput | RecordValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RecordValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecordValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecordValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RecordValues
+    **/
+    _count?: true | RecordValueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RecordValueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RecordValueMaxAggregateInputType
+  }
+
+  export type GetRecordValueAggregateType<T extends RecordValueAggregateArgs> = {
+        [P in keyof T & keyof AggregateRecordValue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRecordValue[P]>
+      : GetScalarType<T[P], AggregateRecordValue[P]>
+  }
+
+
+
+
+  export type RecordValueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecordValueWhereInput
+    orderBy?: RecordValueOrderByWithAggregationInput | RecordValueOrderByWithAggregationInput[]
+    by: RecordValueScalarFieldEnum[] | RecordValueScalarFieldEnum
+    having?: RecordValueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RecordValueCountAggregateInputType | true
+    _min?: RecordValueMinAggregateInputType
+    _max?: RecordValueMaxAggregateInputType
+  }
+
+  export type RecordValueGroupByOutputType = {
+    id: string
+    recordId: string
+    columnName: string
+    value: string
+    _count: RecordValueCountAggregateOutputType | null
+    _min: RecordValueMinAggregateOutputType | null
+    _max: RecordValueMaxAggregateOutputType | null
+  }
+
+  type GetRecordValueGroupByPayload<T extends RecordValueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RecordValueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RecordValueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RecordValueGroupByOutputType[P]>
+            : GetScalarType<T[P], RecordValueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RecordValueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recordId?: boolean
+    columnName?: boolean
+    value?: boolean
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recordValue"]>
+
+  export type RecordValueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recordId?: boolean
+    columnName?: boolean
+    value?: boolean
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recordValue"]>
+
+  export type RecordValueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recordId?: boolean
+    columnName?: boolean
+    value?: boolean
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recordValue"]>
+
+  export type RecordValueSelectScalar = {
+    id?: boolean
+    recordId?: boolean
+    columnName?: boolean
+    value?: boolean
+  }
+
+  export type RecordValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recordId" | "columnName" | "value", ExtArgs["result"]["recordValue"]>
+  export type RecordValueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }
+  export type RecordValueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }
+  export type RecordValueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    record?: boolean | TableRecordDefaultArgs<ExtArgs>
+  }
+
+  export type $RecordValuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RecordValue"
+    objects: {
+      record: Prisma.$TableRecordPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      recordId: string
+      columnName: string
+      value: string
+    }, ExtArgs["result"]["recordValue"]>
+    composites: {}
+  }
+
+  type RecordValueGetPayload<S extends boolean | null | undefined | RecordValueDefaultArgs> = $Result.GetResult<Prisma.$RecordValuePayload, S>
+
+  type RecordValueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RecordValueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RecordValueCountAggregateInputType | true
+    }
+
+  export interface RecordValueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RecordValue'], meta: { name: 'RecordValue' } }
+    /**
+     * Find zero or one RecordValue that matches the filter.
+     * @param {RecordValueFindUniqueArgs} args - Arguments to find a RecordValue
+     * @example
+     * // Get one RecordValue
+     * const recordValue = await prisma.recordValue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RecordValueFindUniqueArgs>(args: SelectSubset<T, RecordValueFindUniqueArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RecordValue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RecordValueFindUniqueOrThrowArgs} args - Arguments to find a RecordValue
+     * @example
+     * // Get one RecordValue
+     * const recordValue = await prisma.recordValue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RecordValueFindUniqueOrThrowArgs>(args: SelectSubset<T, RecordValueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecordValue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueFindFirstArgs} args - Arguments to find a RecordValue
+     * @example
+     * // Get one RecordValue
+     * const recordValue = await prisma.recordValue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RecordValueFindFirstArgs>(args?: SelectSubset<T, RecordValueFindFirstArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecordValue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueFindFirstOrThrowArgs} args - Arguments to find a RecordValue
+     * @example
+     * // Get one RecordValue
+     * const recordValue = await prisma.recordValue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RecordValueFindFirstOrThrowArgs>(args?: SelectSubset<T, RecordValueFindFirstOrThrowArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RecordValues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RecordValues
+     * const recordValues = await prisma.recordValue.findMany()
+     * 
+     * // Get first 10 RecordValues
+     * const recordValues = await prisma.recordValue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const recordValueWithIdOnly = await prisma.recordValue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RecordValueFindManyArgs>(args?: SelectSubset<T, RecordValueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RecordValue.
+     * @param {RecordValueCreateArgs} args - Arguments to create a RecordValue.
+     * @example
+     * // Create one RecordValue
+     * const RecordValue = await prisma.recordValue.create({
+     *   data: {
+     *     // ... data to create a RecordValue
+     *   }
+     * })
+     * 
+     */
+    create<T extends RecordValueCreateArgs>(args: SelectSubset<T, RecordValueCreateArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RecordValues.
+     * @param {RecordValueCreateManyArgs} args - Arguments to create many RecordValues.
+     * @example
+     * // Create many RecordValues
+     * const recordValue = await prisma.recordValue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RecordValueCreateManyArgs>(args?: SelectSubset<T, RecordValueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RecordValues and returns the data saved in the database.
+     * @param {RecordValueCreateManyAndReturnArgs} args - Arguments to create many RecordValues.
+     * @example
+     * // Create many RecordValues
+     * const recordValue = await prisma.recordValue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RecordValues and only return the `id`
+     * const recordValueWithIdOnly = await prisma.recordValue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RecordValueCreateManyAndReturnArgs>(args?: SelectSubset<T, RecordValueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RecordValue.
+     * @param {RecordValueDeleteArgs} args - Arguments to delete one RecordValue.
+     * @example
+     * // Delete one RecordValue
+     * const RecordValue = await prisma.recordValue.delete({
+     *   where: {
+     *     // ... filter to delete one RecordValue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RecordValueDeleteArgs>(args: SelectSubset<T, RecordValueDeleteArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RecordValue.
+     * @param {RecordValueUpdateArgs} args - Arguments to update one RecordValue.
+     * @example
+     * // Update one RecordValue
+     * const recordValue = await prisma.recordValue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RecordValueUpdateArgs>(args: SelectSubset<T, RecordValueUpdateArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RecordValues.
+     * @param {RecordValueDeleteManyArgs} args - Arguments to filter RecordValues to delete.
+     * @example
+     * // Delete a few RecordValues
+     * const { count } = await prisma.recordValue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RecordValueDeleteManyArgs>(args?: SelectSubset<T, RecordValueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecordValues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RecordValues
+     * const recordValue = await prisma.recordValue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RecordValueUpdateManyArgs>(args: SelectSubset<T, RecordValueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecordValues and returns the data updated in the database.
+     * @param {RecordValueUpdateManyAndReturnArgs} args - Arguments to update many RecordValues.
+     * @example
+     * // Update many RecordValues
+     * const recordValue = await prisma.recordValue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RecordValues and only return the `id`
+     * const recordValueWithIdOnly = await prisma.recordValue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RecordValueUpdateManyAndReturnArgs>(args: SelectSubset<T, RecordValueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RecordValue.
+     * @param {RecordValueUpsertArgs} args - Arguments to update or create a RecordValue.
+     * @example
+     * // Update or create a RecordValue
+     * const recordValue = await prisma.recordValue.upsert({
+     *   create: {
+     *     // ... data to create a RecordValue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RecordValue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RecordValueUpsertArgs>(args: SelectSubset<T, RecordValueUpsertArgs<ExtArgs>>): Prisma__RecordValueClient<$Result.GetResult<Prisma.$RecordValuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RecordValues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueCountArgs} args - Arguments to filter RecordValues to count.
+     * @example
+     * // Count the number of RecordValues
+     * const count = await prisma.recordValue.count({
+     *   where: {
+     *     // ... the filter for the RecordValues we want to count
+     *   }
+     * })
+    **/
+    count<T extends RecordValueCountArgs>(
+      args?: Subset<T, RecordValueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RecordValueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RecordValue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RecordValueAggregateArgs>(args: Subset<T, RecordValueAggregateArgs>): Prisma.PrismaPromise<GetRecordValueAggregateType<T>>
+
+    /**
+     * Group by RecordValue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecordValueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RecordValueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RecordValueGroupByArgs['orderBy'] }
+        : { orderBy?: RecordValueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RecordValueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRecordValueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RecordValue model
+   */
+  readonly fields: RecordValueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RecordValue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RecordValueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    record<T extends TableRecordDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TableRecordDefaultArgs<ExtArgs>>): Prisma__TableRecordClient<$Result.GetResult<Prisma.$TableRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RecordValue model
+   */
+  interface RecordValueFieldRefs {
+    readonly id: FieldRef<"RecordValue", 'String'>
+    readonly recordId: FieldRef<"RecordValue", 'String'>
+    readonly columnName: FieldRef<"RecordValue", 'String'>
+    readonly value: FieldRef<"RecordValue", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RecordValue findUnique
+   */
+  export type RecordValueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter, which RecordValue to fetch.
+     */
+    where: RecordValueWhereUniqueInput
+  }
+
+  /**
+   * RecordValue findUniqueOrThrow
+   */
+  export type RecordValueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter, which RecordValue to fetch.
+     */
+    where: RecordValueWhereUniqueInput
+  }
+
+  /**
+   * RecordValue findFirst
+   */
+  export type RecordValueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter, which RecordValue to fetch.
+     */
+    where?: RecordValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecordValues to fetch.
+     */
+    orderBy?: RecordValueOrderByWithRelationInput | RecordValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecordValues.
+     */
+    cursor?: RecordValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecordValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecordValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecordValues.
+     */
+    distinct?: RecordValueScalarFieldEnum | RecordValueScalarFieldEnum[]
+  }
+
+  /**
+   * RecordValue findFirstOrThrow
+   */
+  export type RecordValueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter, which RecordValue to fetch.
+     */
+    where?: RecordValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecordValues to fetch.
+     */
+    orderBy?: RecordValueOrderByWithRelationInput | RecordValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecordValues.
+     */
+    cursor?: RecordValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecordValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecordValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecordValues.
+     */
+    distinct?: RecordValueScalarFieldEnum | RecordValueScalarFieldEnum[]
+  }
+
+  /**
+   * RecordValue findMany
+   */
+  export type RecordValueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter, which RecordValues to fetch.
+     */
+    where?: RecordValueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecordValues to fetch.
+     */
+    orderBy?: RecordValueOrderByWithRelationInput | RecordValueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RecordValues.
+     */
+    cursor?: RecordValueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecordValues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecordValues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecordValues.
+     */
+    distinct?: RecordValueScalarFieldEnum | RecordValueScalarFieldEnum[]
+  }
+
+  /**
+   * RecordValue create
+   */
+  export type RecordValueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RecordValue.
+     */
+    data: XOR<RecordValueCreateInput, RecordValueUncheckedCreateInput>
+  }
+
+  /**
+   * RecordValue createMany
+   */
+  export type RecordValueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RecordValues.
+     */
+    data: RecordValueCreateManyInput | RecordValueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RecordValue createManyAndReturn
+   */
+  export type RecordValueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * The data used to create many RecordValues.
+     */
+    data: RecordValueCreateManyInput | RecordValueCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RecordValue update
+   */
+  export type RecordValueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RecordValue.
+     */
+    data: XOR<RecordValueUpdateInput, RecordValueUncheckedUpdateInput>
+    /**
+     * Choose, which RecordValue to update.
+     */
+    where: RecordValueWhereUniqueInput
+  }
+
+  /**
+   * RecordValue updateMany
+   */
+  export type RecordValueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RecordValues.
+     */
+    data: XOR<RecordValueUpdateManyMutationInput, RecordValueUncheckedUpdateManyInput>
+    /**
+     * Filter which RecordValues to update
+     */
+    where?: RecordValueWhereInput
+    /**
+     * Limit how many RecordValues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecordValue updateManyAndReturn
+   */
+  export type RecordValueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * The data used to update RecordValues.
+     */
+    data: XOR<RecordValueUpdateManyMutationInput, RecordValueUncheckedUpdateManyInput>
+    /**
+     * Filter which RecordValues to update
+     */
+    where?: RecordValueWhereInput
+    /**
+     * Limit how many RecordValues to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RecordValue upsert
+   */
+  export type RecordValueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RecordValue to update in case it exists.
+     */
+    where: RecordValueWhereUniqueInput
+    /**
+     * In case the RecordValue found by the `where` argument doesn't exist, create a new RecordValue with this data.
+     */
+    create: XOR<RecordValueCreateInput, RecordValueUncheckedCreateInput>
+    /**
+     * In case the RecordValue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RecordValueUpdateInput, RecordValueUncheckedUpdateInput>
+  }
+
+  /**
+   * RecordValue delete
+   */
+  export type RecordValueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
+    /**
+     * Filter which RecordValue to delete.
+     */
+    where: RecordValueWhereUniqueInput
+  }
+
+  /**
+   * RecordValue deleteMany
+   */
+  export type RecordValueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecordValues to delete
+     */
+    where?: RecordValueWhereInput
+    /**
+     * Limit how many RecordValues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecordValue without action
+   */
+  export type RecordValueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecordValue
+     */
+    select?: RecordValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecordValue
+     */
+    omit?: RecordValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecordValueInclude<ExtArgs> | null
   }
 
 
@@ -26975,6 +29514,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     dataModelId: 'dataModelId',
+    color: 'color',
+    notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -27008,7 +29549,9 @@ export namespace Prisma {
     sourceColumnId: 'sourceColumnId',
     targetColumnId: 'targetColumnId',
     onDelete: 'onDelete',
-    onUpdate: 'onUpdate'
+    onUpdate: 'onUpdate',
+    cardinality: 'cardinality',
+    fkName: 'fkName'
   };
 
   export type RelationshipScalarFieldEnum = (typeof RelationshipScalarFieldEnum)[keyof typeof RelationshipScalarFieldEnum]
@@ -27019,7 +29562,8 @@ export namespace Prisma {
     tableId: 'tableId',
     name: 'name',
     type: 'type',
-    columns: 'columns'
+    columns: 'columns',
+    isUnique: 'isUnique'
   };
 
   export type IndexScalarFieldEnum = (typeof IndexScalarFieldEnum)[keyof typeof IndexScalarFieldEnum]
@@ -27030,6 +29574,8 @@ export namespace Prisma {
     dataModelId: 'dataModelId',
     name: 'name',
     sql: 'sql',
+    x: 'x',
+    y: 'y',
     primaryIdentifier: 'primaryIdentifier',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -27088,7 +29634,8 @@ export namespace Prisma {
     diagramId: 'diagramId',
     tableId: 'tableId',
     x: 'x',
-    y: 'y'
+    y: 'y',
+    hiddenColumns: 'hiddenColumns'
   };
 
   export type TableNodeScalarFieldEnum = (typeof TableNodeScalarFieldEnum)[keyof typeof TableNodeScalarFieldEnum]
@@ -27117,6 +29664,25 @@ export namespace Prisma {
   };
 
   export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+  export const TableRecordScalarFieldEnum: {
+    id: 'id',
+    tableId: 'tableId',
+    order: 'order'
+  };
+
+  export type TableRecordScalarFieldEnum = (typeof TableRecordScalarFieldEnum)[keyof typeof TableRecordScalarFieldEnum]
+
+
+  export const RecordValueScalarFieldEnum: {
+    id: 'id',
+    recordId: 'recordId',
+    columnName: 'columnName',
+    value: 'value'
+  };
+
+  export type RecordValueScalarFieldEnum = (typeof RecordValueScalarFieldEnum)[keyof typeof RecordValueScalarFieldEnum]
 
 
   export const CheckpointScalarFieldEnum: {
@@ -27287,20 +29853,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -27311,6 +29863,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -27766,6 +30332,8 @@ export namespace Prisma {
     id?: StringFilter<"Table"> | string
     name?: StringFilter<"Table"> | string
     dataModelId?: StringFilter<"Table"> | string
+    color?: StringNullableFilter<"Table"> | string | null
+    notes?: StringNullableFilter<"Table"> | string | null
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
@@ -27773,12 +30341,15 @@ export namespace Prisma {
     indexes?: IndexListRelationFilter
     triggers?: TriggerListRelationFilter
     nodes?: TableNodeListRelationFilter
+    records?: TableRecordListRelationFilter
   }
 
   export type TableOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     dataModelId?: SortOrder
+    color?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     dataModel?: DataModelOrderByWithRelationInput
@@ -27786,6 +30357,7 @@ export namespace Prisma {
     indexes?: IndexOrderByRelationAggregateInput
     triggers?: TriggerOrderByRelationAggregateInput
     nodes?: TableNodeOrderByRelationAggregateInput
+    records?: TableRecordOrderByRelationAggregateInput
   }
 
   export type TableWhereUniqueInput = Prisma.AtLeast<{
@@ -27795,6 +30367,8 @@ export namespace Prisma {
     NOT?: TableWhereInput | TableWhereInput[]
     name?: StringFilter<"Table"> | string
     dataModelId?: StringFilter<"Table"> | string
+    color?: StringNullableFilter<"Table"> | string | null
+    notes?: StringNullableFilter<"Table"> | string | null
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
@@ -27802,12 +30376,15 @@ export namespace Prisma {
     indexes?: IndexListRelationFilter
     triggers?: TriggerListRelationFilter
     nodes?: TableNodeListRelationFilter
+    records?: TableRecordListRelationFilter
   }, "id">
 
   export type TableOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     dataModelId?: SortOrder
+    color?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TableCountOrderByAggregateInput
@@ -27822,6 +30399,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Table"> | string
     name?: StringWithAggregatesFilter<"Table"> | string
     dataModelId?: StringWithAggregatesFilter<"Table"> | string
+    color?: StringNullableWithAggregatesFilter<"Table"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Table"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Table"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Table"> | Date | string
   }
@@ -27944,6 +30523,8 @@ export namespace Prisma {
     targetColumnId?: StringFilter<"Relationship"> | string
     onDelete?: StringFilter<"Relationship"> | string
     onUpdate?: StringFilter<"Relationship"> | string
+    cardinality?: StringFilter<"Relationship"> | string
+    fkName?: StringNullableFilter<"Relationship"> | string | null
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
     sourceColumn?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
     targetColumn?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
@@ -27956,6 +30537,8 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+    cardinality?: SortOrder
+    fkName?: SortOrderInput | SortOrder
     dataModel?: DataModelOrderByWithRelationInput
     sourceColumn?: ColumnOrderByWithRelationInput
     targetColumn?: ColumnOrderByWithRelationInput
@@ -27971,6 +30554,8 @@ export namespace Prisma {
     targetColumnId?: StringFilter<"Relationship"> | string
     onDelete?: StringFilter<"Relationship"> | string
     onUpdate?: StringFilter<"Relationship"> | string
+    cardinality?: StringFilter<"Relationship"> | string
+    fkName?: StringNullableFilter<"Relationship"> | string | null
     dataModel?: XOR<DataModelScalarRelationFilter, DataModelWhereInput>
     sourceColumn?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
     targetColumn?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
@@ -27983,6 +30568,8 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+    cardinality?: SortOrder
+    fkName?: SortOrderInput | SortOrder
     _count?: RelationshipCountOrderByAggregateInput
     _max?: RelationshipMaxOrderByAggregateInput
     _min?: RelationshipMinOrderByAggregateInput
@@ -27998,6 +30585,8 @@ export namespace Prisma {
     targetColumnId?: StringWithAggregatesFilter<"Relationship"> | string
     onDelete?: StringWithAggregatesFilter<"Relationship"> | string
     onUpdate?: StringWithAggregatesFilter<"Relationship"> | string
+    cardinality?: StringWithAggregatesFilter<"Relationship"> | string
+    fkName?: StringNullableWithAggregatesFilter<"Relationship"> | string | null
   }
 
   export type IndexWhereInput = {
@@ -28009,6 +30598,7 @@ export namespace Prisma {
     name?: StringFilter<"Index"> | string
     type?: StringFilter<"Index"> | string
     columns?: StringNullableListFilter<"Index">
+    isUnique?: BoolFilter<"Index"> | boolean
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
   }
 
@@ -28018,6 +30608,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     columns?: SortOrder
+    isUnique?: SortOrder
     table?: TableOrderByWithRelationInput
   }
 
@@ -28030,6 +30621,7 @@ export namespace Prisma {
     name?: StringFilter<"Index"> | string
     type?: StringFilter<"Index"> | string
     columns?: StringNullableListFilter<"Index">
+    isUnique?: BoolFilter<"Index"> | boolean
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
   }, "id">
 
@@ -28039,6 +30631,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     columns?: SortOrder
+    isUnique?: SortOrder
     _count?: IndexCountOrderByAggregateInput
     _max?: IndexMaxOrderByAggregateInput
     _min?: IndexMinOrderByAggregateInput
@@ -28053,6 +30646,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Index"> | string
     type?: StringWithAggregatesFilter<"Index"> | string
     columns?: StringNullableListFilter<"Index">
+    isUnique?: BoolWithAggregatesFilter<"Index"> | boolean
   }
 
   export type ViewWhereInput = {
@@ -28063,6 +30657,8 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    x?: FloatFilter<"View"> | number
+    y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
     createdAt?: DateTimeFilter<"View"> | Date | string
     updatedAt?: DateTimeFilter<"View"> | Date | string
@@ -28075,6 +30671,8 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
     primaryIdentifier?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28090,6 +30688,8 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    x?: FloatFilter<"View"> | number
+    y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
     createdAt?: DateTimeFilter<"View"> | Date | string
     updatedAt?: DateTimeFilter<"View"> | Date | string
@@ -28102,12 +30702,16 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
     primaryIdentifier?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ViewCountOrderByAggregateInput
+    _avg?: ViewAvgOrderByAggregateInput
     _max?: ViewMaxOrderByAggregateInput
     _min?: ViewMinOrderByAggregateInput
+    _sum?: ViewSumOrderByAggregateInput
   }
 
   export type ViewScalarWhereWithAggregatesInput = {
@@ -28118,6 +30722,8 @@ export namespace Prisma {
     dataModelId?: StringWithAggregatesFilter<"View"> | string
     name?: StringWithAggregatesFilter<"View"> | string
     sql?: StringWithAggregatesFilter<"View"> | string
+    x?: FloatWithAggregatesFilter<"View"> | number
+    y?: FloatWithAggregatesFilter<"View"> | number
     primaryIdentifier?: StringNullableWithAggregatesFilter<"View"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"View"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"View"> | Date | string
@@ -28372,6 +30978,7 @@ export namespace Prisma {
     tableId?: StringFilter<"TableNode"> | string
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
+    hiddenColumns?: StringNullableListFilter<"TableNode">
     diagram?: XOR<DiagramScalarRelationFilter, DiagramWhereInput>
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
   }
@@ -28382,6 +30989,7 @@ export namespace Prisma {
     tableId?: SortOrder
     x?: SortOrder
     y?: SortOrder
+    hiddenColumns?: SortOrder
     diagram?: DiagramOrderByWithRelationInput
     table?: TableOrderByWithRelationInput
   }
@@ -28396,6 +31004,7 @@ export namespace Prisma {
     tableId?: StringFilter<"TableNode"> | string
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
+    hiddenColumns?: StringNullableListFilter<"TableNode">
     diagram?: XOR<DiagramScalarRelationFilter, DiagramWhereInput>
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
   }, "id" | "diagramId_tableId">
@@ -28406,6 +31015,7 @@ export namespace Prisma {
     tableId?: SortOrder
     x?: SortOrder
     y?: SortOrder
+    hiddenColumns?: SortOrder
     _count?: TableNodeCountOrderByAggregateInput
     _avg?: TableNodeAvgOrderByAggregateInput
     _max?: TableNodeMaxOrderByAggregateInput
@@ -28422,6 +31032,7 @@ export namespace Prisma {
     tableId?: StringWithAggregatesFilter<"TableNode"> | string
     x?: FloatWithAggregatesFilter<"TableNode"> | number
     y?: FloatWithAggregatesFilter<"TableNode"> | number
+    hiddenColumns?: StringNullableListFilter<"TableNode">
   }
 
   export type GroupWhereInput = {
@@ -28551,6 +31162,106 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"Note"> | string
     x?: FloatWithAggregatesFilter<"Note"> | number
     y?: FloatWithAggregatesFilter<"Note"> | number
+  }
+
+  export type TableRecordWhereInput = {
+    AND?: TableRecordWhereInput | TableRecordWhereInput[]
+    OR?: TableRecordWhereInput[]
+    NOT?: TableRecordWhereInput | TableRecordWhereInput[]
+    id?: StringFilter<"TableRecord"> | string
+    tableId?: StringFilter<"TableRecord"> | string
+    order?: IntFilter<"TableRecord"> | number
+    table?: XOR<TableScalarRelationFilter, TableWhereInput>
+    values?: RecordValueListRelationFilter
+  }
+
+  export type TableRecordOrderByWithRelationInput = {
+    id?: SortOrder
+    tableId?: SortOrder
+    order?: SortOrder
+    table?: TableOrderByWithRelationInput
+    values?: RecordValueOrderByRelationAggregateInput
+  }
+
+  export type TableRecordWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TableRecordWhereInput | TableRecordWhereInput[]
+    OR?: TableRecordWhereInput[]
+    NOT?: TableRecordWhereInput | TableRecordWhereInput[]
+    tableId?: StringFilter<"TableRecord"> | string
+    order?: IntFilter<"TableRecord"> | number
+    table?: XOR<TableScalarRelationFilter, TableWhereInput>
+    values?: RecordValueListRelationFilter
+  }, "id">
+
+  export type TableRecordOrderByWithAggregationInput = {
+    id?: SortOrder
+    tableId?: SortOrder
+    order?: SortOrder
+    _count?: TableRecordCountOrderByAggregateInput
+    _avg?: TableRecordAvgOrderByAggregateInput
+    _max?: TableRecordMaxOrderByAggregateInput
+    _min?: TableRecordMinOrderByAggregateInput
+    _sum?: TableRecordSumOrderByAggregateInput
+  }
+
+  export type TableRecordScalarWhereWithAggregatesInput = {
+    AND?: TableRecordScalarWhereWithAggregatesInput | TableRecordScalarWhereWithAggregatesInput[]
+    OR?: TableRecordScalarWhereWithAggregatesInput[]
+    NOT?: TableRecordScalarWhereWithAggregatesInput | TableRecordScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TableRecord"> | string
+    tableId?: StringWithAggregatesFilter<"TableRecord"> | string
+    order?: IntWithAggregatesFilter<"TableRecord"> | number
+  }
+
+  export type RecordValueWhereInput = {
+    AND?: RecordValueWhereInput | RecordValueWhereInput[]
+    OR?: RecordValueWhereInput[]
+    NOT?: RecordValueWhereInput | RecordValueWhereInput[]
+    id?: StringFilter<"RecordValue"> | string
+    recordId?: StringFilter<"RecordValue"> | string
+    columnName?: StringFilter<"RecordValue"> | string
+    value?: StringFilter<"RecordValue"> | string
+    record?: XOR<TableRecordScalarRelationFilter, TableRecordWhereInput>
+  }
+
+  export type RecordValueOrderByWithRelationInput = {
+    id?: SortOrder
+    recordId?: SortOrder
+    columnName?: SortOrder
+    value?: SortOrder
+    record?: TableRecordOrderByWithRelationInput
+  }
+
+  export type RecordValueWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RecordValueWhereInput | RecordValueWhereInput[]
+    OR?: RecordValueWhereInput[]
+    NOT?: RecordValueWhereInput | RecordValueWhereInput[]
+    recordId?: StringFilter<"RecordValue"> | string
+    columnName?: StringFilter<"RecordValue"> | string
+    value?: StringFilter<"RecordValue"> | string
+    record?: XOR<TableRecordScalarRelationFilter, TableRecordWhereInput>
+  }, "id">
+
+  export type RecordValueOrderByWithAggregationInput = {
+    id?: SortOrder
+    recordId?: SortOrder
+    columnName?: SortOrder
+    value?: SortOrder
+    _count?: RecordValueCountOrderByAggregateInput
+    _max?: RecordValueMaxOrderByAggregateInput
+    _min?: RecordValueMinOrderByAggregateInput
+  }
+
+  export type RecordValueScalarWhereWithAggregatesInput = {
+    AND?: RecordValueScalarWhereWithAggregatesInput | RecordValueScalarWhereWithAggregatesInput[]
+    OR?: RecordValueScalarWhereWithAggregatesInput[]
+    NOT?: RecordValueScalarWhereWithAggregatesInput | RecordValueScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RecordValue"> | string
+    recordId?: StringWithAggregatesFilter<"RecordValue"> | string
+    columnName?: StringWithAggregatesFilter<"RecordValue"> | string
+    value?: StringWithAggregatesFilter<"RecordValue"> | string
   }
 
   export type CheckpointWhereInput = {
@@ -29220,6 +31931,8 @@ export namespace Prisma {
   export type TableCreateInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutTablesInput
@@ -29227,23 +31940,29 @@ export namespace Prisma {
     indexes?: IndexCreateNestedManyWithoutTableInput
     triggers?: TriggerCreateNestedManyWithoutTableInput
     nodes?: TableNodeCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
     triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
     nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
@@ -29251,24 +31970,30 @@ export namespace Prisma {
     indexes?: IndexUpdateManyWithoutTableNestedInput
     triggers?: TriggerUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
     triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type TableCreateManyInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29276,6 +32001,8 @@ export namespace Prisma {
   export type TableUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29284,6 +32011,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29418,6 +32147,8 @@ export namespace Prisma {
     id?: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
     dataModel: DataModelCreateNestedOneWithoutRelationshipsInput
     sourceColumn: ColumnCreateNestedOneWithoutSourceRelationsInput
     targetColumn: ColumnCreateNestedOneWithoutTargetRelationsInput
@@ -29430,12 +32161,16 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
     dataModel?: DataModelUpdateOneRequiredWithoutRelationshipsNestedInput
     sourceColumn?: ColumnUpdateOneRequiredWithoutSourceRelationsNestedInput
     targetColumn?: ColumnUpdateOneRequiredWithoutTargetRelationsNestedInput
@@ -29448,6 +32183,8 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipCreateManyInput = {
@@ -29457,12 +32194,16 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipUncheckedUpdateManyInput = {
@@ -29472,6 +32213,8 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IndexCreateInput = {
@@ -29479,6 +32222,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
     table: TableCreateNestedOneWithoutIndexesInput
   }
 
@@ -29488,6 +32232,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
   }
 
   export type IndexUpdateInput = {
@@ -29495,6 +32240,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
     table?: TableUpdateOneRequiredWithoutIndexesNestedInput
   }
 
@@ -29504,6 +32250,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IndexCreateManyInput = {
@@ -29512,6 +32259,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
   }
 
   export type IndexUpdateManyMutationInput = {
@@ -29519,6 +32267,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IndexUncheckedUpdateManyInput = {
@@ -29527,12 +32276,15 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ViewCreateInput = {
     id?: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29545,6 +32297,8 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29555,6 +32309,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29567,6 +32323,8 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29578,6 +32336,8 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29587,6 +32347,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29597,6 +32359,8 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29875,6 +32639,7 @@ export namespace Prisma {
     id?: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
     diagram: DiagramCreateNestedOneWithoutNodesInput
     table: TableCreateNestedOneWithoutNodesInput
   }
@@ -29885,12 +32650,14 @@ export namespace Prisma {
     tableId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
   }
 
   export type TableNodeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
     diagram?: DiagramUpdateOneRequiredWithoutNodesNestedInput
     table?: TableUpdateOneRequiredWithoutNodesNestedInput
   }
@@ -29901,6 +32668,7 @@ export namespace Prisma {
     tableId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type TableNodeCreateManyInput = {
@@ -29909,12 +32677,14 @@ export namespace Prisma {
     tableId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
   }
 
   export type TableNodeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type TableNodeUncheckedUpdateManyInput = {
@@ -29923,6 +32693,7 @@ export namespace Prisma {
     tableId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type GroupCreateInput = {
@@ -30054,6 +32825,99 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TableRecordCreateInput = {
+    id?: string
+    order?: number
+    table: TableCreateNestedOneWithoutRecordsInput
+    values?: RecordValueCreateNestedManyWithoutRecordInput
+  }
+
+  export type TableRecordUncheckedCreateInput = {
+    id?: string
+    tableId: string
+    order?: number
+    values?: RecordValueUncheckedCreateNestedManyWithoutRecordInput
+  }
+
+  export type TableRecordUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    table?: TableUpdateOneRequiredWithoutRecordsNestedInput
+    values?: RecordValueUpdateManyWithoutRecordNestedInput
+  }
+
+  export type TableRecordUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tableId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    values?: RecordValueUncheckedUpdateManyWithoutRecordNestedInput
+  }
+
+  export type TableRecordCreateManyInput = {
+    id?: string
+    tableId: string
+    order?: number
+  }
+
+  export type TableRecordUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TableRecordUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tableId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RecordValueCreateInput = {
+    id?: string
+    columnName: string
+    value: string
+    record: TableRecordCreateNestedOneWithoutValuesInput
+  }
+
+  export type RecordValueUncheckedCreateInput = {
+    id?: string
+    recordId: string
+    columnName: string
+    value: string
+  }
+
+  export type RecordValueUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    record?: TableRecordUpdateOneRequiredWithoutValuesNestedInput
+  }
+
+  export type RecordValueUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recordId?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecordValueCreateManyInput = {
+    id?: string
+    recordId: string
+    columnName: string
+    value: string
+  }
+
+  export type RecordValueUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecordValueUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recordId?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
   }
 
   export type CheckpointCreateInput = {
@@ -30771,6 +33635,12 @@ export namespace Prisma {
     none?: TableNodeWhereInput
   }
 
+  export type TableRecordListRelationFilter = {
+    every?: TableRecordWhereInput
+    some?: TableRecordWhereInput
+    none?: TableRecordWhereInput
+  }
+
   export type ColumnOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -30787,10 +33657,16 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type TableRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type TableCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     dataModelId?: SortOrder
+    color?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30799,6 +33675,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     dataModelId?: SortOrder
+    color?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30807,6 +33685,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     dataModelId?: SortOrder
+    color?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30918,6 +33798,8 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+    cardinality?: SortOrder
+    fkName?: SortOrder
   }
 
   export type RelationshipMaxOrderByAggregateInput = {
@@ -30927,6 +33809,8 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+    cardinality?: SortOrder
+    fkName?: SortOrder
   }
 
   export type RelationshipMinOrderByAggregateInput = {
@@ -30936,6 +33820,8 @@ export namespace Prisma {
     targetColumnId?: SortOrder
     onDelete?: SortOrder
     onUpdate?: SortOrder
+    cardinality?: SortOrder
+    fkName?: SortOrder
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -30952,6 +33838,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     columns?: SortOrder
+    isUnique?: SortOrder
   }
 
   export type IndexMaxOrderByAggregateInput = {
@@ -30959,6 +33846,7 @@ export namespace Prisma {
     tableId?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    isUnique?: SortOrder
   }
 
   export type IndexMinOrderByAggregateInput = {
@@ -30966,6 +33854,18 @@ export namespace Prisma {
     tableId?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    isUnique?: SortOrder
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type VersionHistoryListRelationFilter = {
@@ -30983,9 +33883,16 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
     primaryIdentifier?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ViewAvgOrderByAggregateInput = {
+    x?: SortOrder
+    y?: SortOrder
   }
 
   export type ViewMaxOrderByAggregateInput = {
@@ -30993,6 +33900,8 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
     primaryIdentifier?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -31003,9 +33912,32 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
     primaryIdentifier?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ViewSumOrderByAggregateInput = {
+    x?: SortOrder
+    y?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type TriggerCountOrderByAggregateInput = {
@@ -31183,17 +34115,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type DiagramScalarRelationFilter = {
     is?: DiagramWhereInput
     isNot?: DiagramWhereInput
@@ -31210,6 +34131,7 @@ export namespace Prisma {
     tableId?: SortOrder
     x?: SortOrder
     y?: SortOrder
+    hiddenColumns?: SortOrder
   }
 
   export type TableNodeAvgOrderByAggregateInput = {
@@ -31236,22 +34158,6 @@ export namespace Prisma {
   export type TableNodeSumOrderByAggregateInput = {
     x?: SortOrder
     y?: SortOrder
-  }
-
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type GroupCountOrderByAggregateInput = {
@@ -31333,6 +34239,68 @@ export namespace Prisma {
   export type NoteSumOrderByAggregateInput = {
     x?: SortOrder
     y?: SortOrder
+  }
+
+  export type RecordValueListRelationFilter = {
+    every?: RecordValueWhereInput
+    some?: RecordValueWhereInput
+    none?: RecordValueWhereInput
+  }
+
+  export type RecordValueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TableRecordCountOrderByAggregateInput = {
+    id?: SortOrder
+    tableId?: SortOrder
+    order?: SortOrder
+  }
+
+  export type TableRecordAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type TableRecordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tableId?: SortOrder
+    order?: SortOrder
+  }
+
+  export type TableRecordMinOrderByAggregateInput = {
+    id?: SortOrder
+    tableId?: SortOrder
+    order?: SortOrder
+  }
+
+  export type TableRecordSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type TableRecordScalarRelationFilter = {
+    is?: TableRecordWhereInput
+    isNot?: TableRecordWhereInput
+  }
+
+  export type RecordValueCountOrderByAggregateInput = {
+    id?: SortOrder
+    recordId?: SortOrder
+    columnName?: SortOrder
+    value?: SortOrder
+  }
+
+  export type RecordValueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    recordId?: SortOrder
+    columnName?: SortOrder
+    value?: SortOrder
+  }
+
+  export type RecordValueMinOrderByAggregateInput = {
+    id?: SortOrder
+    recordId?: SortOrder
+    columnName?: SortOrder
+    value?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -32171,6 +35139,13 @@ export namespace Prisma {
     connect?: TableNodeWhereUniqueInput | TableNodeWhereUniqueInput[]
   }
 
+  export type TableRecordCreateNestedManyWithoutTableInput = {
+    create?: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput> | TableRecordCreateWithoutTableInput[] | TableRecordUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: TableRecordCreateOrConnectWithoutTableInput | TableRecordCreateOrConnectWithoutTableInput[]
+    createMany?: TableRecordCreateManyTableInputEnvelope
+    connect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+  }
+
   export type ColumnUncheckedCreateNestedManyWithoutTableInput = {
     create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
     connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
@@ -32197,6 +35172,13 @@ export namespace Prisma {
     connectOrCreate?: TableNodeCreateOrConnectWithoutTableInput | TableNodeCreateOrConnectWithoutTableInput[]
     createMany?: TableNodeCreateManyTableInputEnvelope
     connect?: TableNodeWhereUniqueInput | TableNodeWhereUniqueInput[]
+  }
+
+  export type TableRecordUncheckedCreateNestedManyWithoutTableInput = {
+    create?: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput> | TableRecordCreateWithoutTableInput[] | TableRecordUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: TableRecordCreateOrConnectWithoutTableInput | TableRecordCreateOrConnectWithoutTableInput[]
+    createMany?: TableRecordCreateManyTableInputEnvelope
+    connect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
   }
 
   export type DataModelUpdateOneRequiredWithoutTablesNestedInput = {
@@ -32263,6 +35245,20 @@ export namespace Prisma {
     deleteMany?: TableNodeScalarWhereInput | TableNodeScalarWhereInput[]
   }
 
+  export type TableRecordUpdateManyWithoutTableNestedInput = {
+    create?: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput> | TableRecordCreateWithoutTableInput[] | TableRecordUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: TableRecordCreateOrConnectWithoutTableInput | TableRecordCreateOrConnectWithoutTableInput[]
+    upsert?: TableRecordUpsertWithWhereUniqueWithoutTableInput | TableRecordUpsertWithWhereUniqueWithoutTableInput[]
+    createMany?: TableRecordCreateManyTableInputEnvelope
+    set?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    disconnect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    delete?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    connect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    update?: TableRecordUpdateWithWhereUniqueWithoutTableInput | TableRecordUpdateWithWhereUniqueWithoutTableInput[]
+    updateMany?: TableRecordUpdateManyWithWhereWithoutTableInput | TableRecordUpdateManyWithWhereWithoutTableInput[]
+    deleteMany?: TableRecordScalarWhereInput | TableRecordScalarWhereInput[]
+  }
+
   export type ColumnUncheckedUpdateManyWithoutTableNestedInput = {
     create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
     connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
@@ -32317,6 +35313,20 @@ export namespace Prisma {
     update?: TableNodeUpdateWithWhereUniqueWithoutTableInput | TableNodeUpdateWithWhereUniqueWithoutTableInput[]
     updateMany?: TableNodeUpdateManyWithWhereWithoutTableInput | TableNodeUpdateManyWithWhereWithoutTableInput[]
     deleteMany?: TableNodeScalarWhereInput | TableNodeScalarWhereInput[]
+  }
+
+  export type TableRecordUncheckedUpdateManyWithoutTableNestedInput = {
+    create?: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput> | TableRecordCreateWithoutTableInput[] | TableRecordUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: TableRecordCreateOrConnectWithoutTableInput | TableRecordCreateOrConnectWithoutTableInput[]
+    upsert?: TableRecordUpsertWithWhereUniqueWithoutTableInput | TableRecordUpsertWithWhereUniqueWithoutTableInput[]
+    createMany?: TableRecordCreateManyTableInputEnvelope
+    set?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    disconnect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    delete?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    connect?: TableRecordWhereUniqueInput | TableRecordWhereUniqueInput[]
+    update?: TableRecordUpdateWithWhereUniqueWithoutTableInput | TableRecordUpdateWithWhereUniqueWithoutTableInput[]
+    updateMany?: TableRecordUpdateManyWithWhereWithoutTableInput | TableRecordUpdateManyWithWhereWithoutTableInput[]
+    deleteMany?: TableRecordScalarWhereInput | TableRecordScalarWhereInput[]
   }
 
   export type TableCreateNestedOneWithoutColumnsInput = {
@@ -32508,6 +35518,14 @@ export namespace Prisma {
     connectOrCreate?: VersionHistoryCreateOrConnectWithoutViewInput | VersionHistoryCreateOrConnectWithoutViewInput[]
     createMany?: VersionHistoryCreateManyViewInputEnvelope
     connect?: VersionHistoryWhereUniqueInput | VersionHistoryWhereUniqueInput[]
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type DataModelUpdateOneRequiredWithoutViewsNestedInput = {
@@ -32798,6 +35816,10 @@ export namespace Prisma {
     deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
+  export type TableNodeCreatehiddenColumnsInput = {
+    set: string[]
+  }
+
   export type DiagramCreateNestedOneWithoutNodesInput = {
     create?: XOR<DiagramCreateWithoutNodesInput, DiagramUncheckedCreateWithoutNodesInput>
     connectOrCreate?: DiagramCreateOrConnectWithoutNodesInput
@@ -32810,12 +35832,9 @@ export namespace Prisma {
     connect?: TableWhereUniqueInput
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type TableNodeUpdatehiddenColumnsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type DiagramUpdateOneRequiredWithoutNodesNestedInput = {
@@ -32860,6 +35879,76 @@ export namespace Prisma {
     upsert?: DiagramUpsertWithoutNotesInput
     connect?: DiagramWhereUniqueInput
     update?: XOR<XOR<DiagramUpdateToOneWithWhereWithoutNotesInput, DiagramUpdateWithoutNotesInput>, DiagramUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type TableCreateNestedOneWithoutRecordsInput = {
+    create?: XOR<TableCreateWithoutRecordsInput, TableUncheckedCreateWithoutRecordsInput>
+    connectOrCreate?: TableCreateOrConnectWithoutRecordsInput
+    connect?: TableWhereUniqueInput
+  }
+
+  export type RecordValueCreateNestedManyWithoutRecordInput = {
+    create?: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput> | RecordValueCreateWithoutRecordInput[] | RecordValueUncheckedCreateWithoutRecordInput[]
+    connectOrCreate?: RecordValueCreateOrConnectWithoutRecordInput | RecordValueCreateOrConnectWithoutRecordInput[]
+    createMany?: RecordValueCreateManyRecordInputEnvelope
+    connect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+  }
+
+  export type RecordValueUncheckedCreateNestedManyWithoutRecordInput = {
+    create?: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput> | RecordValueCreateWithoutRecordInput[] | RecordValueUncheckedCreateWithoutRecordInput[]
+    connectOrCreate?: RecordValueCreateOrConnectWithoutRecordInput | RecordValueCreateOrConnectWithoutRecordInput[]
+    createMany?: RecordValueCreateManyRecordInputEnvelope
+    connect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+  }
+
+  export type TableUpdateOneRequiredWithoutRecordsNestedInput = {
+    create?: XOR<TableCreateWithoutRecordsInput, TableUncheckedCreateWithoutRecordsInput>
+    connectOrCreate?: TableCreateOrConnectWithoutRecordsInput
+    upsert?: TableUpsertWithoutRecordsInput
+    connect?: TableWhereUniqueInput
+    update?: XOR<XOR<TableUpdateToOneWithWhereWithoutRecordsInput, TableUpdateWithoutRecordsInput>, TableUncheckedUpdateWithoutRecordsInput>
+  }
+
+  export type RecordValueUpdateManyWithoutRecordNestedInput = {
+    create?: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput> | RecordValueCreateWithoutRecordInput[] | RecordValueUncheckedCreateWithoutRecordInput[]
+    connectOrCreate?: RecordValueCreateOrConnectWithoutRecordInput | RecordValueCreateOrConnectWithoutRecordInput[]
+    upsert?: RecordValueUpsertWithWhereUniqueWithoutRecordInput | RecordValueUpsertWithWhereUniqueWithoutRecordInput[]
+    createMany?: RecordValueCreateManyRecordInputEnvelope
+    set?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    disconnect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    delete?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    connect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    update?: RecordValueUpdateWithWhereUniqueWithoutRecordInput | RecordValueUpdateWithWhereUniqueWithoutRecordInput[]
+    updateMany?: RecordValueUpdateManyWithWhereWithoutRecordInput | RecordValueUpdateManyWithWhereWithoutRecordInput[]
+    deleteMany?: RecordValueScalarWhereInput | RecordValueScalarWhereInput[]
+  }
+
+  export type RecordValueUncheckedUpdateManyWithoutRecordNestedInput = {
+    create?: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput> | RecordValueCreateWithoutRecordInput[] | RecordValueUncheckedCreateWithoutRecordInput[]
+    connectOrCreate?: RecordValueCreateOrConnectWithoutRecordInput | RecordValueCreateOrConnectWithoutRecordInput[]
+    upsert?: RecordValueUpsertWithWhereUniqueWithoutRecordInput | RecordValueUpsertWithWhereUniqueWithoutRecordInput[]
+    createMany?: RecordValueCreateManyRecordInputEnvelope
+    set?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    disconnect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    delete?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    connect?: RecordValueWhereUniqueInput | RecordValueWhereUniqueInput[]
+    update?: RecordValueUpdateWithWhereUniqueWithoutRecordInput | RecordValueUpdateWithWhereUniqueWithoutRecordInput[]
+    updateMany?: RecordValueUpdateManyWithWhereWithoutRecordInput | RecordValueUpdateManyWithWhereWithoutRecordInput[]
+    deleteMany?: RecordValueScalarWhereInput | RecordValueScalarWhereInput[]
+  }
+
+  export type TableRecordCreateNestedOneWithoutValuesInput = {
+    create?: XOR<TableRecordCreateWithoutValuesInput, TableRecordUncheckedCreateWithoutValuesInput>
+    connectOrCreate?: TableRecordCreateOrConnectWithoutValuesInput
+    connect?: TableRecordWhereUniqueInput
+  }
+
+  export type TableRecordUpdateOneRequiredWithoutValuesNestedInput = {
+    create?: XOR<TableRecordCreateWithoutValuesInput, TableRecordUncheckedCreateWithoutValuesInput>
+    connectOrCreate?: TableRecordCreateOrConnectWithoutValuesInput
+    upsert?: TableRecordUpsertWithoutValuesInput
+    connect?: TableRecordWhereUniqueInput
+    update?: XOR<XOR<TableRecordUpdateToOneWithWhereWithoutValuesInput, TableRecordUpdateWithoutValuesInput>, TableRecordUncheckedUpdateWithoutValuesInput>
   }
 
   export type DataModelCreateNestedOneWithoutCheckpointsInput = {
@@ -33174,6 +36263,22 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -33196,22 +36301,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -33633,23 +36722,29 @@ export namespace Prisma {
   export type TableCreateWithoutDataModelInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnCreateNestedManyWithoutTableInput
     indexes?: IndexCreateNestedManyWithoutTableInput
     triggers?: TriggerCreateNestedManyWithoutTableInput
     nodes?: TableNodeCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutDataModelInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
     triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
     nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutDataModelInput = {
@@ -33666,6 +36761,8 @@ export namespace Prisma {
     id?: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
     sourceColumn: ColumnCreateNestedOneWithoutSourceRelationsInput
     targetColumn: ColumnCreateNestedOneWithoutTargetRelationsInput
   }
@@ -33676,6 +36773,8 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipCreateOrConnectWithoutDataModelInput = {
@@ -33692,6 +36791,8 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33702,6 +36803,8 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33916,6 +37019,8 @@ export namespace Prisma {
     id?: StringFilter<"Table"> | string
     name?: StringFilter<"Table"> | string
     dataModelId?: StringFilter<"Table"> | string
+    color?: StringNullableFilter<"Table"> | string | null
+    notes?: StringNullableFilter<"Table"> | string | null
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
   }
@@ -33946,6 +37051,8 @@ export namespace Prisma {
     targetColumnId?: StringFilter<"Relationship"> | string
     onDelete?: StringFilter<"Relationship"> | string
     onUpdate?: StringFilter<"Relationship"> | string
+    cardinality?: StringFilter<"Relationship"> | string
+    fkName?: StringNullableFilter<"Relationship"> | string | null
   }
 
   export type ViewUpsertWithWhereUniqueWithoutDataModelInput = {
@@ -33972,6 +37079,8 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    x?: FloatFilter<"View"> | number
+    y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
     createdAt?: DateTimeFilter<"View"> | Date | string
     updatedAt?: DateTimeFilter<"View"> | Date | string
@@ -34356,6 +37465,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
   }
 
   export type IndexUncheckedCreateWithoutTableInput = {
@@ -34363,6 +37473,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
   }
 
   export type IndexCreateOrConnectWithoutTableInput = {
@@ -34413,6 +37524,7 @@ export namespace Prisma {
     id?: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
     diagram: DiagramCreateNestedOneWithoutNodesInput
   }
 
@@ -34421,6 +37533,7 @@ export namespace Prisma {
     diagramId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
   }
 
   export type TableNodeCreateOrConnectWithoutTableInput = {
@@ -34430,6 +37543,28 @@ export namespace Prisma {
 
   export type TableNodeCreateManyTableInputEnvelope = {
     data: TableNodeCreateManyTableInput | TableNodeCreateManyTableInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TableRecordCreateWithoutTableInput = {
+    id?: string
+    order?: number
+    values?: RecordValueCreateNestedManyWithoutRecordInput
+  }
+
+  export type TableRecordUncheckedCreateWithoutTableInput = {
+    id?: string
+    order?: number
+    values?: RecordValueUncheckedCreateNestedManyWithoutRecordInput
+  }
+
+  export type TableRecordCreateOrConnectWithoutTableInput = {
+    where: TableRecordWhereUniqueInput
+    create: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput>
+  }
+
+  export type TableRecordCreateManyTableInputEnvelope = {
+    data: TableRecordCreateManyTableInput | TableRecordCreateManyTableInput[]
     skipDuplicates?: boolean
   }
 
@@ -34545,6 +37680,7 @@ export namespace Prisma {
     name?: StringFilter<"Index"> | string
     type?: StringFilter<"Index"> | string
     columns?: StringNullableListFilter<"Index">
+    isUnique?: BoolFilter<"Index"> | boolean
   }
 
   export type TriggerUpsertWithWhereUniqueWithoutTableInput = {
@@ -34603,28 +37739,60 @@ export namespace Prisma {
     tableId?: StringFilter<"TableNode"> | string
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
+    hiddenColumns?: StringNullableListFilter<"TableNode">
+  }
+
+  export type TableRecordUpsertWithWhereUniqueWithoutTableInput = {
+    where: TableRecordWhereUniqueInput
+    update: XOR<TableRecordUpdateWithoutTableInput, TableRecordUncheckedUpdateWithoutTableInput>
+    create: XOR<TableRecordCreateWithoutTableInput, TableRecordUncheckedCreateWithoutTableInput>
+  }
+
+  export type TableRecordUpdateWithWhereUniqueWithoutTableInput = {
+    where: TableRecordWhereUniqueInput
+    data: XOR<TableRecordUpdateWithoutTableInput, TableRecordUncheckedUpdateWithoutTableInput>
+  }
+
+  export type TableRecordUpdateManyWithWhereWithoutTableInput = {
+    where: TableRecordScalarWhereInput
+    data: XOR<TableRecordUpdateManyMutationInput, TableRecordUncheckedUpdateManyWithoutTableInput>
+  }
+
+  export type TableRecordScalarWhereInput = {
+    AND?: TableRecordScalarWhereInput | TableRecordScalarWhereInput[]
+    OR?: TableRecordScalarWhereInput[]
+    NOT?: TableRecordScalarWhereInput | TableRecordScalarWhereInput[]
+    id?: StringFilter<"TableRecord"> | string
+    tableId?: StringFilter<"TableRecord"> | string
+    order?: IntFilter<"TableRecord"> | number
   }
 
   export type TableCreateWithoutColumnsInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutTablesInput
     indexes?: IndexCreateNestedManyWithoutTableInput
     triggers?: TriggerCreateNestedManyWithoutTableInput
     nodes?: TableNodeCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutColumnsInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
     triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
     nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutColumnsInput = {
@@ -34636,6 +37804,8 @@ export namespace Prisma {
     id?: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
     dataModel: DataModelCreateNestedOneWithoutRelationshipsInput
     targetColumn: ColumnCreateNestedOneWithoutTargetRelationsInput
   }
@@ -34646,6 +37816,8 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipCreateOrConnectWithoutSourceColumnInput = {
@@ -34662,6 +37834,8 @@ export namespace Prisma {
     id?: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
     dataModel: DataModelCreateNestedOneWithoutRelationshipsInput
     sourceColumn: ColumnCreateNestedOneWithoutSourceRelationsInput
   }
@@ -34672,6 +37846,8 @@ export namespace Prisma {
     sourceColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipCreateOrConnectWithoutTargetColumnInput = {
@@ -34698,23 +37874,29 @@ export namespace Prisma {
   export type TableUpdateWithoutColumnsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
     indexes?: IndexUpdateManyWithoutTableNestedInput
     triggers?: TriggerUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutColumnsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
     triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type RelationshipUpsertWithWhereUniqueWithoutSourceColumnInput = {
@@ -35024,23 +38206,29 @@ export namespace Prisma {
   export type TableCreateWithoutIndexesInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutTablesInput
     columns?: ColumnCreateNestedManyWithoutTableInput
     triggers?: TriggerCreateNestedManyWithoutTableInput
     nodes?: TableNodeCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutIndexesInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
     nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutIndexesInput = {
@@ -35062,23 +38250,29 @@ export namespace Prisma {
   export type TableUpdateWithoutIndexesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
     columns?: ColumnUpdateManyWithoutTableNestedInput
     triggers?: TriggerUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutIndexesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type DataModelCreateWithoutViewsInput = {
@@ -35240,23 +38434,29 @@ export namespace Prisma {
   export type TableCreateWithoutTriggersInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutTablesInput
     columns?: ColumnCreateNestedManyWithoutTableInput
     indexes?: IndexCreateNestedManyWithoutTableInput
     nodes?: TableNodeCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutTriggersInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
     nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutTriggersInput = {
@@ -35308,23 +38508,29 @@ export namespace Prisma {
   export type TableUpdateWithoutTriggersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
     columns?: ColumnUpdateManyWithoutTableNestedInput
     indexes?: IndexUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutTriggersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type VersionHistoryUpsertWithWhereUniqueWithoutTriggerInput = {
@@ -35534,6 +38740,7 @@ export namespace Prisma {
     id?: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
     table: TableCreateNestedOneWithoutNodesInput
   }
 
@@ -35542,6 +38749,7 @@ export namespace Prisma {
     tableId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
   }
 
   export type TableNodeCreateOrConnectWithoutDiagramInput = {
@@ -35762,23 +38970,29 @@ export namespace Prisma {
   export type TableCreateWithoutNodesInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dataModel: DataModelCreateNestedOneWithoutTablesInput
     columns?: ColumnCreateNestedManyWithoutTableInput
     indexes?: IndexCreateNestedManyWithoutTableInput
     triggers?: TriggerCreateNestedManyWithoutTableInput
+    records?: TableRecordCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutNodesInput = {
     id?: string
     name: string
     dataModelId: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
     triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
+    records?: TableRecordUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutNodesInput = {
@@ -35833,23 +39047,29 @@ export namespace Prisma {
   export type TableUpdateWithoutNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
     columns?: ColumnUpdateManyWithoutTableNestedInput
     indexes?: IndexUpdateManyWithoutTableNestedInput
     triggers?: TriggerUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
     triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type DiagramCreateWithoutGroupsInput = {
@@ -35970,6 +39190,166 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     nodes?: TableNodeUncheckedUpdateManyWithoutDiagramNestedInput
     groups?: GroupUncheckedUpdateManyWithoutDiagramNestedInput
+  }
+
+  export type TableCreateWithoutRecordsInput = {
+    id?: string
+    name: string
+    color?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dataModel: DataModelCreateNestedOneWithoutTablesInput
+    columns?: ColumnCreateNestedManyWithoutTableInput
+    indexes?: IndexCreateNestedManyWithoutTableInput
+    triggers?: TriggerCreateNestedManyWithoutTableInput
+    nodes?: TableNodeCreateNestedManyWithoutTableInput
+  }
+
+  export type TableUncheckedCreateWithoutRecordsInput = {
+    id?: string
+    name: string
+    dataModelId: string
+    color?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
+    indexes?: IndexUncheckedCreateNestedManyWithoutTableInput
+    triggers?: TriggerUncheckedCreateNestedManyWithoutTableInput
+    nodes?: TableNodeUncheckedCreateNestedManyWithoutTableInput
+  }
+
+  export type TableCreateOrConnectWithoutRecordsInput = {
+    where: TableWhereUniqueInput
+    create: XOR<TableCreateWithoutRecordsInput, TableUncheckedCreateWithoutRecordsInput>
+  }
+
+  export type RecordValueCreateWithoutRecordInput = {
+    id?: string
+    columnName: string
+    value: string
+  }
+
+  export type RecordValueUncheckedCreateWithoutRecordInput = {
+    id?: string
+    columnName: string
+    value: string
+  }
+
+  export type RecordValueCreateOrConnectWithoutRecordInput = {
+    where: RecordValueWhereUniqueInput
+    create: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput>
+  }
+
+  export type RecordValueCreateManyRecordInputEnvelope = {
+    data: RecordValueCreateManyRecordInput | RecordValueCreateManyRecordInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TableUpsertWithoutRecordsInput = {
+    update: XOR<TableUpdateWithoutRecordsInput, TableUncheckedUpdateWithoutRecordsInput>
+    create: XOR<TableCreateWithoutRecordsInput, TableUncheckedCreateWithoutRecordsInput>
+    where?: TableWhereInput
+  }
+
+  export type TableUpdateToOneWithWhereWithoutRecordsInput = {
+    where?: TableWhereInput
+    data: XOR<TableUpdateWithoutRecordsInput, TableUncheckedUpdateWithoutRecordsInput>
+  }
+
+  export type TableUpdateWithoutRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataModel?: DataModelUpdateOneRequiredWithoutTablesNestedInput
+    columns?: ColumnUpdateManyWithoutTableNestedInput
+    indexes?: IndexUpdateManyWithoutTableNestedInput
+    triggers?: TriggerUpdateManyWithoutTableNestedInput
+    nodes?: TableNodeUpdateManyWithoutTableNestedInput
+  }
+
+  export type TableUncheckedUpdateWithoutRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    dataModelId?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
+    indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
+    triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
+    nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+  }
+
+  export type RecordValueUpsertWithWhereUniqueWithoutRecordInput = {
+    where: RecordValueWhereUniqueInput
+    update: XOR<RecordValueUpdateWithoutRecordInput, RecordValueUncheckedUpdateWithoutRecordInput>
+    create: XOR<RecordValueCreateWithoutRecordInput, RecordValueUncheckedCreateWithoutRecordInput>
+  }
+
+  export type RecordValueUpdateWithWhereUniqueWithoutRecordInput = {
+    where: RecordValueWhereUniqueInput
+    data: XOR<RecordValueUpdateWithoutRecordInput, RecordValueUncheckedUpdateWithoutRecordInput>
+  }
+
+  export type RecordValueUpdateManyWithWhereWithoutRecordInput = {
+    where: RecordValueScalarWhereInput
+    data: XOR<RecordValueUpdateManyMutationInput, RecordValueUncheckedUpdateManyWithoutRecordInput>
+  }
+
+  export type RecordValueScalarWhereInput = {
+    AND?: RecordValueScalarWhereInput | RecordValueScalarWhereInput[]
+    OR?: RecordValueScalarWhereInput[]
+    NOT?: RecordValueScalarWhereInput | RecordValueScalarWhereInput[]
+    id?: StringFilter<"RecordValue"> | string
+    recordId?: StringFilter<"RecordValue"> | string
+    columnName?: StringFilter<"RecordValue"> | string
+    value?: StringFilter<"RecordValue"> | string
+  }
+
+  export type TableRecordCreateWithoutValuesInput = {
+    id?: string
+    order?: number
+    table: TableCreateNestedOneWithoutRecordsInput
+  }
+
+  export type TableRecordUncheckedCreateWithoutValuesInput = {
+    id?: string
+    tableId: string
+    order?: number
+  }
+
+  export type TableRecordCreateOrConnectWithoutValuesInput = {
+    where: TableRecordWhereUniqueInput
+    create: XOR<TableRecordCreateWithoutValuesInput, TableRecordUncheckedCreateWithoutValuesInput>
+  }
+
+  export type TableRecordUpsertWithoutValuesInput = {
+    update: XOR<TableRecordUpdateWithoutValuesInput, TableRecordUncheckedUpdateWithoutValuesInput>
+    create: XOR<TableRecordCreateWithoutValuesInput, TableRecordUncheckedCreateWithoutValuesInput>
+    where?: TableRecordWhereInput
+  }
+
+  export type TableRecordUpdateToOneWithWhereWithoutValuesInput = {
+    where?: TableRecordWhereInput
+    data: XOR<TableRecordUpdateWithoutValuesInput, TableRecordUncheckedUpdateWithoutValuesInput>
+  }
+
+  export type TableRecordUpdateWithoutValuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    table?: TableUpdateOneRequiredWithoutRecordsNestedInput
+  }
+
+  export type TableRecordUncheckedUpdateWithoutValuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tableId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
   }
 
   export type DataModelCreateWithoutCheckpointsInput = {
@@ -36236,6 +39616,8 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36247,6 +39629,8 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36336,6 +39720,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36347,6 +39733,8 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36595,6 +39983,8 @@ export namespace Prisma {
   export type TableCreateManyDataModelInput = {
     id?: string
     name: string
+    color?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -36605,12 +39995,16 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type ViewCreateManyDataModelInput = {
     id?: string
     name: string
     sql: string
+    x?: number
+    y?: number
     primaryIdentifier?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36668,28 +40062,36 @@ export namespace Prisma {
   export type TableUpdateWithoutDataModelInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUpdateManyWithoutTableNestedInput
     indexes?: IndexUpdateManyWithoutTableNestedInput
     triggers?: TriggerUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUpdateManyWithoutTableNestedInput
+    records?: TableRecordUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutDataModelInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     indexes?: IndexUncheckedUpdateManyWithoutTableNestedInput
     triggers?: TriggerUncheckedUpdateManyWithoutTableNestedInput
     nodes?: TableNodeUncheckedUpdateManyWithoutTableNestedInput
+    records?: TableRecordUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateManyWithoutDataModelInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -36698,6 +40100,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
     sourceColumn?: ColumnUpdateOneRequiredWithoutSourceRelationsNestedInput
     targetColumn?: ColumnUpdateOneRequiredWithoutTargetRelationsNestedInput
   }
@@ -36708,6 +40112,8 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipUncheckedUpdateManyWithoutDataModelInput = {
@@ -36716,12 +40122,16 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ViewUpdateWithoutDataModelInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36732,6 +40142,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36742,6 +40154,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    x?: FloatFieldUpdateOperationsInput | number
+    y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36903,6 +40317,7 @@ export namespace Prisma {
     name: string
     type: string
     columns?: IndexCreatecolumnsInput | string[]
+    isUnique?: boolean
   }
 
   export type TriggerCreateManyTableInput = {
@@ -36921,6 +40336,12 @@ export namespace Prisma {
     diagramId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
+  }
+
+  export type TableRecordCreateManyTableInput = {
+    id?: string
+    order?: number
   }
 
   export type ColumnUpdateWithoutTableInput = {
@@ -36980,6 +40401,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IndexUncheckedUpdateWithoutTableInput = {
@@ -36987,6 +40409,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IndexUncheckedUpdateManyWithoutTableInput = {
@@ -36994,6 +40417,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     columns?: IndexUpdatecolumnsInput | string[]
+    isUnique?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TriggerUpdateWithoutTableInput = {
@@ -37035,6 +40459,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
     diagram?: DiagramUpdateOneRequiredWithoutNodesNestedInput
   }
 
@@ -37043,6 +40468,7 @@ export namespace Prisma {
     diagramId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type TableNodeUncheckedUpdateManyWithoutTableInput = {
@@ -37050,6 +40476,24 @@ export namespace Prisma {
     diagramId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
+  }
+
+  export type TableRecordUpdateWithoutTableInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    values?: RecordValueUpdateManyWithoutRecordNestedInput
+  }
+
+  export type TableRecordUncheckedUpdateWithoutTableInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    values?: RecordValueUncheckedUpdateManyWithoutRecordNestedInput
+  }
+
+  export type TableRecordUncheckedUpdateManyWithoutTableInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
   }
 
   export type RelationshipCreateManySourceColumnInput = {
@@ -37058,6 +40502,8 @@ export namespace Prisma {
     targetColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipCreateManyTargetColumnInput = {
@@ -37066,12 +40512,16 @@ export namespace Prisma {
     sourceColumnId: string
     onDelete: string
     onUpdate: string
+    cardinality?: string
+    fkName?: string | null
   }
 
   export type RelationshipUpdateWithoutSourceColumnInput = {
     id?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
     dataModel?: DataModelUpdateOneRequiredWithoutRelationshipsNestedInput
     targetColumn?: ColumnUpdateOneRequiredWithoutTargetRelationsNestedInput
   }
@@ -37082,6 +40532,8 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipUncheckedUpdateManyWithoutSourceColumnInput = {
@@ -37090,12 +40542,16 @@ export namespace Prisma {
     targetColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipUpdateWithoutTargetColumnInput = {
     id?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
     dataModel?: DataModelUpdateOneRequiredWithoutRelationshipsNestedInput
     sourceColumn?: ColumnUpdateOneRequiredWithoutSourceRelationsNestedInput
   }
@@ -37106,6 +40562,8 @@ export namespace Prisma {
     sourceColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RelationshipUncheckedUpdateManyWithoutTargetColumnInput = {
@@ -37114,6 +40572,8 @@ export namespace Prisma {
     sourceColumnId?: StringFieldUpdateOperationsInput | string
     onDelete?: StringFieldUpdateOperationsInput | string
     onUpdate?: StringFieldUpdateOperationsInput | string
+    cardinality?: StringFieldUpdateOperationsInput | string
+    fkName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VersionHistoryCreateManyViewInput = {
@@ -37241,6 +40701,7 @@ export namespace Prisma {
     tableId: string
     x: number
     y: number
+    hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
   }
 
   export type GroupCreateManyDiagramInput = {
@@ -37264,6 +40725,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
     table?: TableUpdateOneRequiredWithoutNodesNestedInput
   }
 
@@ -37272,6 +40734,7 @@ export namespace Prisma {
     tableId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type TableNodeUncheckedUpdateManyWithoutDiagramInput = {
@@ -37279,6 +40742,7 @@ export namespace Prisma {
     tableId?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+    hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
   }
 
   export type GroupUpdateWithoutDiagramInput = {
@@ -37330,6 +40794,30 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type RecordValueCreateManyRecordInput = {
+    id?: string
+    columnName: string
+    value: string
+  }
+
+  export type RecordValueUpdateWithoutRecordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecordValueUncheckedUpdateWithoutRecordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecordValueUncheckedUpdateManyWithoutRecordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    columnName?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
   }
 
 
