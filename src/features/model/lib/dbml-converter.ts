@@ -79,7 +79,7 @@ export function generateDBML(nodes: CanvasNode[], edges: RelationshipEdge[]): st
         dbml += "}\n\n";
     });
 
-    // 2. Relationships — only emit when a matching FK column actually exists
+    // 2. Relationships — emit even if no explicit FK column exists
     relationshipEdges.forEach((edge) => {
         const sourceNode = nodes.find(n => n.id === edge.source) as TableNode;
         const targetNode = nodes.find(n => n.id === edge.target) as TableNode;
@@ -88,20 +88,65 @@ export function generateDBML(nodes: CanvasNode[], edges: RelationshipEdge[]): st
 
         const targetPk = targetNode.data.columns.find(c => c.isPk)?.name ?? "id";
 
-        // Only use an FK column that ACTUALLY EXISTS in the source table
-        const fkColumn = sourceNode.data.columns.find(
-            c => c.isFk && c.name.toLowerCase().includes(targetNode.data.name.toLowerCase())
-        )?.name;
+        // First, try to use the column referenced by the edge's sourceHandle (if it exists)
+        let fkColumn: string | undefined;
+        
+        if (edge.sourceHandle) {
+            // Extract column ID from sourceHandle (format: "{columnId}-source")
+            // Remove the "-source" or "-target" suffix to get the full column ID
+            const sourceColId = edge.sourceHandle.replace(/-source$/, "").replace(/-target$/, "");
+            const sourceCol = sourceNode.data.columns.find(c => c.id === sourceColId);
+            if (sourceCol) {
+                fkColumn = sourceCol.name;
+            }
+        }
+        
+        if (!fkColumn) {
+            // Fallback 1: Use any column marked with isFk=true and contains target table name
+            fkColumn = sourceNode.data.columns.find(
+                c => c.isFk && c.name.toLowerCase().includes(targetNode.data.name.toLowerCase())
+            )?.name;
+        }
+        
+        if (!fkColumn) {
+            // Fallback 2: Use any column marked as FK
+            fkColumn = sourceNode.data.columns.find(c => c.isFk)?.name;
+        }
+        
+        if (!fkColumn) {
+            // Fallback 3: Use column that looks like FK (ends with _id, contains target name)
+            fkColumn = sourceNode.data.columns.find(
+                c => c.name.toLowerCase().endsWith("_id") && 
+                     c.name.toLowerCase().includes(targetNode.data.name.toLowerCase())
+            )?.name;
+        }
+        
+        if (!fkColumn) {
+            // Fallback 4: Use any column ending with _id
+            fkColumn = sourceNode.data.columns.find(c => c.name.toLowerCase().endsWith("_id"))?.name;
+        }
+        
+        if (!fkColumn) {
+            // Fallback 5: Use first non-PK column
+            fkColumn = sourceNode.data.columns.find(c => !c.isPk)?.name;
+        }
 
-        // If no explicit FK column found, skip the Ref to avoid parser errors
-        // (the edge stays in the canvas; it just won't appear in DBML)
+        // If still no column found, cannot emit Ref
         if (!fkColumn) return;
 
-        // DBML Ref: > = many-to-one, < = one-to-many, - = one-to-one, <> = many-to-many
+        // DBML Ref operators:
+        // - ">" : many-to-one (source table has many, target has one)
+        // - "<" : one-to-many (source table has one, target has many)  
+        // - "-" : one-to-one
+        // - "<>": many-to-many
+        //
+        // Canvas cardinality "1:n" means: source → target where source=1, target=many
+        // So for source.user_id → target.users (1:n), we render: posts.user_id > users
         const card = edge.data?.cardinality;
         let op = ">";
         if (card === "1:1") op = "-";
-        else if (card === "1:n") op = "<";
+        else if (card === "1:n") op = ">"; // one side → many side = many-to-one from FK perspective
+        else if (card === "n:1") op = "<"; // many side → one side = one-to-many from FK perspective
         else if (card === "n:m") op = "<>";
 
         dbml += `Ref: ${sourceNode.data.name}.${fkColumn} ${op} ${targetNode.data.name}.${targetPk}`;
