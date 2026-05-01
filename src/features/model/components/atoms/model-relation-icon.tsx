@@ -1,6 +1,6 @@
 import React from "react";
 
-export type RelationType = "1:1" | "1:n" | "0..1" | "0..n" | "n:n";
+export type RelationType = "1:1" | "1:n" | "0..1" | "0..n" | "n:m";
 
 interface ModelRelationIconProps {
     type: RelationType;
@@ -210,7 +210,7 @@ export function ModelRelationIcon({
                     />
                 </svg>
             );
-        case "n:n":
+        case "n:m":
             return (
                 <svg
                     className={className}

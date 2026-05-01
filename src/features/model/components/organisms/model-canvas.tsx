@@ -6,13 +6,14 @@ import {
     ConnectionMode,
     MiniMap,
     ReactFlow,
-    ReactFlowProvider,
     useReactFlow,
-    type Node
+    type Node,
+    type Edge
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";
 
+import { useCanvasDebouncedSync } from "../../hooks/use-canvas-debounced-sync";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 import type { GroupNodeData } from "../../types/canvas";
@@ -51,13 +52,34 @@ const TOOL_CURSOR: Record<string, string> = {
 
 interface ModelCanvasProps {
     dataModelId: string;
+    initialNodes?: Node[];
+    initialEdges?: Edge[];
 }
 
 /**
  * Inner component runs inside ReactFlowProvider so we can use context hooks.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
+function ModelCanvasInner({ dataModelId, initialNodes = [], initialEdges = [] }: ModelCanvasProps) {
+    const activeTabId = useWorkspaceStore((s) => s.activeTabId);
+    const diagramId = `${dataModelId}-default`;
+
+    const { setWorkspaceData, setDataModelId } = useCanvasStore();
+
+    useEffect(() => {
+        setDataModelId(dataModelId);
+    }, [dataModelId, setDataModelId]);
+
+    useEffect(() => {
+        if (initialNodes.length > 0 || initialEdges.length > 0) {
+            setWorkspaceData(diagramId, {
+                nodes: initialNodes,
+                edges: initialEdges
+            });
+        }
+    }, [diagramId, initialNodes, initialEdges, setWorkspaceData]);
+
+    useCanvasDebouncedSync(dataModelId);
+
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
     const viewport = useCanvasStore((s) => s.viewport);
@@ -84,7 +106,6 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
     }));
 
     const setViewportStore = useCanvasStore((s) => s.setViewport);
-    const activeTabId = useWorkspaceStore((s) => s.activeTabId);
 
     // Sync viewport from store when the TAB changes
     useEffect(() => {
@@ -114,9 +135,9 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                         name: col.name,
                         type: col.type,
                         nullable: col.nullable,
-                        isPrimary: false,
+                        isPk: false,
                         isUnique: false,
-                        isIndex: false,
+                        isIdx: false,
                     }));
 
                     // Complete column list starting with ID
@@ -125,9 +146,9 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
                             id: crypto.randomUUID(),
                             name: "id",
                             type: settings.idColumnType,
-                            isPrimary: true,
+                            isPk: true,
                             isUnique: true,
-                            isIndex: true,
+                            isIdx: false,
                             nullable: false,
                         },
                         ...defaultCols
@@ -343,9 +364,5 @@ function ModelCanvasInner({ dataModelId }: ModelCanvasProps) {
 }
 
 export function ModelCanvas(props: ModelCanvasProps) {
-    return (
-        <ReactFlowProvider>
-            <ModelCanvasInner {...props} />
-        </ReactFlowProvider>
-    );
+    return <ModelCanvasInner {...props} />;
 }

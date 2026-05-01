@@ -29,6 +29,7 @@ export interface ColumnData {
     nullable?: boolean;
     defaultValue?: string;
     notes?: string;
+    customType?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -75,6 +76,7 @@ export interface ViewNodeData extends Record<string, unknown> {
 export interface NoteNodeData extends Record<string, unknown> {
     content: string;
     color?: string;
+    isNew?: boolean;
 }
 
 export interface GroupNodeData extends Record<string, unknown> {
@@ -147,7 +149,7 @@ export type CanvasTool =
     | "rel-1-n"
     | "rel-0-1"
     | "rel-0-n"
-    | "rel-n-n";
+    | "rel-n-m";
 
 export interface ModelSettings {
     showFkName: boolean;

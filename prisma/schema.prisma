@@ -148,14 +148,17 @@ model Table {
   id          String   @id @default(uuid())
   name        String
   dataModelId String
+  color       String?
+  notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  dataModel DataModel   @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  dataModel DataModel      @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
   columns   Column[]
   indexes   Index[]
   triggers  Trigger[]
   nodes     TableNode[]
+  records   TableRecord[]
 
   @@index([dataModelId])
   @@map("tables")
@@ -186,12 +189,14 @@ model Column {
 }
 
 model Relationship {
-  id             String @id @default(uuid())
+  id             String  @id @default(uuid())
   dataModelId    String
   sourceColumnId String
   targetColumnId String
   onDelete       String
   onUpdate       String
+  cardinality    String  @default("1:n")
+  fkName         String?
 
   dataModel    DataModel @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
   sourceColumn Column    @relation("SourceColumn", fields: [sourceColumnId], references: [id], onDelete: Cascade)
@@ -202,11 +207,12 @@ model Relationship {
 }
 
 model Index {
-  id      String   @id @default(uuid())
-  tableId String
-  name    String
-  type    String
-  columns String[]
+  id       String   @id @default(uuid())
+  tableId  String
+  name     String
+  type     String
+  columns  String[]
+  isUnique Boolean  @default(false)
 
   table Table @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
@@ -223,6 +229,8 @@ model View {
   dataModelId       String
   name              String
   sql               String
+  x                 Float    @default(0)
+  y                 Float    @default(0)
   primaryIdentifier String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -295,11 +303,12 @@ model Diagram {
 }
 
 model TableNode {
-  id        String @id @default(uuid())
-  diagramId String
-  tableId   String
-  x         Float
-  y         Float
+  id            String   @id @default(uuid())
+  diagramId     String
+  tableId       String
+  x             Float
+  y             Float
+  hiddenColumns String[] @default([])
 
   diagram Diagram @relation(fields: [diagramId], references: [id], onDelete: Cascade)
   table   Table   @relation(fields: [tableId], references: [id], onDelete: Cascade)
@@ -336,6 +345,34 @@ model Note {
 
   @@index([diagramId])
   @@map("notes")
+}
+
+///////////////////////
+// TABLE RECORDS (SEED DATA)
+///////////////////////
+
+model TableRecord {
+  id      String @id @default(uuid())
+  tableId String
+  order   Int    @default(0)
+
+  table  Table         @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  values RecordValue[]
+
+  @@index([tableId])
+  @@map("table_records")
+}
+
+model RecordValue {
+  id        String @id @default(uuid())
+  recordId  String
+  columnName String
+  value     String
+
+  record TableRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+
+  @@index([recordId])
+  @@map("record_values")
 }
 
 ///////////////////////

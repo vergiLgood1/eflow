@@ -58,12 +58,14 @@ export function DbmlPanel() {
     if (!isDbmlModeOpen) return null;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(code);
+        navigator.clipboard.writeText(displayCode).catch(() => {
+            toast.error("Failed to copy to clipboard");
+        });
         toast.success("DBML copied to clipboard");
     };
 
     const handleDownload = () => {
-        const blob = new Blob([code], { type: "text/plain" });
+        const blob = new Blob([displayCode], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;

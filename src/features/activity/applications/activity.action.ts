@@ -12,6 +12,34 @@ interface ActivityFilters {
     time?: string;
 }
 
+export interface CreateActivityLogParams {
+    dataModelId: string;
+    userId: string;
+    action: string;
+    details: {
+        type: "create" | "update" | "delete";
+        category: string;
+        target: string;
+        changes?: { field: string; oldValue?: any; newValue: any }[];
+    };
+}
+
+export async function createActivityLog(params: CreateActivityLogParams): Promise<void> {
+    try {
+        await db.activityLog.create({
+            data: {
+                dataModelId: params.dataModelId,
+                userId: params.userId,
+                action: params.action,
+                details: params.details as any
+            }
+        });
+    } catch (error) {
+        console.error("Error creating activity log:", error);
+        // We don't throw here to avoid failing the main action
+    }
+}
+
 export async function getActivityLogs(
     workspaceSlug: string, 
     filters?: ActivityFilters
@@ -32,7 +60,7 @@ export async function getActivityLogs(
             }
         };
 
-        // Filter by category
+        // Filter by category (which is stored as 'type' in details)
         if (filters?.category && filters.category !== "all") {
             where.details = {
                 path: ["type"],

@@ -1,10 +1,9 @@
 "use client";
 
-import { saveDiagram } from "@/features/workspace/applications/workspace.action";
+import { syncModelSchema } from "../applications/model.action";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useCanvasStore } from "../store/use-canvas-store";
-import { isTableNode } from "../types/canvas";
 
 const DEBOUNCE_DELAY_MS = 2500;
 
@@ -12,31 +11,28 @@ const DEBOUNCE_DELAY_MS = 2500;
  * Watches the Zustand canvas store for dirty state and auto-saves
  * the diagram to the database after a debounce window with no changes.
  */
-export function useCanvasDebouncedSync(dataModelId: string): void {
+export function useCanvasDebouncedSync(dataModelId: string, isEnabled: boolean = true): void {
     const isDirty = useCanvasStore((s) => s.isDirty);
     const nodes = useCanvasStore((s) => s.nodes);
+    const edges = useCanvasStore((s) => s.edges);
     const markSaved = useCanvasStore((s) => s.markSaved);
 
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        if (!isDirty) return;
+        if (!isEnabled || !isDirty) return;
 
         if (timerRef.current) clearTimeout(timerRef.current);
 
         timerRef.current = setTimeout(async () => {
-            const tableNodes = nodes.filter(isTableNode).map((n) => ({
-                id: n.id,
-                tableId: n.id,
-                x: n.position.x,
-                y: n.position.y,
-            }));
-
-            const result = await saveDiagram({
+            const diagramId = `${dataModelId}-default`;
+            const result = await syncModelSchema(
                 dataModelId,
-                name: "Default Diagram",
-                tableNodes,
-            });
+                diagramId,
+                "Default Diagram",
+                nodes,
+                edges
+            );
 
             if (result.success) {
                 markSaved();
@@ -48,5 +44,5 @@ export function useCanvasDebouncedSync(dataModelId: string): void {
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current);
         };
-    }, [isDirty, nodes, dataModelId, markSaved]);
+    }, [isDirty, nodes, edges, dataModelId, markSaved, isEnabled]);
 }

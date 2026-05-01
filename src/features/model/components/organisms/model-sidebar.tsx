@@ -90,9 +90,20 @@ export function ModelSidebar() {
                                     </ModelSidebarSection>
                                     
                                     <ModelSidebarSection title="Indexes" defaultOpen={false}>
-                                        <div className="py-1 px-2 text-[10px] text-muted-foreground italic">
-                                            No indexes defined
-                                        </div>
+                                        {(node.data.indexes && node.data.indexes.length > 0) ? (
+                                            node.data.indexes.map((idx) => (
+                                                <div key={idx.id} className="py-1 px-2 text-[10px] flex items-center justify-between">
+                                                    <span className="truncate font-medium">{idx.name}</span>
+                                                    <span className="text-muted-foreground shrink-0 ml-2">
+                                                        {idx.isUnique ? "UNIQUE " : ""}{idx.type?.toUpperCase() || "BTREE"}
+                                                    </span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="py-1 px-2 text-[10px] text-muted-foreground italic">
+                                                No indexes defined
+                                            </div>
+                                        )}
                                     </ModelSidebarSection>
 
                                     <ModelSidebarSection title="Triggers" defaultOpen={false}>

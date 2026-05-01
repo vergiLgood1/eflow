@@ -19,11 +19,15 @@ import {
     TabsTrigger,
 } from "@/shared/components/ui/tabs";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { createTrigger } from "@/features/model/applications/advanced-objects.action";
+import { toast } from "sonner";
 
 export function TRGConfigDialog({ nodeId, onClose }: { nodeId: string; onClose: () => void }) {
     const { getTableData } = useTableActions();
     const table = getTableData(nodeId);
+
+    const [isPending, startTransition] = useTransition();
 
     const [name, setName] = useState("");
     const [timing, setTiming] = useState("BEFORE");
@@ -34,8 +38,27 @@ export function TRGConfigDialog({ nodeId, onClose }: { nodeId: string; onClose: 
     const [notes, setNotes] = useState("");
 
     const handleSave = () => {
-        // Implement Trigger saving logic here
-        onClose();
+        if (!name || !definition) {
+            toast.error("Name and definition are required");
+            return;
+        }
+
+        startTransition(async () => {
+            const res = await createTrigger(nodeId, {
+                name,
+                event,
+                timing,
+                body: definition,
+                level: forEach,
+            });
+
+            if (res.success) {
+                toast.success("Trigger created successfully");
+                onClose();
+            } else {
+                toast.error(res.error || "Failed to create trigger");
+            }
+        });
     };
 
     return (
@@ -161,8 +184,10 @@ export function TRGConfigDialog({ nodeId, onClose }: { nodeId: string; onClose: 
             </div>
 
             <DialogFooter>
-                <Button variant="ghost" onClick={onClose}>Cancel</Button>
-                <Button onClick={handleSave}>Create Trigger</Button>
+                <Button variant="ghost" onClick={onClose} disabled={isPending}>Cancel</Button>
+                <Button onClick={handleSave} disabled={isPending}>
+                    {isPending ? "Creating..." : "Create Trigger"}
+                </Button>
             </DialogFooter>
         </DialogContent>
     );

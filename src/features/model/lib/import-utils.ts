@@ -99,26 +99,36 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[]; edges: Relati
         const nodes: CanvasNode[] = [];
         const edges: RelationshipEdge[] = [];
 
+        const tableIdMap: Record<string, string> = {}; // tableName -> tableId
+        const columnIdMap: Record<string, Record<string, string>> = {}; // tableName -> fieldName -> colId
         let x = 100;
         let y = 100;
 
         database.schemas.forEach(schema => {
             // 1. Tables
             schema.tables.forEach(table => {
-                const columns: ColumnData[] = table.fields.map(field => ({
-                    id: Math.random().toString(36).substring(2, 9),
-                    name: field.name,
-                    type: field.type.type_name,
-                    isPk: field.pk,
-                    isUnique: field.unique,
-                    nullable: !field.not_null,
-                    defaultValue: field.dbdefault?.value,
-                    notes: field.note,
-                    isAutoIncrement: field.increment
-                }));
+                const tableId = crypto.randomUUID();
+                tableIdMap[table.name] = tableId;
+                columnIdMap[table.name] = {};
+                const columns: ColumnData[] = table.fields.map(field => {
+                    const colId = crypto.randomUUID();
+                    columnIdMap[table.name][field.name] = colId;
+                    
+                    return {
+                        id: colId,
+                        name: field.name,
+                        type: field.type.type_name,
+                        isPk: field.pk,
+                        isUnique: field.unique,
+                        nullable: !field.not_null,
+                        defaultValue: field.dbdefault?.value,
+                        notes: field.note,
+                        isAutoIncrement: field.increment
+                    };
+                });
 
                 const indexes: TableIndex[] = table.indexes.map(idx => ({
-                    id: Math.random().toString(36).substring(2, 9),
+                    id: crypto.randomUUID(),
                     name: idx.name || "",
                     columns: idx.columns.map(c => c.value as string),
                     isUnique: idx.unique,
@@ -126,7 +136,7 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[]; edges: Relati
                 }));
 
                 nodes.push({
-                    id: table.name,
+                    id: tableId,
                     type: "table",
                     position: { x, y },
                     data: {
@@ -159,10 +169,21 @@ export function dbmlToCanvas(dbml: string): { nodes: CanvasNode[]; edges: Relati
                 if (source.relation === "1" && target.relation === "*") cardinality = "1:n";
                 if (source.relation === "*" && target.relation === "*") cardinality = "n:m";
 
+                const sourceColName = source.fieldNames[0];
+                const targetColName = target.fieldNames[0];
+                
+                const sourceColId = columnIdMap[source.tableName]?.[sourceColName];
+                const targetColId = columnIdMap[target.tableName]?.[targetColName];
+                const sourceTableId = tableIdMap[source.tableName];
+                const targetTableId = tableIdMap[target.tableName];
+                if (!sourceTableId || !targetTableId) return;
+
                 edges.push({
-                    id: `edge-${ref.name || Math.random().toString(36).substring(2, 9)}`,
-                    source: source.tableName,
-                    target: target.tableName,
+                    id: crypto.randomUUID(),
+                    source: sourceTableId,
+                    target: targetTableId,
+                    sourceHandle: sourceColId ? `${sourceColId}-source` : undefined,
+                    targetHandle: targetColId ? `${targetColId}-target` : undefined,
                     type: "relationship",
                     data: {
                         cardinality,

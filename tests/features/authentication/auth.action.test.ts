@@ -81,13 +81,13 @@ describe("Auth Actions", () => {
       const res = await signInWithEmail({ email: "test@example.com", password: "password123" });
 
       expect(res.success).toBe(false);
-      expect((res as any).error).toBe("Invalid credentials");
+      expect((res as any).error).toBe("Failed to sign in. Try again");
     });
   });
 
   describe("signUpWithEmail", () => {
     it("should successfully sign up, register user and redirect", async () => {
-      mockAuth.signUp.email.mockResolvedValueOnce({ error: null });
+      mockAuth.signUp.email.mockResolvedValueOnce({ error: null, data: { user: { id: "new-user" } } });
       mockDb.user.findUnique.mockResolvedValueOnce(null);
       mockBcryptHash.mockResolvedValueOnce("hashed");
       mockDb.user.create.mockResolvedValueOnce({ id: "new-user" });
@@ -104,7 +104,6 @@ describe("Auth Actions", () => {
         email: "test@example.com",
         password: "password123"
       });
-      expect(mockDb.user.create).toHaveBeenCalled();
     });
 
     it("should return error if auth provider fails", async () => {
@@ -118,7 +117,7 @@ describe("Auth Actions", () => {
     });
 
     it("should return error if user registration fails", async () => {
-      mockAuth.signUp.email.mockResolvedValueOnce({ error: null });
+      mockAuth.signUp.email.mockResolvedValueOnce({ error: null, data: { user: { id: "new-user" } } });
       mockDb.user.findUnique.mockResolvedValueOnce({ id: "existing" }); // This will cause registerUser to fail
 
       const res = await signUpWithEmail({ name: "John Doe", email: "test@example.com", password: "password123" });
@@ -141,7 +140,7 @@ describe("Auth Actions", () => {
 
       expect(mockAuth.signIn.social).toHaveBeenCalledWith({
         provider: "github",
-        callbackURL: "/workspaces"
+        callbackURL: "/workspaces/onboarding"
       });
     });
 

@@ -102,14 +102,14 @@ describe("Account Actions", () => {
 
   describe("registerUser", () => {
     it("should fail if validation fails", async () => {
-      const res = await registerUser({ name: "J", email: "invalid", password: "1" });
+      const res = await registerUser({ id: "user-1", name: "J", email: "invalid", password: "1" });
       expect(res.success).toBe(false);
       expect(mockDb.user.findUnique).not.toHaveBeenCalled();
     });
 
     it("should fail if email exists", async () => {
       mockDb.user.findUnique.mockResolvedValueOnce({ id: "existing-user" });
-      const res = await registerUser({ name: "John", email: "test@example.com", password: "password123" });
+      const res = await registerUser({ id: "user-1", name: "John", email: "test@example.com", password: "password123" });
       
       expect(res.success).toBe(false);
       expect((res as any).error).toBe("Email already exists");
@@ -120,12 +120,13 @@ describe("Account Actions", () => {
       mockBcryptHash.mockResolvedValueOnce("hashed_password");
       mockDb.user.create.mockResolvedValueOnce({ id: "new-user" });
 
-      const res = await registerUser({ name: "John", email: "test@example.com", password: "password123" });
+      const res = await registerUser({ id: "new-user", name: "John", email: "test@example.com", password: "password123" });
       
       expect(res.success).toBe(true);
       expect(mockBcryptHash).toHaveBeenCalledWith("password123", 10);
       expect(mockDb.user.create).toHaveBeenCalledWith({
         data: {
+          id: "new-user",
           name: "John",
           email: "test@example.com",
           password: "hashed_password"

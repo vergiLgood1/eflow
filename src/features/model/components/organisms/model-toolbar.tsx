@@ -31,6 +31,7 @@ import type { CanvasNode, CanvasTool, RelationshipEdge } from "../../types/canva
 import { ModelRelationIcon } from "../atoms/model-relation-icon";
 import { ModelToolbarButton } from "../atoms/model-toolbar-button";
 import { ModelSettingsDialog } from "./model-settings-dialog";
+import { CheckpointDialog } from "./checkpoint-dialog";
 
 const ACTIVE_TOOL_CLASS =
     "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80";
@@ -39,7 +40,7 @@ export function ModelToolbar() {
     const activeTool = useCanvasStore((s) => s.activeTool);
     const setActiveTool = useCanvasStore((s) => s.setActiveTool);
 
-    const { tabs, closeTab, addTab, renameTab } =
+    const { tabs, closeTab, addTab, renameTab, activeTabId } =
         useWorkspaceStore();
 
     const { zoomIn, zoomOut } = useReactFlow();
@@ -53,7 +54,8 @@ export function ModelToolbar() {
         nodes,
         edges,
         isDbmlModeOpen,
-        toggleDbmlMode
+        toggleDbmlMode,
+        dataModelId,
     } = useCanvasStore();
 
     const [importMode, setImportMode] = useState<"sql" | "dbml" | null>(null);
@@ -154,6 +156,7 @@ export function ModelToolbar() {
             <div className="flex h-12 items-center gap-2 bg-background px-2 text-foreground overflow-x-auto no-scrollbar">
                 <div className="flex min-w-0 flex-1 items-center gap-1">
                     <ModelSettingsDialog />
+                    {dataModelId && <CheckpointDialog dataModelId={dataModelId} />}
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
                     <ModelToolbarButton
@@ -203,11 +206,11 @@ export function ModelToolbar() {
                     </ModelToolbarButton>
                     <ModelToolbarButton
                         tooltip="Many to Many"
-                        label="n:n"
-                        className={activeTool === "rel-n-n" ? ACTIVE_TOOL_CLASS : undefined}
-                        onClick={() => handleToolClick("rel-n-n")}
+                        label="n:m"
+                        className={activeTool === "rel-n-m" ? ACTIVE_TOOL_CLASS : undefined}
+                        onClick={() => handleToolClick("rel-n-m")}
                     >
-                        <ModelRelationIcon type="n:n" />
+                        <ModelRelationIcon type="n:m" />
                     </ModelToolbarButton>
 
                     <ModelToolbarButton

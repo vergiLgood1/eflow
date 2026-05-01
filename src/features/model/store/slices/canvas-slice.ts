@@ -13,6 +13,8 @@ import type { StateCreator } from "zustand";
 import type { CanvasNode, CanvasTool, ModelSettings } from "../../types/canvas";
 
 export interface CanvasSlice {
+  dataModelId: string | null;
+  setDataModelId: (id: string) => void;
   nodes: Node[];
   edges: Edge[];
   viewport: Viewport;
@@ -69,6 +71,8 @@ export const createCanvasSlice: StateCreator<
   [],
   CanvasSlice
 > = (set, get) => ({
+  dataModelId: null,
+  setDataModelId: (id) => set({ dataModelId: id }),
   nodes: [],
   edges: [],
   viewport: { x: 0, y: 0, zoom: 1 },
@@ -295,8 +299,8 @@ function getRelationshipConfig(activeTool: CanvasTool): {
   const source = parts[0];
   const target = parts[1];
 
-  const markerStart = source === "n" || source === "0" ? "marker-many" : "marker-one";
-  const markerEnd = target === "n" || target === "0" ? "marker-many" : "marker-one";
+  const markerStart = source === "n" ? "marker-many" : source === "0" ? "marker-one" : "marker-one";
+  const markerEnd = target === "n" || target === "m" ? "marker-many" : "marker-one";
 
   return { cardinality, markerStart, markerEnd };
 }

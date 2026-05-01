@@ -120,18 +120,24 @@ const ColumnRow = ({ nodeId, column }: { nodeId: string; column: ColumnData }) =
                     <ColumnConfigPopover nodeId={nodeId} column={column} onClose={() => { }} />
                 </ActionButton>
 
-                <ActionButton
-                    icon={<Trash2 className="h-3 w-3" />}
-                    tooltip="Delete column"
-                    destructive
-                >
-                    <div
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            removeColumn(nodeId, column.id);
-                        }}
-                    />
-                </ActionButton>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5 hover:bg-destructive/10 hover:text-destructive"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                removeColumn(nodeId, column.id);
+                            }}
+                        >
+                            <Trash2 className="h-3 w-3" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-[10px] py-1 px-2">
+                        Delete column
+                    </TooltipContent>
+                </Tooltip>
             </div>
 
             {/* Handles */}
@@ -149,13 +155,18 @@ const FOOTER_TABS = [
     { id: "trg", label: "TRG", icon: Zap, title: "Triggers" },
 ] as const;
 
-const TableFooter = ({ nodeId }: { nodeId: string }) => {
+const TableFooter = ({ nodeId, data }: { nodeId: string; data: TableNodeData }) => {
     const [activeTab, setActiveTab] = useState<FooterTab | null>(null);
     const [isTrgDialogOpen, setIsTrgDialogOpen] = useState(false);
     const [isFkPopoverOpen, setIsFkPopoverOpen] = useState(false);
     const [isIdxPopoverOpen, setIsIdxPopoverOpen] = useState(false);
+    const edges = useCanvasStore((s) => s.edges);
 
     const activeTabData = FOOTER_TABS.find(tab => tab.id === activeTab);
+
+    // Get FK edges for this table
+    const fkEdges = edges.filter(e => e.source === nodeId || e.target === nodeId);
+    const indexes = data.indexes || [];
 
     const handleTabClick = (tabId: FooterTab) => {
         setActiveTab(prev => prev === tabId ? null : tabId);
@@ -245,9 +256,51 @@ const TableFooter = ({ nodeId }: { nodeId: string }) => {
                     {activeTabData?.title}
                 </div>
                 <div className="px-1 pb-3">
-                    <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
-                        No {activeTabData?.title.toLowerCase()} yet.
-                    </div>
+                    {activeTab === "fk" && (
+                        fkEdges.length > 0 ? (
+                            <div className="space-y-1 mx-1">
+                                {fkEdges.map(edge => (
+                                    <div key={edge.id} className="px-2 py-1.5 text-[11px] border border-border/40 rounded bg-foreground/2 flex items-center gap-2">
+                                        <Link2 className="h-3 w-3 text-muted-foreground shrink-0" />
+                                        <span className="truncate">
+                                            {edge.source === nodeId ? `-> ${edge.target}` : `<- ${edge.source}`}
+                                        </span>
+                                        <span className="text-[9px] text-muted-foreground ml-auto">
+                                            {(edge.data as Record<string, unknown>)?.cardinality as string || "1:n"}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
+                                No foreign keys yet.
+                            </div>
+                        )
+                    )}
+                    {activeTab === "idx" && (
+                        indexes.length > 0 ? (
+                            <div className="space-y-1 mx-1">
+                                {indexes.map(idx => (
+                                    <div key={idx.id} className="px-2 py-1.5 text-[11px] border border-border/40 rounded bg-foreground/2 flex items-center gap-2">
+                                        <Database className="h-3 w-3 text-muted-foreground shrink-0" />
+                                        <span className="truncate font-medium">{idx.name}</span>
+                                        <span className="text-[9px] text-muted-foreground ml-auto">
+                                            {idx.isUnique ? "UNIQUE" : ""} {idx.type?.toUpperCase() || "BTREE"}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
+                                No indexes yet.
+                            </div>
+                        )
+                    )}
+                    {activeTab === "trg" && (
+                        <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
+                            No triggers yet.
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -333,7 +386,7 @@ export const TableNodeComponent = memo(function TableNodeComponent({ id, data: r
                 </div>
 
                 {/* Footer */}
-                <TableFooter nodeId={id} />
+                <TableFooter nodeId={id} data={data} />
 
                 {/* Handles */}
                 <NodeHandles />

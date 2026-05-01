@@ -5,6 +5,7 @@ import { auth } from "@/features/authentication/lib/auth-server";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
 import { DataModel } from "../../../../prisma/generated";
 import { CreateDataModelSchema, createDataModelSchema, createWorkspaceSchema } from "../types/workspace.schema";
+import { createActivityLog } from "@/features/activity/applications/activity.action";
 
 
 export async function isWorkspaceSlugExists(slug: string): Promise<boolean> {
@@ -296,6 +297,20 @@ export async function createDataModel(workspaceSlug: string, data: CreateDataMod
             return model;
         });
 
+        const session = await auth.getSession();
+        if (session.data?.user) {
+            await createActivityLog({
+                dataModelId: dataModel.id,
+                userId: session.data.user.id,
+                action: `Created data model "${dataModel.name}"`,
+                details: {
+                    type: "create",
+                    category: "General",
+                    target: dataModel.name
+                }
+            });
+        }
+
         return {
             success: true,
             data: dataModel,
@@ -439,6 +454,20 @@ export async function togglePinDataModel(id: string): Promise<ActionResponse<Dat
             data: { isPinned: !model.isPinned }
         });
 
+        const session = await auth.getSession();
+        if (session.data?.user) {
+            await createActivityLog({
+                dataModelId: id,
+                userId: session.data.user.id,
+                action: `${updated.isPinned ? 'Pinned' : 'Unpinned'} data model "${model.name}"`,
+                details: {
+                    type: "update",
+                    category: "General",
+                    target: model.name
+                }
+            });
+        }
+
         return { success: true, data: updated };
     } catch (error) {
         return handleActionError(error);
@@ -453,6 +482,20 @@ export async function toggleVisibilityDataModel(id: string): Promise<ActionRespo
             where: { id },
             data: { isPublic: !model.isPublic }
         });
+
+        const session = await auth.getSession();
+        if (session.data?.user) {
+            await createActivityLog({
+                dataModelId: id,
+                userId: session.data.user.id,
+                action: `Changed visibility of data model "${model.name}" to ${updated.isPublic ? 'Public' : 'Private'}`,
+                details: {
+                    type: "update",
+                    category: "General",
+                    target: model.name
+                }
+            });
+        }
 
         return { success: true, data: updated };
     } catch (error) {

@@ -5,6 +5,7 @@ import type { CanvasSlice } from "./canvas-slice";
 export interface WorkspaceSlice {
   workspaces: Record<string, { nodes: Node[]; edges: Edge[]; viewport: Viewport }>;
   swapWorkspace: (fromId: string | null, toId: string) => void;
+  setWorkspaceData: (id: string, data: { nodes: Node[]; edges: Edge[] }) => void;
 }
 
 export const createWorkspaceSlice: StateCreator<
@@ -38,4 +39,25 @@ export const createWorkspaceSlice: StateCreator<
       isDirty: false,
     });
   },
+  
+  setWorkspaceData: (id, { nodes, edges }) => {
+    set((state) => {
+      const nextWorkspaces = {
+        ...state.workspaces,
+        [id]: { 
+          ...state.workspaces[id], 
+          nodes, 
+          edges, 
+          viewport: state.workspaces[id]?.viewport || { x: 0, y: 0, zoom: 1 } 
+        }
+      };
+      
+      return {
+        workspaces: nextWorkspaces,
+        nodes: nodes,
+        edges: edges,
+        isDirty: false,
+      };
+    });
+  }
 });
