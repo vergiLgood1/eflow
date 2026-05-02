@@ -6,7 +6,7 @@ import {
     CollapsibleTrigger,
 } from "@/shared/components/ui/collapsible";
 import { cn } from "@/shared/lib/utils";
-import { ChevronRight, Eye, EyeOff, Plus, Table2 } from "lucide-react";
+import { ChevronRight, Eye, EyeOff, Table2, Trash2 } from "lucide-react";
 import React from "react";
 
 interface ModelSidebarTableProps {
@@ -15,6 +15,7 @@ interface ModelSidebarTableProps {
     onToggle?: () => void;
     isHidden?: boolean;
     onToggleVisibility?: () => void;
+    onDelete?: () => void;
     children?: React.ReactNode;
 }
 
@@ -24,6 +25,7 @@ export function ModelSidebarTable({
     onToggle,
     isHidden = false,
     onToggleVisibility,
+    onDelete,
     children,
 }: ModelSidebarTableProps) {
     return (
@@ -54,10 +56,7 @@ export function ModelSidebarTable({
                         </span>
                     </div>
                 </CollapsibleTrigger>
-                <div className="ml-auto flex shrink-0 items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="opacity-30 cursor-not-allowed" disabled title="Add section">
-                        <Plus className="h-3.5 w-3.5" />
-                    </button>
+                <div className="ml-auto flex shrink-0 items-center gap-1.5  transition-opacity">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -75,6 +74,18 @@ export function ModelSidebarTable({
                             <Eye className="h-3.5 w-3.5" />
                         )}
                     </button>
+                    {onDelete && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete();
+                            }}
+                            className="cursor-pointer transition-colors p-0.5 rounded bg-destructive/10 text-destructive"
+                            title="Delete table"
+                        >
+                            <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                    )}
                 </div>
             </div>
             <CollapsibleContent className="ml-5 mt-0.5 space-y-0.5 pb-2 border-l border-border/40 pl-2">

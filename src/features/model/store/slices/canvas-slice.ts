@@ -119,20 +119,20 @@ export const createCanvasSlice: StateCreator<
       const targetNode = nodes.find(n => n.id === connection.target);
       
       if (sourceNode && targetNode && cardinality !== "n:m") {
-        const targetPk = (targetNode.data as any)?.columns?.find((c: any) => c.isPk);
-        const targetName = (targetNode.data as any)?.name || "table";
-        const fkName = `${targetName.toLowerCase()}_${targetPk?.name || 'id'}`;
+        const sourcePk = (sourceNode.data as any)?.columns?.find((c: any) => c.isPk);
+        const sourceName = (sourceNode.data as any)?.name || "table";
+        const fkName = `${sourceName.toLowerCase()}_${sourcePk?.name || 'id'}`;
         
-        // Check if FK column already exists in source table
-        const existingFk = (sourceNode.data as any)?.columns?.find((c: any) => 
-          c.name === fkName || (c.isFk && c.name.includes(targetName.toLowerCase()))
+        // Check if FK column already exists in target table
+        const existingFk = (targetNode.data as any)?.columns?.find((c: any) => 
+          c.name === fkName || (c.isFk && c.name.includes(sourceName.toLowerCase()))
         );
 
         if (!existingFk) {
           const newFkColumn = {
             id: crypto.randomUUID(),
             name: fkName,
-            type: targetPk?.type || "INT",
+            type: sourcePk?.type || "INT",
             nullable: cardinality.startsWith("0"),
             isPk: false,
             isFk: true,
@@ -140,26 +140,32 @@ export const createCanvasSlice: StateCreator<
             defaultValue: undefined,
           };
 
-          const updatedSourceColumns = [...(sourceNode.data as any)?.columns || [], newFkColumn];
-          get().updateNodeData(connection.source, { columns: updatedSourceColumns });
+          const updatedTargetColumns = [...(targetNode.data as any)?.columns || [], newFkColumn];
+          get().updateNodeData(connection.target, { columns: updatedTargetColumns });
         }
       }
     }
 
     set({
-      edges: addEdge(
-        {
-          ...connection,
-          type: "relationship",
-          data: { cardinality },
-          markerStart,
-          markerEnd,
-        },
-        edges
-      ),
       isDirty: true,
       activeTool: "select",
     });
+
+    setTimeout(() => {
+      set({
+        edges: addEdge(
+          {
+            ...connection,
+            type: "relationship",
+            data: { cardinality },
+            markerStart,
+            markerEnd,
+          },
+          get().edges
+        ),
+        isDirty: true,
+      });
+    }, 250);
   },
 
   setNodes: (nodes) => set({ nodes }),
@@ -258,56 +264,64 @@ export const createCanvasSlice: StateCreator<
         },
       };
 
-      // Create edges: source → junction, junction → target
+      // Create edges: source → junction, target → junction
       const edge1 = {
         id: crypto.randomUUID(),
         source: pendingConnectionSourceId,
         target: junctionId,
+        sourceHandle: `${sourcePk?.id || ""}-source`,
+        targetHandle: `${junctionTable.data.columns[1].id}-target`,
         type: "relationship" as const,
         data: { cardinality: "1:n" as const, fkName: sourceFkName },
       };
       const edge2 = {
         id: crypto.randomUUID(),
-        source: junctionId,
-        target: id,
+        source: id,
+        target: junctionId,
+        sourceHandle: `${targetPk?.id || ""}-source`,
+        targetHandle: `${junctionTable.data.columns[2].id}-target`,
         type: "relationship" as const,
         data: { cardinality: "1:n" as const, fkName: targetFkName },
       };
 
       get().saveToHistory();
       
-      // Create new edges array with both edges
-      const newEdges = [...edges, edge1, edge2];
-      
       set({
         nodes: [...nodes, junctionTable],
-        edges: newEdges,
         pendingConnectionSourceId: null,
         activeTool: "select",
         isDirty: true,
       });
+
+      setTimeout(() => {
+        set({
+          edges: [...get().edges, edge1, edge2],
+          isDirty: true,
+        });
+      }, 250);
+
       return;
     }
 
-    // Handle non-n:m relationships - auto-create FK column in source table
-    const targetPk = (targetNode.data as any)?.columns?.find((c: any) => c.isPk);
-    const targetPkId = targetPk?.id || "";
-    const targetName = (targetNode.data as any)?.name || "table";
-    const fkName = `${targetName.toLowerCase()}_${targetPk?.name || 'id'}`;
+    // Handle non-n:m relationships - auto-create FK column in target table
+    const sourcePk = (sourceNode.data as any)?.columns?.find((c: any) => c.isPk);
+    const sourcePkId = sourcePk?.id || "";
+    const sourceName = (sourceNode.data as any)?.name || "table";
+    const fkName = `${sourceName.toLowerCase()}_${sourcePk?.name || 'id'}`;
     
     // Check if FK column already exists
-    const existingFk = (sourceNode.data as any)?.columns?.find((c: any) => 
-      c.name === fkName || (c.isFk && c.name.includes(targetName.toLowerCase()))
+    const existingFk = (targetNode.data as any)?.columns?.find((c: any) => 
+      c.name === fkName || (c.isFk && c.name.includes(sourceName.toLowerCase()))
     );
 
-    let sourceFkId = existingFk?.id;
+    let targetFkId = existingFk?.id;
     
     // Create FK column if it doesn't exist
     if (!existingFk) {
       const newFkColumn = {
         id: crypto.randomUUID(),
         name: fkName,
-        type: targetPk?.type || "INT",
+        type: sourcePk?.type || "INT",
         nullable: cardinality.startsWith("0"),
         isPk: false,
         isFk: true,
@@ -315,10 +329,10 @@ export const createCanvasSlice: StateCreator<
         defaultValue: undefined,
       };
 
-      // Add FK column to source table
-      const updatedSourceColumns = [...(sourceNode.data as any)?.columns || [], newFkColumn];
-      get().updateNodeData(pendingConnectionSourceId, { columns: updatedSourceColumns });
-      sourceFkId = newFkColumn.id;
+      // Add FK column to target table
+      const updatedTargetColumns = [...(targetNode.data as any)?.columns || [], newFkColumn];
+      get().updateNodeData(id, { columns: updatedTargetColumns });
+      targetFkId = newFkColumn.id;
     }
 
     // Create edge with FK column reference
@@ -326,19 +340,27 @@ export const createCanvasSlice: StateCreator<
 
     get().saveToHistory();
     set({
-      edges: addEdge({
-        id: crypto.randomUUID(),
-        source: pendingConnectionSourceId,
-        target: id,
-        type: "relationship",
-        data: { cardinality: finalCardinality, fkName: fkName },
-        markerStart,
-        markerEnd,
-      }, edges),
       pendingConnectionSourceId: null,
       activeTool: "select",
       isDirty: true,
     });
+
+    setTimeout(() => {
+      set({
+        edges: addEdge({
+          id: crypto.randomUUID(),
+          source: pendingConnectionSourceId,
+          target: id,
+          sourceHandle: `${sourcePkId}-source`,
+          targetHandle: `${targetFkId}-target`,
+          type: "relationship",
+          data: { cardinality: finalCardinality, fkName: fkName },
+          markerStart,
+          markerEnd,
+        }, get().edges),
+        isDirty: true,
+      });
+    }, 250);
   },
 
   addNode: (node) => {

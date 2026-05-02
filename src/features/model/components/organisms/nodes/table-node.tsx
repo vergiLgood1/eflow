@@ -18,7 +18,7 @@ import {
     TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 import { cn } from "@/shared/lib/utils";
-import { Handle, NodeProps, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position, useUpdateNodeInternals } from "@xyflow/react";
 import { Database, Link2, Pencil, Plus, Table2, Trash2, Zap } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { EntityActionsBox } from "./entity-actions-box";
@@ -94,6 +94,7 @@ const ActionButton = ({
 
 const ColumnRow = ({ nodeId, column }: { nodeId: string; column: ColumnData }) => {
     const { removeColumn } = useTableActions();
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     return (
         <div className="group/col flex items-center gap-2 px-2.5 py-1 text-xs hover:bg-foreground/5 cursor-pointer transition">
@@ -120,24 +121,61 @@ const ColumnRow = ({ nodeId, column }: { nodeId: string; column: ColumnData }) =
                     <ColumnConfigPopover nodeId={nodeId} column={column} onClose={() => { }} />
                 </ActionButton>
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 hover:bg-destructive/10 hover:text-destructive"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                removeColumn(nodeId, column.id);
-                            }}
-                        >
-                            <Trash2 className="h-3 w-3" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-[10px] py-1 px-2">
-                        Delete column
-                    </TooltipContent>
-                </Tooltip>
+                {column.isFk ? (
+                    <Popover open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 hover:bg-destructive/10 hover:text-destructive"
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-56 p-3 shadow-xl border-border/50" side="right" align="center" sideOffset={10}>
+                            <div className="space-y-3">
+                                <div className="space-y-1">
+                                    <p className="text-[12px] font-semibold text-destructive flex items-center gap-2">
+                                        <Trash2 className="h-3 w-3" /> Confirm Delete
+                                    </p>
+                                    <p className="text-[10px] text-muted-foreground leading-snug">
+                                        Deleting this FK column will also remove its relationship.
+                                    </p>
+                                </div>
+                                <div className="flex justify-end gap-2 pt-2 border-t border-border/20">
+                                    <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2" onClick={() => setIsConfirmOpen(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="destructive" size="sm" className="h-6 text-[10px] px-2" onClick={() => {
+                                        removeColumn(nodeId, column.id);
+                                        setIsConfirmOpen(false);
+                                    }}>
+                                        Delete
+                                    </Button>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                ) : (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 hover:bg-destructive/10 hover:text-destructive"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeColumn(nodeId, column.id);
+                                }}
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="text-[10px] py-1 px-2">
+                            Delete column
+                        </TooltipContent>
+                    </Tooltip>
+                )}
             </div>
 
             {/* Handles */}
@@ -161,6 +199,8 @@ const TableFooter = ({ nodeId, data }: { nodeId: string; data: TableNodeData }) 
     const [isFkPopoverOpen, setIsFkPopoverOpen] = useState(false);
     const [isIdxPopoverOpen, setIsIdxPopoverOpen] = useState(false);
     const edges = useCanvasStore((s) => s.edges);
+    const nodes = useCanvasStore((s) => s.nodes);
+    const removeNode = useCanvasStore((s) => s.removeNode);
 
     const activeTabData = FOOTER_TABS.find(tab => tab.id === activeTab);
 
@@ -175,7 +215,7 @@ const TableFooter = ({ nodeId, data }: { nodeId: string; data: TableNodeData }) 
     return (
         <div className="w-full border-t border-border/50 bg-foreground/5 rounded-b-[6px] flex flex-col overflow-hidden transition-all duration-300 ease-in-out">
             {/* Tabs Header */}
-            <div className="flex h-9 items-center gap-1 px-2 bg-background/5 border-b border-border/10">
+            <div className="flex h-9 items-center justify-between gap-1 px-2 bg-background/5 border-b border-border/10">
                 {FOOTER_TABS.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -196,8 +236,6 @@ const TableFooter = ({ nodeId, data }: { nodeId: string; data: TableNodeData }) 
                         </Button>
                     );
                 })}
-
-                <div className="flex-1" />
 
                 {activeTab && (
                     <div className="flex items-center">
@@ -259,17 +297,45 @@ const TableFooter = ({ nodeId, data }: { nodeId: string; data: TableNodeData }) 
                     {activeTab === "fk" && (
                         fkEdges.length > 0 ? (
                             <div className="space-y-1 mx-1">
-                                {fkEdges.map(edge => (
-                                    <div key={edge.id} className="px-2 py-1.5 text-[11px] border border-border/40 rounded bg-foreground/2 flex items-center gap-2">
-                                        <Link2 className="h-3 w-3 text-muted-foreground shrink-0" />
-                                        <span className="truncate">
-                                            {edge.source === nodeId ? `-> ${edge.target}` : `<- ${edge.source}`}
-                                        </span>
-                                        <span className="text-[9px] text-muted-foreground ml-auto">
-                                            {(edge.data as Record<string, unknown>)?.cardinality as string || "1:n"}
-                                        </span>
-                                    </div>
-                                ))}
+                                {fkEdges.map(edge => {
+                                    const isSource = edge.source === nodeId;
+                                    const otherNodeId = isSource ? edge.target : edge.source;
+                                    const otherNode = nodes.find(n => n.id === otherNodeId);
+                                    const otherName = (otherNode?.data as TableNodeData)?.name || otherNodeId;
+                                    const fkData = edge.data as Record<string, unknown> | undefined;
+                                    const fkName = fkData?.fkName as string | undefined;
+                                    const cardinality = (fkData?.cardinality as string) || "1:n";
+
+                                    return (
+                                        <div key={edge.id} className="px-2 py-1.5 text-[11px] border border-border/40 rounded bg-foreground/2 flex items-center gap-2 group/fk">
+                                            <Link2 className="h-3 w-3 text-muted-foreground shrink-0" />
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="truncate font-medium text-foreground/90">
+                                                        {otherName}
+                                                    </span>
+                                                    <span className={cn(
+                                                        "text-[8px] px-1 rounded-sm border leading-3 shrink-0 font-bold",
+                                                        isSource 
+                                                            ? "bg-blue-500/10 text-blue-500 border-blue-500/20" 
+                                                            : "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                                                    )}>
+                                                        {isSource ? "REF" : "BY"}
+                                                    </span>
+                                                </div>
+                                                {fkName && (
+                                                    <div className="text-[9px] text-muted-foreground/60 truncate italic mt-0.5">
+                                                        via {fkName}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <span className="text-[9px] text-muted-foreground ml-auto font-mono bg-foreground/5 px-1 rounded shrink-0">
+                                                {cardinality}
+                                            </span>
+                                            
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="px-2 py-3 text-[11px] text-muted-foreground italic border border-dashed border-border/40 rounded mx-1 bg-foreground/2">
@@ -312,6 +378,12 @@ export const TableNodeComponent = memo(function TableNodeComponent({ id, data: r
     const data = rawData as TableNodeData;
     const { updateNodeData } = useCanvasStore();
     const [isPropertiesOpen, setIsPropertiesOpen] = useState(data.isEditing ?? false);
+    const updateNodeInternals = useUpdateNodeInternals();
+
+    // Trigger handle recalculation when columns change
+    useEffect(() => {
+        updateNodeInternals(id);
+    }, [data.columns?.length, (data.hiddenColumns as string[] | undefined)?.length, id, updateNodeInternals]);
 
     // Clear the flag after picking it up
     useEffect(() => {

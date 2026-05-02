@@ -2,7 +2,7 @@
 
 import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { isTableNode } from "../../types/canvas";
 import { ModelSearchInput } from "../molecules/model-search-input";
@@ -14,6 +14,7 @@ export function ModelSidebar() {
     const nodes = useCanvasStore((s) => s.nodes);
     const updateNode = useCanvasStore((s) => s.updateNode);
     const updateNodeData = useCanvasStore((s) => s.updateNodeData);
+    const removeNode = useCanvasStore((s) => s.removeNode);
     
     const tableNodes = nodes.filter(isTableNode);
 
@@ -76,6 +77,7 @@ export function ModelSidebar() {
                                     onToggle={() => toggleTableExpansion(node.id)}
                                     isHidden={node.hidden}
                                     onToggleVisibility={() => toggleTableVisibility(node.id, !!node.hidden)}
+                                    onDelete={() => removeNode(node.id)}
                                 >
                                     <ModelSidebarSection title="Columns">
                                         {node.data.columns?.map((col) => (

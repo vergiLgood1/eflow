@@ -76,6 +76,18 @@ export function useTableActions() {
             ...data,
             columns: data.columns.filter((column) => column.id !== columnId),
         });
+
+        // Also remove associated edges
+        const edges = useCanvasStore.getState().edges;
+        const setEdges = useCanvasStore.getState().setEdges;
+        const updatedEdges = edges.filter(edge => 
+            edge.sourceHandle !== `${columnId}-source` && 
+            edge.targetHandle !== `${columnId}-target`
+        );
+        
+        if (updatedEdges.length !== edges.length) {
+            setEdges(updatedEdges);
+        }
     }, [getTableData, updateNodeData]);
 
     const updateTable = useCallback((nodeId: string, updates: Partial<TableNodeData>) => {

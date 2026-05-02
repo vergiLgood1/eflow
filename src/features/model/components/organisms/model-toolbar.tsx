@@ -157,7 +157,7 @@ export function ModelToolbar() {
                 <div className="flex min-w-0 flex-1 items-center gap-1">
                     <ModelSettingsDialog />
                     {dataModelId && <CheckpointDialog dataModelId={dataModelId} />}
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 
                     <ModelToolbarButton
                         tooltip="Cursor"
@@ -226,7 +226,7 @@ export function ModelToolbar() {
                         onClick={() => handleToolClick("group")}
                     />
 
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 
                     <ModelToolbarButton
                         tooltip="Import SQL"
@@ -251,7 +251,7 @@ export function ModelToolbar() {
                         className={isDbmlModeOpen ? ACTIVE_TOOL_CLASS : undefined}
                     />
 
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 
                     <ModelToolbarButton
                         tooltip="Undo (Ctrl+Z)"
@@ -266,7 +266,7 @@ export function ModelToolbar() {
                         disabled={future.length === 0}
                     />
 
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 
                     <ModelToolbarButton
                         tooltip="Zoom In"
@@ -279,7 +279,7 @@ export function ModelToolbar() {
                         onClick={() => zoomOut()}
                     />
 
-                    <Separator orientation="vertical" className="mx-1 h-6" />
+                    <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 
                     <ModelToolbarButton
                         tooltip="Animated Relationships"
@@ -290,7 +290,7 @@ export function ModelToolbar() {
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1">
-                    {/* <Separator orientation="vertical" className="mx-1 h-6" />
+                    {/* <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
                     <ModelToolbarButton tooltip="Share" icon={<Users className="h-4 w-4" />} />
                     <ModelToolbarButton tooltip="Activity" icon={<Clock className="h-4 w-4" />} /> */}
                     {/* <ModelUserAvatar name="Diyo Anggara" /> */}
