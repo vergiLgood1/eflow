@@ -17,7 +17,7 @@ import { useCanvasDebouncedSync } from "../../hooks/use-canvas-debounced-sync";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 import type { GroupNodeData } from "../../types/canvas";
-import { ModelEdgeMarkers } from "../atoms/model-edge-markers";
+import { EdgeMarkerDefinitions as ModelEdgeMarkers } from "../atoms/model-edge-markers";
 import { RelationshipEdgeComponent } from "../atoms/relationship-edge";
 import { CanvasContextMenu } from "./canvas-context-menu";
 import { GroupNodeComponent } from "./nodes/group-node";
