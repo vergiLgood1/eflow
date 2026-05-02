@@ -232,6 +232,7 @@ exports.Prisma.ViewScalarFieldEnum = {
   dataModelId: 'dataModelId',
   name: 'name',
   sql: 'sql',
+  parentId: 'parentId',
   x: 'x',
   y: 'y',
   primaryIdentifier: 'primaryIdentifier',
@@ -279,6 +280,7 @@ exports.Prisma.TableNodeScalarFieldEnum = {
   id: 'id',
   diagramId: 'diagramId',
   tableId: 'tableId',
+  parentId: 'parentId',
   x: 'x',
   y: 'y',
   hiddenColumns: 'hiddenColumns'
@@ -287,8 +289,12 @@ exports.Prisma.TableNodeScalarFieldEnum = {
 exports.Prisma.GroupScalarFieldEnum = {
   id: 'id',
   diagramId: 'diagramId',
+  parentId: 'parentId',
   name: 'name',
+  description: 'description',
   color: 'color',
+  isCollapsed: 'isCollapsed',
+  expandedHeight: 'expandedHeight',
   x: 'x',
   y: 'y',
   width: 'width',
@@ -298,6 +304,7 @@ exports.Prisma.GroupScalarFieldEnum = {
 exports.Prisma.NoteScalarFieldEnum = {
   id: 'id',
   diagramId: 'diagramId',
+  parentId: 'parentId',
   content: 'content',
   x: 'x',
   y: 'y'

@@ -229,6 +229,7 @@ model View {
   dataModelId       String
   name              String
   sql               String
+  parentId          String?
   x                 Float    @default(0)
   y                 Float    @default(0)
   primaryIdentifier String?
@@ -306,6 +307,7 @@ model TableNode {
   id            String   @id @default(uuid())
   diagramId     String
   tableId       String
+  parentId      String?
   x             Float
   y             Float
   hiddenColumns String[] @default([])
@@ -320,13 +322,17 @@ model TableNode {
 
 model Group {
   id        String @id @default(uuid())
-  diagramId String
-  name      String
-  color     String
-  x         Float
-  y         Float
-  width     Float
-  height    Float
+  diagramId      String
+  parentId       String?
+  name           String
+  description    String?
+  color          String
+  isCollapsed    Boolean @default(false)
+  expandedHeight Float?
+  x              Float
+  y              Float
+  width          Float
+  height         Float
 
   diagram Diagram @relation(fields: [diagramId], references: [id], onDelete: Cascade)
 
@@ -337,6 +343,7 @@ model Group {
 model Note {
   id        String @id @default(uuid())
   diagramId String
+  parentId  String?
   content   String
   x         Float
   y         Float

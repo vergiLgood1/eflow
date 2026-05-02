@@ -15910,6 +15910,7 @@ export namespace Prisma {
     dataModelId: string | null
     name: string | null
     sql: string | null
+    parentId: string | null
     x: number | null
     y: number | null
     primaryIdentifier: string | null
@@ -15922,6 +15923,7 @@ export namespace Prisma {
     dataModelId: string | null
     name: string | null
     sql: string | null
+    parentId: string | null
     x: number | null
     y: number | null
     primaryIdentifier: string | null
@@ -15934,6 +15936,7 @@ export namespace Prisma {
     dataModelId: number
     name: number
     sql: number
+    parentId: number
     x: number
     y: number
     primaryIdentifier: number
@@ -15958,6 +15961,7 @@ export namespace Prisma {
     dataModelId?: true
     name?: true
     sql?: true
+    parentId?: true
     x?: true
     y?: true
     primaryIdentifier?: true
@@ -15970,6 +15974,7 @@ export namespace Prisma {
     dataModelId?: true
     name?: true
     sql?: true
+    parentId?: true
     x?: true
     y?: true
     primaryIdentifier?: true
@@ -15982,6 +15987,7 @@ export namespace Prisma {
     dataModelId?: true
     name?: true
     sql?: true
+    parentId?: true
     x?: true
     y?: true
     primaryIdentifier?: true
@@ -16081,6 +16087,7 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    parentId: string | null
     x: number
     y: number
     primaryIdentifier: string | null
@@ -16112,6 +16119,7 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     primaryIdentifier?: boolean
@@ -16127,6 +16135,7 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     primaryIdentifier?: boolean
@@ -16140,6 +16149,7 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     primaryIdentifier?: boolean
@@ -16153,6 +16163,7 @@ export namespace Prisma {
     dataModelId?: boolean
     name?: boolean
     sql?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     primaryIdentifier?: boolean
@@ -16160,7 +16171,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ViewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "name" | "sql" | "x" | "y" | "primaryIdentifier" | "createdAt" | "updatedAt", ExtArgs["result"]["view"]>
+  export type ViewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataModelId" | "name" | "sql" | "parentId" | "x" | "y" | "primaryIdentifier" | "createdAt" | "updatedAt", ExtArgs["result"]["view"]>
   export type ViewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dataModel?: boolean | DataModelDefaultArgs<ExtArgs>
     versions?: boolean | View$versionsArgs<ExtArgs>
@@ -16184,6 +16195,7 @@ export namespace Prisma {
       dataModelId: string
       name: string
       sql: string
+      parentId: string | null
       x: number
       y: number
       primaryIdentifier: string | null
@@ -16618,6 +16630,7 @@ export namespace Prisma {
     readonly dataModelId: FieldRef<"View", 'String'>
     readonly name: FieldRef<"View", 'String'>
     readonly sql: FieldRef<"View", 'String'>
+    readonly parentId: FieldRef<"View", 'String'>
     readonly x: FieldRef<"View", 'Float'>
     readonly y: FieldRef<"View", 'Float'>
     readonly primaryIdentifier: FieldRef<"View", 'String'>
@@ -20579,6 +20592,7 @@ export namespace Prisma {
     id: string | null
     diagramId: string | null
     tableId: string | null
+    parentId: string | null
     x: number | null
     y: number | null
   }
@@ -20587,6 +20601,7 @@ export namespace Prisma {
     id: string | null
     diagramId: string | null
     tableId: string | null
+    parentId: string | null
     x: number | null
     y: number | null
   }
@@ -20595,6 +20610,7 @@ export namespace Prisma {
     id: number
     diagramId: number
     tableId: number
+    parentId: number
     x: number
     y: number
     hiddenColumns: number
@@ -20616,6 +20632,7 @@ export namespace Prisma {
     id?: true
     diagramId?: true
     tableId?: true
+    parentId?: true
     x?: true
     y?: true
   }
@@ -20624,6 +20641,7 @@ export namespace Prisma {
     id?: true
     diagramId?: true
     tableId?: true
+    parentId?: true
     x?: true
     y?: true
   }
@@ -20632,6 +20650,7 @@ export namespace Prisma {
     id?: true
     diagramId?: true
     tableId?: true
+    parentId?: true
     x?: true
     y?: true
     hiddenColumns?: true
@@ -20728,6 +20747,7 @@ export namespace Prisma {
     id: string
     diagramId: string
     tableId: string
+    parentId: string | null
     x: number
     y: number
     hiddenColumns: string[]
@@ -20756,6 +20776,7 @@ export namespace Prisma {
     id?: boolean
     diagramId?: boolean
     tableId?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     hiddenColumns?: boolean
@@ -20767,6 +20788,7 @@ export namespace Prisma {
     id?: boolean
     diagramId?: boolean
     tableId?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     hiddenColumns?: boolean
@@ -20778,6 +20800,7 @@ export namespace Prisma {
     id?: boolean
     diagramId?: boolean
     tableId?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     hiddenColumns?: boolean
@@ -20789,12 +20812,13 @@ export namespace Prisma {
     id?: boolean
     diagramId?: boolean
     tableId?: boolean
+    parentId?: boolean
     x?: boolean
     y?: boolean
     hiddenColumns?: boolean
   }
 
-  export type TableNodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "tableId" | "x" | "y" | "hiddenColumns", ExtArgs["result"]["tableNode"]>
+  export type TableNodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "tableId" | "parentId" | "x" | "y" | "hiddenColumns", ExtArgs["result"]["tableNode"]>
   export type TableNodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
     table?: boolean | TableDefaultArgs<ExtArgs>
@@ -20818,6 +20842,7 @@ export namespace Prisma {
       id: string
       diagramId: string
       tableId: string
+      parentId: string | null
       x: number
       y: number
       hiddenColumns: string[]
@@ -21249,6 +21274,7 @@ export namespace Prisma {
     readonly id: FieldRef<"TableNode", 'String'>
     readonly diagramId: FieldRef<"TableNode", 'String'>
     readonly tableId: FieldRef<"TableNode", 'String'>
+    readonly parentId: FieldRef<"TableNode", 'String'>
     readonly x: FieldRef<"TableNode", 'Float'>
     readonly y: FieldRef<"TableNode", 'Float'>
     readonly hiddenColumns: FieldRef<"TableNode", 'String[]'>
@@ -21684,6 +21710,7 @@ export namespace Prisma {
   }
 
   export type GroupAvgAggregateOutputType = {
+    expandedHeight: number | null
     x: number | null
     y: number | null
     width: number | null
@@ -21691,6 +21718,7 @@ export namespace Prisma {
   }
 
   export type GroupSumAggregateOutputType = {
+    expandedHeight: number | null
     x: number | null
     y: number | null
     width: number | null
@@ -21700,8 +21728,12 @@ export namespace Prisma {
   export type GroupMinAggregateOutputType = {
     id: string | null
     diagramId: string | null
+    parentId: string | null
     name: string | null
+    description: string | null
     color: string | null
+    isCollapsed: boolean | null
+    expandedHeight: number | null
     x: number | null
     y: number | null
     width: number | null
@@ -21711,8 +21743,12 @@ export namespace Prisma {
   export type GroupMaxAggregateOutputType = {
     id: string | null
     diagramId: string | null
+    parentId: string | null
     name: string | null
+    description: string | null
     color: string | null
+    isCollapsed: boolean | null
+    expandedHeight: number | null
     x: number | null
     y: number | null
     width: number | null
@@ -21722,8 +21758,12 @@ export namespace Prisma {
   export type GroupCountAggregateOutputType = {
     id: number
     diagramId: number
+    parentId: number
     name: number
+    description: number
     color: number
+    isCollapsed: number
+    expandedHeight: number
     x: number
     y: number
     width: number
@@ -21733,6 +21773,7 @@ export namespace Prisma {
 
 
   export type GroupAvgAggregateInputType = {
+    expandedHeight?: true
     x?: true
     y?: true
     width?: true
@@ -21740,6 +21781,7 @@ export namespace Prisma {
   }
 
   export type GroupSumAggregateInputType = {
+    expandedHeight?: true
     x?: true
     y?: true
     width?: true
@@ -21749,8 +21791,12 @@ export namespace Prisma {
   export type GroupMinAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     name?: true
+    description?: true
     color?: true
+    isCollapsed?: true
+    expandedHeight?: true
     x?: true
     y?: true
     width?: true
@@ -21760,8 +21806,12 @@ export namespace Prisma {
   export type GroupMaxAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     name?: true
+    description?: true
     color?: true
+    isCollapsed?: true
+    expandedHeight?: true
     x?: true
     y?: true
     width?: true
@@ -21771,8 +21821,12 @@ export namespace Prisma {
   export type GroupCountAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     name?: true
+    description?: true
     color?: true
+    isCollapsed?: true
+    expandedHeight?: true
     x?: true
     y?: true
     width?: true
@@ -21869,8 +21923,12 @@ export namespace Prisma {
   export type GroupGroupByOutputType = {
     id: string
     diagramId: string
+    parentId: string | null
     name: string
+    description: string | null
     color: string
+    isCollapsed: boolean
+    expandedHeight: number | null
     x: number
     y: number
     width: number
@@ -21899,8 +21957,12 @@ export namespace Prisma {
   export type GroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     name?: boolean
+    description?: boolean
     color?: boolean
+    isCollapsed?: boolean
+    expandedHeight?: boolean
     x?: boolean
     y?: boolean
     width?: boolean
@@ -21911,8 +21973,12 @@ export namespace Prisma {
   export type GroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     name?: boolean
+    description?: boolean
     color?: boolean
+    isCollapsed?: boolean
+    expandedHeight?: boolean
     x?: boolean
     y?: boolean
     width?: boolean
@@ -21923,8 +21989,12 @@ export namespace Prisma {
   export type GroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     name?: boolean
+    description?: boolean
     color?: boolean
+    isCollapsed?: boolean
+    expandedHeight?: boolean
     x?: boolean
     y?: boolean
     width?: boolean
@@ -21935,15 +22005,19 @@ export namespace Prisma {
   export type GroupSelectScalar = {
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     name?: boolean
+    description?: boolean
     color?: boolean
+    isCollapsed?: boolean
+    expandedHeight?: boolean
     x?: boolean
     y?: boolean
     width?: boolean
     height?: boolean
   }
 
-  export type GroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "name" | "color" | "x" | "y" | "width" | "height", ExtArgs["result"]["group"]>
+  export type GroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "parentId" | "name" | "description" | "color" | "isCollapsed" | "expandedHeight" | "x" | "y" | "width" | "height", ExtArgs["result"]["group"]>
   export type GroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
   }
@@ -21962,8 +22036,12 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       diagramId: string
+      parentId: string | null
       name: string
+      description: string | null
       color: string
+      isCollapsed: boolean
+      expandedHeight: number | null
       x: number
       y: number
       width: number
@@ -22394,8 +22472,12 @@ export namespace Prisma {
   interface GroupFieldRefs {
     readonly id: FieldRef<"Group", 'String'>
     readonly diagramId: FieldRef<"Group", 'String'>
+    readonly parentId: FieldRef<"Group", 'String'>
     readonly name: FieldRef<"Group", 'String'>
+    readonly description: FieldRef<"Group", 'String'>
     readonly color: FieldRef<"Group", 'String'>
+    readonly isCollapsed: FieldRef<"Group", 'Boolean'>
+    readonly expandedHeight: FieldRef<"Group", 'Float'>
     readonly x: FieldRef<"Group", 'Float'>
     readonly y: FieldRef<"Group", 'Float'>
     readonly width: FieldRef<"Group", 'Float'>
@@ -22844,6 +22926,7 @@ export namespace Prisma {
   export type NoteMinAggregateOutputType = {
     id: string | null
     diagramId: string | null
+    parentId: string | null
     content: string | null
     x: number | null
     y: number | null
@@ -22852,6 +22935,7 @@ export namespace Prisma {
   export type NoteMaxAggregateOutputType = {
     id: string | null
     diagramId: string | null
+    parentId: string | null
     content: string | null
     x: number | null
     y: number | null
@@ -22860,6 +22944,7 @@ export namespace Prisma {
   export type NoteCountAggregateOutputType = {
     id: number
     diagramId: number
+    parentId: number
     content: number
     x: number
     y: number
@@ -22880,6 +22965,7 @@ export namespace Prisma {
   export type NoteMinAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     content?: true
     x?: true
     y?: true
@@ -22888,6 +22974,7 @@ export namespace Prisma {
   export type NoteMaxAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     content?: true
     x?: true
     y?: true
@@ -22896,6 +22983,7 @@ export namespace Prisma {
   export type NoteCountAggregateInputType = {
     id?: true
     diagramId?: true
+    parentId?: true
     content?: true
     x?: true
     y?: true
@@ -22991,6 +23079,7 @@ export namespace Prisma {
   export type NoteGroupByOutputType = {
     id: string
     diagramId: string
+    parentId: string | null
     content: string
     x: number
     y: number
@@ -23018,6 +23107,7 @@ export namespace Prisma {
   export type NoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     content?: boolean
     x?: boolean
     y?: boolean
@@ -23027,6 +23117,7 @@ export namespace Prisma {
   export type NoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     content?: boolean
     x?: boolean
     y?: boolean
@@ -23036,6 +23127,7 @@ export namespace Prisma {
   export type NoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     content?: boolean
     x?: boolean
     y?: boolean
@@ -23045,12 +23137,13 @@ export namespace Prisma {
   export type NoteSelectScalar = {
     id?: boolean
     diagramId?: boolean
+    parentId?: boolean
     content?: boolean
     x?: boolean
     y?: boolean
   }
 
-  export type NoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "content" | "x" | "y", ExtArgs["result"]["note"]>
+  export type NoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "diagramId" | "parentId" | "content" | "x" | "y", ExtArgs["result"]["note"]>
   export type NoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     diagram?: boolean | DiagramDefaultArgs<ExtArgs>
   }
@@ -23069,6 +23162,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       diagramId: string
+      parentId: string | null
       content: string
       x: number
       y: number
@@ -23498,6 +23592,7 @@ export namespace Prisma {
   interface NoteFieldRefs {
     readonly id: FieldRef<"Note", 'String'>
     readonly diagramId: FieldRef<"Note", 'String'>
+    readonly parentId: FieldRef<"Note", 'String'>
     readonly content: FieldRef<"Note", 'String'>
     readonly x: FieldRef<"Note", 'Float'>
     readonly y: FieldRef<"Note", 'Float'>
@@ -29574,6 +29669,7 @@ export namespace Prisma {
     dataModelId: 'dataModelId',
     name: 'name',
     sql: 'sql',
+    parentId: 'parentId',
     x: 'x',
     y: 'y',
     primaryIdentifier: 'primaryIdentifier',
@@ -29633,6 +29729,7 @@ export namespace Prisma {
     id: 'id',
     diagramId: 'diagramId',
     tableId: 'tableId',
+    parentId: 'parentId',
     x: 'x',
     y: 'y',
     hiddenColumns: 'hiddenColumns'
@@ -29644,8 +29741,12 @@ export namespace Prisma {
   export const GroupScalarFieldEnum: {
     id: 'id',
     diagramId: 'diagramId',
+    parentId: 'parentId',
     name: 'name',
+    description: 'description',
     color: 'color',
+    isCollapsed: 'isCollapsed',
+    expandedHeight: 'expandedHeight',
     x: 'x',
     y: 'y',
     width: 'width',
@@ -29658,6 +29759,7 @@ export namespace Prisma {
   export const NoteScalarFieldEnum: {
     id: 'id',
     diagramId: 'diagramId',
+    parentId: 'parentId',
     content: 'content',
     x: 'x',
     y: 'y'
@@ -30657,6 +30759,7 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    parentId?: StringNullableFilter<"View"> | string | null
     x?: FloatFilter<"View"> | number
     y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
@@ -30671,6 +30774,7 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     primaryIdentifier?: SortOrderInput | SortOrder
@@ -30688,6 +30792,7 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    parentId?: StringNullableFilter<"View"> | string | null
     x?: FloatFilter<"View"> | number
     y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
@@ -30702,6 +30807,7 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     primaryIdentifier?: SortOrderInput | SortOrder
@@ -30722,6 +30828,7 @@ export namespace Prisma {
     dataModelId?: StringWithAggregatesFilter<"View"> | string
     name?: StringWithAggregatesFilter<"View"> | string
     sql?: StringWithAggregatesFilter<"View"> | string
+    parentId?: StringNullableWithAggregatesFilter<"View"> | string | null
     x?: FloatWithAggregatesFilter<"View"> | number
     y?: FloatWithAggregatesFilter<"View"> | number
     primaryIdentifier?: StringNullableWithAggregatesFilter<"View"> | string | null
@@ -30976,6 +31083,7 @@ export namespace Prisma {
     id?: StringFilter<"TableNode"> | string
     diagramId?: StringFilter<"TableNode"> | string
     tableId?: StringFilter<"TableNode"> | string
+    parentId?: StringNullableFilter<"TableNode"> | string | null
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
     hiddenColumns?: StringNullableListFilter<"TableNode">
@@ -30987,6 +31095,7 @@ export namespace Prisma {
     id?: SortOrder
     diagramId?: SortOrder
     tableId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     hiddenColumns?: SortOrder
@@ -31002,6 +31111,7 @@ export namespace Prisma {
     NOT?: TableNodeWhereInput | TableNodeWhereInput[]
     diagramId?: StringFilter<"TableNode"> | string
     tableId?: StringFilter<"TableNode"> | string
+    parentId?: StringNullableFilter<"TableNode"> | string | null
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
     hiddenColumns?: StringNullableListFilter<"TableNode">
@@ -31013,6 +31123,7 @@ export namespace Prisma {
     id?: SortOrder
     diagramId?: SortOrder
     tableId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     hiddenColumns?: SortOrder
@@ -31030,6 +31141,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"TableNode"> | string
     diagramId?: StringWithAggregatesFilter<"TableNode"> | string
     tableId?: StringWithAggregatesFilter<"TableNode"> | string
+    parentId?: StringNullableWithAggregatesFilter<"TableNode"> | string | null
     x?: FloatWithAggregatesFilter<"TableNode"> | number
     y?: FloatWithAggregatesFilter<"TableNode"> | number
     hiddenColumns?: StringNullableListFilter<"TableNode">
@@ -31041,8 +31153,12 @@ export namespace Prisma {
     NOT?: GroupWhereInput | GroupWhereInput[]
     id?: StringFilter<"Group"> | string
     diagramId?: StringFilter<"Group"> | string
+    parentId?: StringNullableFilter<"Group"> | string | null
     name?: StringFilter<"Group"> | string
+    description?: StringNullableFilter<"Group"> | string | null
     color?: StringFilter<"Group"> | string
+    isCollapsed?: BoolFilter<"Group"> | boolean
+    expandedHeight?: FloatNullableFilter<"Group"> | number | null
     x?: FloatFilter<"Group"> | number
     y?: FloatFilter<"Group"> | number
     width?: FloatFilter<"Group"> | number
@@ -31053,8 +31169,12 @@ export namespace Prisma {
   export type GroupOrderByWithRelationInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
     color?: SortOrder
+    isCollapsed?: SortOrder
+    expandedHeight?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -31068,8 +31188,12 @@ export namespace Prisma {
     OR?: GroupWhereInput[]
     NOT?: GroupWhereInput | GroupWhereInput[]
     diagramId?: StringFilter<"Group"> | string
+    parentId?: StringNullableFilter<"Group"> | string | null
     name?: StringFilter<"Group"> | string
+    description?: StringNullableFilter<"Group"> | string | null
     color?: StringFilter<"Group"> | string
+    isCollapsed?: BoolFilter<"Group"> | boolean
+    expandedHeight?: FloatNullableFilter<"Group"> | number | null
     x?: FloatFilter<"Group"> | number
     y?: FloatFilter<"Group"> | number
     width?: FloatFilter<"Group"> | number
@@ -31080,8 +31204,12 @@ export namespace Prisma {
   export type GroupOrderByWithAggregationInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
     color?: SortOrder
+    isCollapsed?: SortOrder
+    expandedHeight?: SortOrderInput | SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -31099,8 +31227,12 @@ export namespace Prisma {
     NOT?: GroupScalarWhereWithAggregatesInput | GroupScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Group"> | string
     diagramId?: StringWithAggregatesFilter<"Group"> | string
+    parentId?: StringNullableWithAggregatesFilter<"Group"> | string | null
     name?: StringWithAggregatesFilter<"Group"> | string
+    description?: StringNullableWithAggregatesFilter<"Group"> | string | null
     color?: StringWithAggregatesFilter<"Group"> | string
+    isCollapsed?: BoolWithAggregatesFilter<"Group"> | boolean
+    expandedHeight?: FloatNullableWithAggregatesFilter<"Group"> | number | null
     x?: FloatWithAggregatesFilter<"Group"> | number
     y?: FloatWithAggregatesFilter<"Group"> | number
     width?: FloatWithAggregatesFilter<"Group"> | number
@@ -31113,6 +31245,7 @@ export namespace Prisma {
     NOT?: NoteWhereInput | NoteWhereInput[]
     id?: StringFilter<"Note"> | string
     diagramId?: StringFilter<"Note"> | string
+    parentId?: StringNullableFilter<"Note"> | string | null
     content?: StringFilter<"Note"> | string
     x?: FloatFilter<"Note"> | number
     y?: FloatFilter<"Note"> | number
@@ -31122,6 +31255,7 @@ export namespace Prisma {
   export type NoteOrderByWithRelationInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     content?: SortOrder
     x?: SortOrder
     y?: SortOrder
@@ -31134,6 +31268,7 @@ export namespace Prisma {
     OR?: NoteWhereInput[]
     NOT?: NoteWhereInput | NoteWhereInput[]
     diagramId?: StringFilter<"Note"> | string
+    parentId?: StringNullableFilter<"Note"> | string | null
     content?: StringFilter<"Note"> | string
     x?: FloatFilter<"Note"> | number
     y?: FloatFilter<"Note"> | number
@@ -31143,6 +31278,7 @@ export namespace Prisma {
   export type NoteOrderByWithAggregationInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     content?: SortOrder
     x?: SortOrder
     y?: SortOrder
@@ -31159,6 +31295,7 @@ export namespace Prisma {
     NOT?: NoteScalarWhereWithAggregatesInput | NoteScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Note"> | string
     diagramId?: StringWithAggregatesFilter<"Note"> | string
+    parentId?: StringNullableWithAggregatesFilter<"Note"> | string | null
     content?: StringWithAggregatesFilter<"Note"> | string
     x?: FloatWithAggregatesFilter<"Note"> | number
     y?: FloatWithAggregatesFilter<"Note"> | number
@@ -32283,6 +32420,7 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -32297,6 +32435,7 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -32309,6 +32448,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32323,6 +32463,7 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32336,6 +32477,7 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -32347,6 +32489,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32359,6 +32502,7 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32637,6 +32781,7 @@ export namespace Prisma {
 
   export type TableNodeCreateInput = {
     id?: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -32648,6 +32793,7 @@ export namespace Prisma {
     id?: string
     diagramId: string
     tableId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -32655,6 +32801,7 @@ export namespace Prisma {
 
   export type TableNodeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -32666,6 +32813,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
     tableId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -32675,6 +32823,7 @@ export namespace Prisma {
     id?: string
     diagramId: string
     tableId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -32682,6 +32831,7 @@ export namespace Prisma {
 
   export type TableNodeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -32691,6 +32841,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
     tableId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -32698,8 +32849,12 @@ export namespace Prisma {
 
   export type GroupCreateInput = {
     id?: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -32710,8 +32865,12 @@ export namespace Prisma {
   export type GroupUncheckedCreateInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -32720,8 +32879,12 @@ export namespace Prisma {
 
   export type GroupUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -32732,8 +32895,12 @@ export namespace Prisma {
   export type GroupUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -32743,8 +32910,12 @@ export namespace Prisma {
   export type GroupCreateManyInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -32753,8 +32924,12 @@ export namespace Prisma {
 
   export type GroupUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -32764,8 +32939,12 @@ export namespace Prisma {
   export type GroupUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -32774,6 +32953,7 @@ export namespace Prisma {
 
   export type NoteCreateInput = {
     id?: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -32783,6 +32963,7 @@ export namespace Prisma {
   export type NoteUncheckedCreateInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -32790,6 +32971,7 @@ export namespace Prisma {
 
   export type NoteUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -32799,6 +32981,7 @@ export namespace Prisma {
   export type NoteUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -32807,6 +32990,7 @@ export namespace Prisma {
   export type NoteCreateManyInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -32814,6 +32998,7 @@ export namespace Prisma {
 
   export type NoteUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -32822,6 +33007,7 @@ export namespace Prisma {
   export type NoteUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -33883,6 +34069,7 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
     primaryIdentifier?: SortOrder
@@ -33900,6 +34087,7 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
     primaryIdentifier?: SortOrder
@@ -33912,6 +34100,7 @@ export namespace Prisma {
     dataModelId?: SortOrder
     name?: SortOrder
     sql?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
     primaryIdentifier?: SortOrder
@@ -34129,6 +34318,7 @@ export namespace Prisma {
     id?: SortOrder
     diagramId?: SortOrder
     tableId?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
     hiddenColumns?: SortOrder
@@ -34143,6 +34333,7 @@ export namespace Prisma {
     id?: SortOrder
     diagramId?: SortOrder
     tableId?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
   }
@@ -34151,6 +34342,7 @@ export namespace Prisma {
     id?: SortOrder
     diagramId?: SortOrder
     tableId?: SortOrder
+    parentId?: SortOrder
     x?: SortOrder
     y?: SortOrder
   }
@@ -34160,11 +34352,26 @@ export namespace Prisma {
     y?: SortOrder
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type GroupCountOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     color?: SortOrder
+    isCollapsed?: SortOrder
+    expandedHeight?: SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -34172,6 +34379,7 @@ export namespace Prisma {
   }
 
   export type GroupAvgOrderByAggregateInput = {
+    expandedHeight?: SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -34181,8 +34389,12 @@ export namespace Prisma {
   export type GroupMaxOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     color?: SortOrder
+    isCollapsed?: SortOrder
+    expandedHeight?: SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -34192,8 +34404,12 @@ export namespace Prisma {
   export type GroupMinOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     color?: SortOrder
+    isCollapsed?: SortOrder
+    expandedHeight?: SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
@@ -34201,15 +34417,33 @@ export namespace Prisma {
   }
 
   export type GroupSumOrderByAggregateInput = {
+    expandedHeight?: SortOrder
     x?: SortOrder
     y?: SortOrder
     width?: SortOrder
     height?: SortOrder
   }
 
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NoteCountOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     content?: SortOrder
     x?: SortOrder
     y?: SortOrder
@@ -34223,6 +34457,7 @@ export namespace Prisma {
   export type NoteMaxOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     content?: SortOrder
     x?: SortOrder
     y?: SortOrder
@@ -34231,6 +34466,7 @@ export namespace Prisma {
   export type NoteMinOrderByAggregateInput = {
     id?: SortOrder
     diagramId?: SortOrder
+    parentId?: SortOrder
     content?: SortOrder
     x?: SortOrder
     y?: SortOrder
@@ -35859,6 +36095,14 @@ export namespace Prisma {
     connect?: DiagramWhereUniqueInput
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DiagramUpdateOneRequiredWithoutGroupsNestedInput = {
     create?: XOR<DiagramCreateWithoutGroupsInput, DiagramUncheckedCreateWithoutGroupsInput>
     connectOrCreate?: DiagramCreateOrConnectWithoutGroupsInput
@@ -36301,6 +36545,22 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -36791,6 +37051,7 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -36803,6 +37064,7 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -37079,6 +37341,7 @@ export namespace Prisma {
     dataModelId?: StringFilter<"View"> | string
     name?: StringFilter<"View"> | string
     sql?: StringFilter<"View"> | string
+    parentId?: StringNullableFilter<"View"> | string | null
     x?: FloatFilter<"View"> | number
     y?: FloatFilter<"View"> | number
     primaryIdentifier?: StringNullableFilter<"View"> | string | null
@@ -37522,6 +37785,7 @@ export namespace Prisma {
 
   export type TableNodeCreateWithoutTableInput = {
     id?: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -37531,6 +37795,7 @@ export namespace Prisma {
   export type TableNodeUncheckedCreateWithoutTableInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -37737,6 +38002,7 @@ export namespace Prisma {
     id?: StringFilter<"TableNode"> | string
     diagramId?: StringFilter<"TableNode"> | string
     tableId?: StringFilter<"TableNode"> | string
+    parentId?: StringNullableFilter<"TableNode"> | string | null
     x?: FloatFilter<"TableNode"> | number
     y?: FloatFilter<"TableNode"> | number
     hiddenColumns?: StringNullableListFilter<"TableNode">
@@ -38738,6 +39004,7 @@ export namespace Prisma {
 
   export type TableNodeCreateWithoutDiagramInput = {
     id?: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -38747,6 +39014,7 @@ export namespace Prisma {
   export type TableNodeUncheckedCreateWithoutDiagramInput = {
     id?: string
     tableId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -38764,8 +39032,12 @@ export namespace Prisma {
 
   export type GroupCreateWithoutDiagramInput = {
     id?: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -38774,8 +39046,12 @@ export namespace Prisma {
 
   export type GroupUncheckedCreateWithoutDiagramInput = {
     id?: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -38794,6 +39070,7 @@ export namespace Prisma {
 
   export type NoteCreateWithoutDiagramInput = {
     id?: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -38801,6 +39078,7 @@ export namespace Prisma {
 
   export type NoteUncheckedCreateWithoutDiagramInput = {
     id?: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -38905,8 +39183,12 @@ export namespace Prisma {
     NOT?: GroupScalarWhereInput | GroupScalarWhereInput[]
     id?: StringFilter<"Group"> | string
     diagramId?: StringFilter<"Group"> | string
+    parentId?: StringNullableFilter<"Group"> | string | null
     name?: StringFilter<"Group"> | string
+    description?: StringNullableFilter<"Group"> | string | null
     color?: StringFilter<"Group"> | string
+    isCollapsed?: BoolFilter<"Group"> | boolean
+    expandedHeight?: FloatNullableFilter<"Group"> | number | null
     x?: FloatFilter<"Group"> | number
     y?: FloatFilter<"Group"> | number
     width?: FloatFilter<"Group"> | number
@@ -38935,6 +39217,7 @@ export namespace Prisma {
     NOT?: NoteScalarWhereInput | NoteScalarWhereInput[]
     id?: StringFilter<"Note"> | string
     diagramId?: StringFilter<"Note"> | string
+    parentId?: StringNullableFilter<"Note"> | string | null
     content?: StringFilter<"Note"> | string
     x?: FloatFilter<"Note"> | number
     y?: FloatFilter<"Note"> | number
@@ -39616,6 +39899,7 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -39629,6 +39913,7 @@ export namespace Prisma {
     dataModelId: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -39720,6 +40005,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39733,6 +40019,7 @@ export namespace Prisma {
     dataModelId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40003,6 +40290,7 @@ export namespace Prisma {
     id?: string
     name: string
     sql: string
+    parentId?: string | null
     x?: number
     y?: number
     primaryIdentifier?: string | null
@@ -40130,6 +40418,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40142,6 +40431,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40154,6 +40444,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sql?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     primaryIdentifier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40334,6 +40625,7 @@ export namespace Prisma {
   export type TableNodeCreateManyTableInput = {
     id?: string
     diagramId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -40457,6 +40749,7 @@ export namespace Prisma {
 
   export type TableNodeUpdateWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40466,6 +40759,7 @@ export namespace Prisma {
   export type TableNodeUncheckedUpdateWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40474,6 +40768,7 @@ export namespace Prisma {
   export type TableNodeUncheckedUpdateManyWithoutTableInput = {
     id?: StringFieldUpdateOperationsInput | string
     diagramId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40699,6 +40994,7 @@ export namespace Prisma {
   export type TableNodeCreateManyDiagramInput = {
     id?: string
     tableId: string
+    parentId?: string | null
     x: number
     y: number
     hiddenColumns?: TableNodeCreatehiddenColumnsInput | string[]
@@ -40706,8 +41002,12 @@ export namespace Prisma {
 
   export type GroupCreateManyDiagramInput = {
     id?: string
+    parentId?: string | null
     name: string
+    description?: string | null
     color: string
+    isCollapsed?: boolean
+    expandedHeight?: number | null
     x: number
     y: number
     width: number
@@ -40716,6 +41016,7 @@ export namespace Prisma {
 
   export type NoteCreateManyDiagramInput = {
     id?: string
+    parentId?: string | null
     content: string
     x: number
     y: number
@@ -40723,6 +41024,7 @@ export namespace Prisma {
 
   export type TableNodeUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40732,6 +41034,7 @@ export namespace Prisma {
   export type TableNodeUncheckedUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40740,6 +41043,7 @@ export namespace Prisma {
   export type TableNodeUncheckedUpdateManyWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     hiddenColumns?: TableNodeUpdatehiddenColumnsInput | string[]
@@ -40747,8 +41051,12 @@ export namespace Prisma {
 
   export type GroupUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -40757,8 +41065,12 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -40767,8 +41079,12 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateManyWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     color?: StringFieldUpdateOperationsInput | string
+    isCollapsed?: BoolFieldUpdateOperationsInput | boolean
+    expandedHeight?: NullableFloatFieldUpdateOperationsInput | number | null
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
     width?: FloatFieldUpdateOperationsInput | number
@@ -40777,6 +41093,7 @@ export namespace Prisma {
 
   export type NoteUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -40784,6 +41101,7 @@ export namespace Prisma {
 
   export type NoteUncheckedUpdateWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number
@@ -40791,6 +41109,7 @@ export namespace Prisma {
 
   export type NoteUncheckedUpdateManyWithoutDiagramInput = {
     id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     x?: FloatFieldUpdateOperationsInput | number
     y?: FloatFieldUpdateOperationsInput | number

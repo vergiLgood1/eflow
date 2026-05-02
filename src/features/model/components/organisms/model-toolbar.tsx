@@ -10,7 +10,6 @@ import {
     CodeXml,
     Download,
     FileCode,
-    Layers,
     MousePointer2,
     Plus,
     Redo2,
@@ -30,8 +29,8 @@ import { useWorkspaceStore } from "../../store/use-workspace-store";
 import type { CanvasNode, CanvasTool, RelationshipEdge } from "../../types/canvas";
 import { ModelRelationIcon } from "../atoms/model-relation-icon";
 import { ModelToolbarButton } from "../atoms/model-toolbar-button";
-import { ModelSettingsDialog } from "./model-settings-dialog";
 import { CheckpointDialog } from "./checkpoint-dialog";
+import { ModelSettingsDialog } from "./model-settings-dialog";
 
 const ACTIVE_TOOL_CLASS =
     "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80";
@@ -219,12 +218,12 @@ export function ModelToolbar() {
                         className={activeTool === "note" ? ACTIVE_TOOL_CLASS : undefined}
                         onClick={() => handleToolClick("note")}
                     />
-                    <ModelToolbarButton
+                    {/* <ModelToolbarButton
                         tooltip="Group (click canvas to place)"
                         icon={<Layers className="h-4 w-4" />}
                         className={activeTool === "group" ? ACTIVE_TOOL_CLASS : undefined}
                         onClick={() => handleToolClick("group")}
-                    />
+                    /> */}
 
                     <Separator orientation="vertical" className="flex items-center mx-1 my-2" />
 

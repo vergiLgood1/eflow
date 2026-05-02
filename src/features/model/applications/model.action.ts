@@ -143,8 +143,8 @@ export async function syncModelSchema(
                 });
                 await tx.tableNode.upsert({
                     where: { diagramId_tableId: { diagramId, tableId: node.id } },
-                    update: { x: node.position.x, y: node.position.y, hiddenColumns: data.hiddenColumns ?? [] },
-                    create: { diagramId, tableId: node.id, x: node.position.x, y: node.position.y, hiddenColumns: data.hiddenColumns ?? [] },
+                    update: { x: node.position.x, y: node.position.y, parentId: node.parentId ?? null, hiddenColumns: data.hiddenColumns ?? [] },
+                    create: { diagramId, tableId: node.id, x: node.position.x, y: node.position.y, parentId: node.parentId ?? null, hiddenColumns: data.hiddenColumns ?? [] },
                 });
 
                 if (!existingTableIdSet.has(node.id)) {
@@ -232,7 +232,7 @@ export async function syncModelSchema(
             await tx.view.deleteMany({ where: { dataModelId } });
             const allViews = incomingViewNodes.map(node => {
                 const data = node.data as ViewNodeData;
-                return { id: node.id, dataModelId, name: data.name, sql: data.query || "", x: node.position.x, y: node.position.y };
+                return { id: node.id, dataModelId, parentId: node.parentId ?? null, name: data.name, sql: data.query || "", x: node.position.x, y: node.position.y };
             });
             if (allViews.length > 0) {
                 await tx.view.createMany({ data: allViews });
@@ -249,10 +249,11 @@ export async function syncModelSchema(
             const allGroups = incomingGroupNodes.map(node => {
                 const data = node.data as GroupNodeData;
                 return {
-                    id: node.id, diagramId, name: data.name, color: data.color || "#ffffff",
+                    id: node.id, diagramId, parentId: node.parentId ?? null, name: data.name, description: data.description ?? null, color: data.color || "#ffffff",
+                    isCollapsed: data.isCollapsed ?? false, expandedHeight: data.expandedHeight ?? null,
                     x: node.position.x, y: node.position.y,
-                    width: (node as Record<string, unknown>).width as number ?? (node.measured?.width ?? 200),
-                    height: (node as Record<string, unknown>).height as number ?? (node.measured?.height ?? 150),
+                    width: (node.style?.width as number) ?? (node as Record<string, unknown>).width as number ?? (node.measured?.width ?? 200),
+                    height: (node.style?.height as number) ?? (node as Record<string, unknown>).height as number ?? (node.measured?.height ?? 150),
                 };
             });
             if (allGroups.length > 0) {
@@ -263,7 +264,7 @@ export async function syncModelSchema(
             await tx.note.deleteMany({ where: { diagramId } });
             const allNotes = incomingNoteNodes.map(node => {
                 const data = node.data as NoteNodeData;
-                return { id: node.id, diagramId, content: data.content, x: node.position.x, y: node.position.y };
+                return { id: node.id, diagramId, parentId: node.parentId ?? null, content: data.content, x: node.position.x, y: node.position.y };
             });
             if (allNotes.length > 0) {
                 await tx.note.createMany({ data: allNotes });
@@ -346,6 +347,7 @@ export async function getModelDiagram(
                 id: tn.tableId,
                 type: "table",
                 position: { x: tn.x, y: tn.y },
+                parentId: tn.parentId ?? undefined,
                 data: {
                     name: tn.table.name,
                     color: tn.table.color ?? undefined,
@@ -380,6 +382,7 @@ export async function getModelDiagram(
                 id: view.id,
                 type: "view",
                 position: { x: view.x, y: view.y },
+                parentId: view.parentId ?? undefined,
                 data: {
                     name: view.name,
                     query: view.sql,
@@ -393,10 +396,15 @@ export async function getModelDiagram(
                 id: group.id,
                 type: "group",
                 position: { x: group.x, y: group.y },
+                parentId: group.parentId ?? undefined,
+                style: { width: group.width, height: group.height },
                 measured: { width: group.width, height: group.height },
                 data: {
                     name: group.name,
+                    description: group.description ?? undefined,
                     color: group.color,
+                    isCollapsed: group.isCollapsed,
+                    expandedHeight: group.expandedHeight ?? undefined,
                 } as GroupNodeData,
             });
         }
@@ -407,6 +415,7 @@ export async function getModelDiagram(
                 id: note.id,
                 type: "note",
                 position: { x: note.x, y: note.y },
+                parentId: note.parentId ?? undefined,
                 data: {
                     content: note.content,
                 } as NoteNodeData,

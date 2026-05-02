@@ -26,7 +26,16 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
     // In-place editing name
     const [isEditingName, setIsEditingName] = useState(data.isEditing || false);
-    const [editName, setEditName] = useState(data.name);
+    const [editName, setEditName] = useState(data.name || "Group");
+
+    // Sync local state when data changes externally (e.g., from properties popover)
+    useEffect(() => {
+        setEditName(data.name || "Group");
+    }, [data.name]);
+
+    useEffect(() => {
+        setTempDescription(data.description || "");
+    }, [data.description]);
 
     // Auto-focus logic for new groups
     useEffect(() => {
@@ -38,9 +47,12 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
     }, [data.isEditing, id, updateNodeData]);
 
     const handleNameSave = () => {
+        if (!isEditingName) return;
         setIsEditingName(false);
         if (editName.trim() && editName !== data.name) {
             updateNodeData(id, { name: editName.trim() });
+        } else {
+            setEditName(data.name || "Group");
         }
     };
 
@@ -66,8 +78,13 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
     ];
 
     const handleDescriptionSubmit = () => {
-        updateNodeData(id, { description: tempDescription });
+        if (!isEditingDescription) return;
         setIsEditingDescription(false);
+        if (tempDescription !== data.description) {
+            updateNodeData(id, { description: tempDescription });
+        } else {
+            setTempDescription(data.description || "");
+        }
     };
 
     const handleDeleteOnlyGroup = () => {
@@ -140,7 +157,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
         <TooltipProvider delayDuration={0}>
             <div
                 className={cn(
-                    "group/node relative h-full w-full overflow-hidden rounded-md border-2 transition-all duration-200",
+                    "group/node relative h-full w-full rounded-md border-2 transition-all duration-200",
                     selected ? "border-primary ring-2 ring-primary/20" : "",
                     isDragOver && "ring-4 scale-[1.01] shadow-2xl z-50"
                 )}
@@ -305,7 +322,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                             {isEditingName ? (
                                 <input
                                     autoFocus
-                                    className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/50 w-full font-semibold p-0 h-auto nodrag"
+                                    className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/50 w-full font-semibold p-0 h-auto nodrag flex items-start"
                                     value={editName}
                                     onChange={(e) => setEditName(e.target.value)}
                                     onBlur={handleNameSave}
@@ -313,7 +330,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                                     onClick={(e) => e.stopPropagation()}
                                 />
                             ) : (
-                                <span className="cursor-text line-clamp-2 items-start flex">
+                                <span className="cursor-text line-clamp-2 flex items-start">
                                     {data.name || "Group"}
                                 </span>
                             )}
@@ -346,8 +363,8 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
                                         className="mt-0.5 line-clamp-2 cursor-text text-[12px] text-muted-foreground hover:text-foreground transition-colors flex items-start"
                                         onDoubleClick={(e) => {
                                             e.stopPropagation();
-                                            setIsEditingDescription(true);
                                             setTempDescription(data.description || "");
+                                            setIsEditingDescription(true);
                                         }}
                                     >
                                         {data.description || "Description (Double click to edit)"}
@@ -360,18 +377,7 @@ export const GroupNodeComponent = memo(({ id, data: rawData, selected }: NodePro
 
                 {/* Content area for nested nodes handled by React Flow */}
                 {!isCollapsed && (
-                    <>
-                        <div className="flex-1 h-full w-full" />
-                        <NodeResizeControl 
-                            position="bottom-right"
-                            className="bg-transparent! border-none! flex items-center justify-center"
-                            style={{ width: 20, height: 20 }}
-                        >
-                            <div className="opacity-30 transition-opacity group-hover/node:opacity-60">
-                                <ArrowDownRight className="h-4 w-4" style={{ color: groupColor }} />
-                            </div>
-                        </NodeResizeControl>
-                    </>
+                    <div className="flex-1 h-full w-full" />
                 )}
             </div>
         </TooltipProvider>
