@@ -8,10 +8,12 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignUpForm() {
+  const router = useRouter();
 
   const {
     register,
@@ -31,6 +33,8 @@ export function SignUpForm() {
       const result = await signUpWithEmail(values);
       if (!result.success) {
         toast.error(result.error);
+      } else if (result.redirectTo) {
+        router.push(result.redirectTo);
       }
     } catch (err) {
       toast.error("An unexpected error occurred.");
@@ -42,6 +46,8 @@ export function SignUpForm() {
       const result = await signInWithGithub();
       if (!result.success) {
         toast.error(result.error);
+      } else if (result.redirectTo) {
+        router.push(result.redirectTo);
       }
     } catch (err) {
       toast.error("Failed to sign up with GitHub.");

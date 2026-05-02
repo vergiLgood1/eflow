@@ -4,7 +4,6 @@ import { registerUser } from "@/features/account/applications/account.action";
 import { SignInSchema, SignUpSchema } from "@/features/authentication/types/auth.schema";
 import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
-import { redirect } from "next/navigation";
 import { auth } from "../lib/auth-server";
 import { forgotPasswordSchema, ForgotPasswordSchema, signInSchema, signUpSchema } from "../types/auth.schema";
 
@@ -21,7 +20,7 @@ export async function signInWithEmail(req: SignInSchema): Promise<ActionResponse
       throw new AppError('Failed to sign in. Try again', 400);
     }
 
-    redirect("/workspaces/onboarding");
+    return { success: true, redirectTo: "/workspaces/onboarding" };
   } catch (error) {
     return handleActionError(error);
   }
@@ -52,7 +51,7 @@ export async function signUpWithEmail(req: SignUpSchema): Promise<ActionResponse
       throw new AppError(userResult.error || "Failed to register user", 400);
     }
 
-    redirect("/workspaces/onboarding");
+    return { success: true, redirectTo: "/workspaces/onboarding" };
   } catch (error) {
     return handleActionError(error);
   }
@@ -69,7 +68,7 @@ export async function signInWithGithub(): Promise<ActionResponse> {
       throw new AppError(error.message || "Failed to sign in with GitHub. Try again", 400);
     }
 
-    redirect("/workspaces/onboarding");
+    return { success: true, redirectTo: "/workspaces/onboarding" };
   } catch (error) {
     return handleActionError(error);
   }
@@ -78,7 +77,7 @@ export async function signInWithGithub(): Promise<ActionResponse> {
 export async function signOut(): Promise<ActionResponse> {
   try {
     await auth.signOut();
-    redirect("/");
+    return { success: true, redirectTo: "/" };
   } catch (error) {
     return handleActionError(error);
   }

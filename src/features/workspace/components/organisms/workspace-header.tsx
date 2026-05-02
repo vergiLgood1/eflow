@@ -56,8 +56,13 @@ export function WorkspaceHeader({
 
     const handleLogout = async () => {
         try {
-            await signOut();
-            toast.success("Logged out successfully");
+            const result = await signOut();
+            if (result.success && result.redirectTo) {
+                router.push(result.redirectTo);
+                toast.success("Logged out successfully");
+            } else if (!result.success) {
+                toast.error(result.error || "Failed to log out");
+            }
         } catch (error) {
             toast.error("Failed to log out");
         }

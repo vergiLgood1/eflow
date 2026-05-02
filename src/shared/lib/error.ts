@@ -9,7 +9,7 @@ export class AppError extends Error {
 }
 
 export type ActionResponse<T = any> = 
-    | { success: true; data?: T; message?: string }
+    | { success: true; data?: T; message?: string; redirectTo?: string }
     | { success: false; error: string };
 
 export function handleError(err: unknown) {
