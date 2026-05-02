@@ -82,6 +82,8 @@ function ModelCanvasInner({ dataModelId, initialNodes = [], initialEdges = [] }:
 
     const nodes = useCanvasStore((s) => s.nodes);
     const edges = useCanvasStore((s) => s.edges);
+    const pendingEdges = useCanvasStore((s) => s.pendingEdges);
+    const flushPendingEdges = useCanvasStore((s) => s.flushPendingEdges);
     const viewport = useCanvasStore((s) => s.viewport);
     const onNodesChange = useCanvasStore((s) => s.onNodesChange);
     const onEdgesChange = useCanvasStore((s) => s.onEdgesChange);
@@ -113,6 +115,13 @@ function ModelCanvasInner({ dataModelId, initialNodes = [], initialEdges = [] }:
             setViewport(viewport);
         }
     }, [activeTabId, setViewport, viewport]);
+
+    // Flush pending edges to allow React Flow to mount handles first
+    useEffect(() => {
+        if (pendingEdges && pendingEdges.length > 0) {
+            flushPendingEdges();
+        }
+    }, [pendingEdges, flushPendingEdges]);
 
 
     // Handle pane click — place node at cursor when a tool is active
