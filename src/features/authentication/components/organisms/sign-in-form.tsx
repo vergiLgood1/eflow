@@ -6,13 +6,15 @@ import { AuthField } from "@/features/authentication/components/molecules/auth-f
 import { signInSchema, SignInSchema } from "@/features/authentication/types/auth.schema";
 import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GitHubIcon } from "@neondatabase/auth/react";
+import { GitHubIcon, GoogleIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignInForm() {
+  const router = useRouter();
 
   const {
     register,
@@ -31,6 +33,12 @@ export function SignInForm() {
       const result = await signInWithEmail(values);
       if (!result.success) {
         toast.error(result.error);
+        return;
+      }
+
+      if (result.redirectTo) {
+        router.push(result.redirectTo);
+        toast.success("Signed in successfully!");
       }
     } catch (err) {
       toast.error("An unexpected error occurred.");
@@ -42,6 +50,11 @@ export function SignInForm() {
       const result = await signInWithGithub();
       if (!result.success) {
         toast.error(result.error);
+        return;
+      }
+
+      if (result.redirectTo) {
+        window.location.href = result.redirectTo;
       }
     } catch (err) {
       toast.error("Failed to sign in with GitHub.");
@@ -94,11 +107,18 @@ export function SignInForm() {
         </div>
       </div>
       <SocialButton
-        disabled={isSubmitting}
+        disabled
         onClick={handleGithubSignIn}
       >
         <GitHubIcon />
-        GitHub
+        Coming soon
+      </SocialButton>
+      <SocialButton
+        disabled
+        onClick={handleGithubSignIn}
+      >
+        <GoogleIcon />
+        Coming soon
       </SocialButton>
     </div>
   );

@@ -6,7 +6,7 @@ import { AuthField } from "@/features/authentication/components/molecules/auth-f
 import { signUpSchema, SignUpSchema } from "@/features/authentication/types/auth.schema";
 import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GitHubIcon } from "@neondatabase/auth/react";
+import { GitHubIcon, GoogleIcon } from "@neondatabase/auth/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -101,11 +101,18 @@ export function SignUpForm() {
         </div>
       </div>
       <SocialButton
-        disabled={isSubmitting}
-        onClick={handleGithubSignUp}
+        disabled
+        onClick={() => { }}
       >
         <GitHubIcon />
-        GitHub
+        Coming soon
+      </SocialButton>
+      <SocialButton
+        disabled
+        onClick={() => { }}
+      >
+        <GoogleIcon />
+        Coming soon
       </SocialButton>
     </div>
   );

@@ -14,7 +14,7 @@ export const MarketingNavbar = () => {
         </div>
         <div className="flex items-center gap-4">
           <MarketingButton href="/auth/sign-in" size="sm" variant="secondary">
-            Get started
+            Sign In
           </MarketingButton>
         </div>
       </div>

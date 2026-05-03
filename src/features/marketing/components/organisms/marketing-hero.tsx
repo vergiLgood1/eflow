@@ -19,8 +19,8 @@ export const MarketingHero = () => {
         title="Design your database schema with speed and precision"
       />
       <div className="mt-2">
-        <MarketingButton href="/signup" showArrow variant="primary">
-          Get started today
+        <MarketingButton href="/auth/sign-up" showArrow variant="primary">
+          Get started 
         </MarketingButton>
       </div>
     </motion.div>
