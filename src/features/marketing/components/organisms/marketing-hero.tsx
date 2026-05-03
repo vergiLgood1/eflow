@@ -1,9 +1,9 @@
-import { MarketingHeroHeading } from "../molecules/marketing-hero-heading";
 import { MarketingButton } from "../atoms/marketing-button";
+import { MarketingHeroHeading } from "../molecules/marketing-hero-heading";
 
 export const MarketingHero = () => {
   return (
-    <div className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6">
+    <div className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6" id="hero">
       <MarketingHeroHeading
         description="Deploy custom AI agents for complex workflows. Focus on strategy while Nova handles the execution."
         title="Scale your operations with autonomous AI agents"

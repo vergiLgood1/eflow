@@ -53,7 +53,7 @@ const faqs = [
 
 export default function MarketingFaq() {
   return (
-    <div className="mx-auto max-w-[1200px] py-14 ">
+    <div className="mx-auto max-w-[1200px] py-14 " id="faqs">
       <h2 className="mt-5 max-w-4xl text-balance font-medium text-4xl leading-[1.1] tracking-[-0.04em]">
         Frequently Asked Questions
       </h2>
