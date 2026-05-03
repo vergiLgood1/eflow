@@ -1,4 +1,7 @@
+"use client";
+
 import { Marquee } from "@/shared/components/ui/marquee";
+import { motion } from "framer-motion";
 
 const LOGOS = [
   "Vertex Core",
@@ -11,7 +14,11 @@ const LOGOS = [
 
 export const MarketingLogoMarquee = () => {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
       className="w-full max-w-[1200px] mx-auto px-6 mt-8 opacity-90 hover:opacity-100 transition-opacity duration-500"
       id="logo-section"
     >
@@ -36,6 +43,6 @@ export const MarketingLogoMarquee = () => {
           <div className="absolute inset-y-0 right-0 w-1/4 bg-linear-to-l from-[rgb(12,12,14)] to-transparent z-10 pointer-events-none" />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

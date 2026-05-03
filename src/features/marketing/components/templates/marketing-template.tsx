@@ -12,7 +12,7 @@ export const MarketingTemplate = () => {
     <div className="bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col w-full relative">
       <MarketingGridBackground />
 
-      <main className="relative z-10 flex-grow">
+      <main className="relative z-10 grow">
         <section
           className="relative flex flex-col items-center justify-center w-full min-h-screen overflow-hidden py-32 px-10"
           id="home"

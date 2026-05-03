@@ -1,65 +1,59 @@
+"use client";
+
 import { cn } from "@/shared/lib/utils";
+import { motion } from "framer-motion";
 
 const faqs = [
   {
-    question: "What is your return policy?",
+    question: "Can I import my existing database?",
     answer:
-      "We offer a 30-day return policy on all unused products. Please ensure the item is in original packaging when returning.",
+      "Yes, EFlow supports importing SQL DDL and DBML files. Simply paste your code or upload a file to instantly visualize your entire schema.",
   },
   {
-    question: "How long does shipping take?",
+    question: "Does it support multiple SQL dialects?",
     answer:
-      "Shipping typically takes 3-7 business days depending on your location.",
+      "Currently, we support PostgreSQL, MySQL, and SQLite dialects for both import and export, ensuring compatibility with your existing stack.",
   },
   {
-    question: "Do you ship internationally?",
+    question: "Is there a limit to how many tables I can design?",
     answer:
-      "Yes, we ship to most countries worldwide. Shipping fees and delivery times vary by destination.",
+      "Our high-performance canvas is optimized to handle thousands of entities without lag, making it perfect for complex enterprise-grade database architectures.",
   },
   {
-    question: "How can I track my order?",
+    question: "How does real-time collaboration work?",
     answer:
-      "After your order is shipped, you'll receive an email with a tracking link. You can also track your order in your account dashboard.",
+      "Much like Figma, you can invite team members to your workspace. You'll see their cursors and changes in real-time as you design and iterate together.",
   },
   {
-    question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards, PayPal, UPI, and net banking.",
-  },
-  {
-    question: "Can I cancel or change my order?",
+    question: "Can I export back to SQL or DBML?",
     answer:
-      "Yes, you can cancel or modify your order within 2 hours of placing it. After that, the order may already be processed for shipment.",
+      "Absolutely. You can export your visual models to production-ready SQL, DBML, or high-resolution images for your technical documentation.",
   },
   {
-    question: "Is my personal information secure?",
+    question: "Is my schema data secure?",
     answer:
-      "Yes, we use industry-standard encryption to ensure your personal and payment information is secure.",
-  },
-  {
-    question: "Do you offer customer support?",
-    answer:
-      "Absolutely. Our support team is available 24/7 via email and chat to help with any issues or questions.",
-  },
-  {
-    question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards, PayPal, UPI, and net banking.",
-  },
-  {
-    question: "Can I cancel or change my order?",
-    answer:
-      "Yes, you can cancel or modify your order within 2 hours of placing it. After that, the order may already be processed for shipment.",
+      "Security is our top priority. We use industry-standard encryption for all stored schemas and offer granular role-based access control for teams.",
   },
 ];
 
 export default function MarketingFaq() {
   return (
-    <div className="mx-auto max-w-[1200px] py-14 " id="faqs">
-      <h2 className="mt-5 max-w-4xl text-balance font-medium text-4xl leading-[1.1] tracking-[-0.04em]">
-        Frequently Asked Questions
-      </h2>
-      <p className="mt-2 text-lg text-muted-foreground sm:text-xl">
-        Find answers to common questions about our products and services.
-      </p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="mx-auto max-w-[1200px] py-14 "
+      id="faqs"
+    >
+      <div className="flex flex-col items-center justify-center gap-2 mb-16">
+        <h2 className="mt-5 max-w-4xl text-balance font-medium text-4xl leading-[1.1] tracking-[-0.04em]">
+          Frequently Asked Questions
+        </h2>
+        <p className="mt-2 text-lg text-muted-foreground sm:text-xl">
+          Find answers to common questions about our products and services.
+        </p>
+      </div>
 
       <div className="mt-8 grid grid-cols-1 gap-1 rounded-lg border border-border/75 bg-muted p-0.75 md:grid-cols-2">
         {faqs.map((faq, index) => (
@@ -84,6 +78,6 @@ export default function MarketingFaq() {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

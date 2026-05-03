@@ -55,7 +55,7 @@ export const MarketingNavDropdown = () => {
               </h5>
               <div className="flex flex-col gap-1">
                 <DropdownItem
-                  title="About Nova"
+                  title="About Eflow"
                   description="Our mission, values, and the team"
                   icon={
                     <svg
@@ -94,7 +94,7 @@ export const MarketingNavDropdown = () => {
                 />
                 <DropdownItem
                   title="Contact Sales"
-                  description="Scale your enterprise with Nova"
+                  description="Scale your enterprise with Eflow"
                   icon={
                     <svg
                       className="w-5 h-5"

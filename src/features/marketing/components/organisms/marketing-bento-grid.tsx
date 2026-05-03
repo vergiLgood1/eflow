@@ -2,9 +2,9 @@
 
 import {
   Database as DatabaseIcon,
-  FileText as FileTextIcon,
+  FileTextIcon,
   History as HistoryIcon,
-  Sparkles as SparklesIcon,
+  SparklesIcon,
   Users as UsersIcon
 } from "lucide-react";
 import { MarketingBentoCard } from "../molecules/marketing-bento-card";
@@ -55,17 +55,23 @@ export const MarketingBentoGrid = () => {
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "Auto-Docs",
-      description: "Instant data dictionaries and documentation generated from your visual designs.",
+      title: "Activity History",
+      description: "Track every change and iteration made to your database schema, with detailed version history and rollback capabilities.",
+      icon: <HistoryIcon className="size-5" />,
+      className: "md:col-span-1 md:row-span-1",
+    },
+    {
+      title: "Export & Integration",
+      description: "Seamlessly export your designs to SQL, DBML, or high-resolution images, and integrate with your favorite tools.",
       icon: <FileTextIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "AI Optimization",
-      description: "Let AI suggest indexing strategies and normalization improvements.",
+      title: "AI Schema Assistant",
+      description: "Get AI-powered suggestions for normalization, indexing, and performance optimization.",
       icon: <SparklesIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
-    },
+    }
   ];
 
   return (

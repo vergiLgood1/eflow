@@ -1,29 +1,37 @@
+"use client";
+
 import { Separator } from "@/shared/components/ui/separator";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { MarketingLogo } from "../atoms/marketing-logo";
 
 const FOOTER_LINKS = {
     Product: [
-        { href: "/pricing", label: "Pricing" },
-        { href: "/features", label: "Features" },
-        { href: "/blog", label: "Blog" },
-        { href: "/contact", label: "Contact" },
+        { href: "#home", label: "Hero", id: 'home' },
+        { href: "#features", label: "Features", id: 'features' },
+        { href: "#faqs", label: "Faqs", id: 'faqs' },
     ],
     Legal: [
-        { href: "/privacy", label: "Privacy Policy" },
-        { href: "/terms", label: "Terms of Service" },
-        { href: "/refunds", label: "Refund Policy" },
+        { href: "", label: "Privacy Policy", id: 'privacy-policy' },
+        { href: "", label: "Terms of Service", id: 'terms-of-service' },
+        { href: "", label: "Refund Policy", id: 'refund-policy' },
     ],
     Connect: [
-        { href: "https://twitter.com/eflow", label: "Twitter / X" },
-        { href: "https://github.com/eflow", label: "GitHub" },
-        { href: "https://linkedin.com/company/eflow", label: "LinkedIn" },
+        { href: "", label: "Discord", id: 'discord' },
+        { href: "", label: "GitHub", id: 'github' },
+        { href: "", label: "LinkedIn", id: 'linkedin' },
     ],
 };
 
 export const Footer = () => {
     return (
-        <footer className="relative bg-background border-t border-border mt-24">
+        <motion.footer
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="relative bg-background border-t border-border mt-24"
+        >
             <div className="mx-auto max-w-[1200px] py-14">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-12">
                     {/* Brand + copyright */}
@@ -48,7 +56,7 @@ export const Footer = () => {
                                 </p>
                                 {links.map((link) => (
                                     <Link
-                                        key={link.href}
+                                        key={link.id}
                                         href={link.href}
                                         className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                                     >
@@ -70,6 +78,6 @@ export const Footer = () => {
                     EFLOW
                 </p>
             </div>
-        </footer>
+        </motion.footer>
     );
 };

@@ -1,18 +1,28 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { MarketingButton } from "../atoms/marketing-button";
 import { MarketingHeroHeading } from "../molecules/marketing-hero-heading";
 
 export const MarketingHero = () => {
   return (
-    <div className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6" id="hero">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6"
+      id="hero"
+    >
       <MarketingHeroHeading
-        description="Deploy custom AI agents for complex workflows. Focus on strategy while Nova handles the execution."
-        title="Scale your operations with autonomous AI agents"
+        description="Transform complex database requirements into elegant visual diagrams. Import SQL, collaborate in real-time, and generate production-ready schemas in seconds."
+        title="Design your database schema with speed and precision"
       />
       <div className="mt-2">
         <MarketingButton href="/signup" showArrow variant="primary">
           Get started today
         </MarketingButton>
       </div>
-    </div>
+    </motion.div>
   );
 };
