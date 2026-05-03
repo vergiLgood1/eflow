@@ -5,6 +5,7 @@ import { Label } from "@/shared/components/ui/label";
 import { cn } from "@/shared/lib/utils";
 import { ReactNode, forwardRef } from "react";
 import { FieldError } from "react-hook-form";
+import { PasswordInput } from "../atoms/password-input";
 
 interface AuthFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -13,7 +14,9 @@ interface AuthFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const AuthField = forwardRef<HTMLInputElement, AuthFieldProps>(
-  ({ label, error, rightElement, id, className, ...props }, ref) => {
+  ({ label, error, rightElement, id, className, type, ...props }, ref) => {
+    const InputComponent = type === "password" ? PasswordInput : Input;
+
     return (
       <div className="grid gap-2">
         <div className="flex items-center justify-between">
@@ -22,9 +25,10 @@ export const AuthField = forwardRef<HTMLInputElement, AuthFieldProps>(
           </Label>
           {rightElement}
         </div>
-        <Input
+        <InputComponent
           id={id}
           ref={ref}
+          type={type}
           className={cn(
             error && "border-destructive focus-visible:ring-destructive",
             className

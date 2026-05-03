@@ -17,7 +17,7 @@ export async function signInWithEmail(req: SignInSchema): Promise<ActionResponse
     });
 
     if (error) {
-      throw new AppError('Failed to sign in. Try again', 400);
+      throw new AppError(error.message || "Failed to sign in. Try again", 400);
     }
 
     return { success: true, redirectTo: "/workspaces/onboarding" };

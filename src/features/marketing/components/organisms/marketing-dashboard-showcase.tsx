@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { MarketingNodeCanvas } from "../molecules/marketing-node-canvas";
 
 export const MarketingDashboardShowcase = () => {
   return (
@@ -11,7 +11,7 @@ export const MarketingDashboardShowcase = () => {
     >
       {/* Background Glows & Effects */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[1200px] h-[600px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]">
+        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[1200px] h-[600px] opacity-40 mask-[radial-gradient(ellipse_at_center,black_20%,transparent_70%)]">
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,#ffffff2a_2px,transparent_2px)] bg-[size:1px_6px] [mask-image:linear-gradient(to_right,black_1px,transparent_1px)] [mask-size:48px_100%]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff2a_2px,transparent_2px)] bg-[size:6px_1px] [mask-image:linear-gradient(to_bottom,black_1px,transparent_1px)] [mask-size:100%_48px]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#ffffff40_1px,transparent_0)] bg-[size:48px_48px]" />
@@ -39,17 +39,11 @@ export const MarketingDashboardShowcase = () => {
         className="relative z-10 w-full h-full bg-card rounded-[14px] p-[1px] shadow-2xl overflow-hidden ring-1 ring-white/10"
       >
         <div className="w-full h-full rounded-[13px] bg-muted overflow-hidden relative group">
-          {/* Dashboard Image */}
-          <Image
-            src="/home/diyoanggara/.gemini/antigravity/brain/ad321057-a819-4deb-9beb-94abf458e072/eflow_dashboard_showcase_1777799868158.png"
-            alt="EFlow Dashboard Interface"
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-            priority
-          />
+          {/* Dashboard Visual (Node Flow) */}
+          <MarketingNodeCanvas />
           
           {/* Overlay for glass effect */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/10 via-transparent to-transparent pointer-events-none" />
           
           {/* Decorative frame light */}
           <div className="absolute inset-0 rounded-[13px] border border-white/5 pointer-events-none" />

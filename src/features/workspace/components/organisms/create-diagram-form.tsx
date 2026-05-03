@@ -174,7 +174,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
       <div className="space-y-2">
         <Label htmlFor="dbType">Database Type</Label>
         <Select
-          disabled={isSubmitting}
+          disabled
           onValueChange={(value) =>
             setValue("dbType", value as CreateDataModelSchema["dbType"], {
               shouldValidate: true,

@@ -33,12 +33,9 @@ export function SignInForm() {
       const result = await signInWithEmail(values);
       if (!result.success) {
         toast.error(result.error);
-        return;
-      }
-
-      if (result.redirectTo) {
-        router.push(result.redirectTo);
+      } else if (result.redirectTo) {
         toast.success("Signed in successfully!");
+        router.push(result.redirectTo);
       }
     } catch (err) {
       toast.error("An unexpected error occurred.");
