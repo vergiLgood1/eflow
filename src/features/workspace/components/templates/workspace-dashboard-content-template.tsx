@@ -9,64 +9,67 @@ import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-heade
 import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
 
 interface WorkspaceDashboardContentTemplateProps {
-    models: DataModel[];
-    workspaces: Workspace[];
+  models: DataModel[];
+  workspaces: Workspace[];
 }
 
-export function WorkspaceDashboardContentTemplate({ models, workspaces }: WorkspaceDashboardContentTemplateProps) {
-    const params = useParams();
-    const slug = params?.slug as string;
-    
-    const [searchQuery, setSearchQuery] = React.useState("");
-    const [debouncedSearch] = useDebounceValue(searchQuery, 300);
-    const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
-    
-    // Hydration handling for persisted zustand store
-    const [isMounted, setIsMounted] = useState(false);
-    const { isBannerVisible, hideBanner } = useWorkspaceStore();
+export function WorkspaceDashboardContentTemplate({
+  models,
+  workspaces,
+}: WorkspaceDashboardContentTemplateProps) {
+  const params = useParams();
+  const slug = params?.slug as string;
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [debouncedSearch] = useDebounceValue(searchQuery, 300);
+  const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
 
-    const filteredModels = models.filter(model => 
-        model.name.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
+  // Hydration handling for persisted zustand store
+  const [isMounted, setIsMounted] = useState(false);
+  const { isBannerVisible, hideBanner } = useWorkspaceStore();
 
-    const currentWorkspace = workspaces.find(w => w.slug === slug);
-    const workspaceName = currentWorkspace?.name || "Workspace";
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-    // Mock subscription data - in real app, this would come from a useSubscription hook
-    const maxModels = 3; 
+  const filteredModels = models.filter((model) =>
+    model.name.toLowerCase().includes(debouncedSearch.toLowerCase()),
+  );
 
-    return (
-        <div className="w-full mx-auto p-6 md:p-10 pb-20">
-            <WorkspaceDashboardHeader 
-                title={workspaceName} 
-                path={`workspaces/${slug}`} 
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-            />
-            
-            {isMounted && isBannerVisible && (
-                <WorkspaceUpgradeBanner
-                    modelCount={models.length}
-                    maxModels={maxModels}
-                    onDismiss={hideBanner}
-                />
-            )}
-            
-            <WorkspaceDiagramList 
-                models={filteredModels} 
-                workspaces={workspaces} 
-                viewMode={viewMode}
-                searchQuery={searchQuery}
-                onClearSearch={() => setSearchQuery("")}
-            />
-            
-            <WorkspaceProUpsellCard />
-        </div>
-    );
+  const currentWorkspace = workspaces.find((w) => w.slug === slug);
+  const workspaceName = currentWorkspace?.name || "Workspace";
+
+  // Mock subscription data - in real app, this would come from a useSubscription hook
+  const maxModels = 3;
+
+  return (
+    <div className="mx-auto w-full p-6 pb-20 md:p-10">
+      <WorkspaceDashboardHeader
+        title={workspaceName}
+        path={`workspaces/${slug}`}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
+
+      {isMounted && isBannerVisible && (
+        <WorkspaceUpgradeBanner
+          modelCount={models.length}
+          maxModels={maxModels}
+          onDismiss={hideBanner}
+        />
+      )}
+
+      <WorkspaceDiagramList
+        models={filteredModels}
+        workspaces={workspaces}
+        viewMode={viewMode}
+        searchQuery={searchQuery}
+        onClearSearch={() => setSearchQuery("")}
+      />
+
+      <WorkspaceProUpsellCard />
+    </div>
+  );
 }

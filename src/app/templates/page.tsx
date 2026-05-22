@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function TemplatesPage() {
-    return <TemplatesLayoutTemplate />;
+  return <TemplatesLayoutTemplate />;
 }

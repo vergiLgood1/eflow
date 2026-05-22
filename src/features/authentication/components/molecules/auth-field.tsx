@@ -31,18 +31,18 @@ export const AuthField = forwardRef<HTMLInputElement, AuthFieldProps>(
           type={type}
           className={cn(
             error && "border-destructive focus-visible:ring-destructive",
-            className
+            className,
           )}
           {...props}
         />
         {error && (
-          <p className="text-xs font-medium text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
+          <p className="text-destructive animate-in fade-in slide-in-from-top-1 text-xs font-medium duration-200">
             {error.message}
           </p>
         )}
       </div>
     );
-  }
+  },
 );
 
 AuthField.displayName = "AuthField";

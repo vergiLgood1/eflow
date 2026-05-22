@@ -8,182 +8,194 @@ import { formatDistanceToNow, subDays } from "date-fns";
 import { enUS } from "date-fns/locale";
 
 interface ActivityFilters {
-    category?: string;
-    time?: string;
+  category?: string;
+  time?: string;
 }
 
 export interface CreateActivityLogParams {
-    dataModelId: string;
-    userId: string;
-    action: string;
-    details: {
-        type: "create" | "update" | "delete";
-        category: string;
-        target: string;
-        changes?: { field: string; oldValue?: any; newValue: any }[];
-    };
+  dataModelId: string;
+  userId: string;
+  action: string;
+  details: {
+    type: "create" | "update" | "delete";
+    category: string;
+    target: string;
+    changes?: { field: string; oldValue?: any; newValue: any }[];
+  };
 }
 
-export async function createActivityLog(params: CreateActivityLogParams): Promise<void> {
-    try {
-        await db.activityLog.create({
-            data: {
-                dataModelId: params.dataModelId,
-                userId: params.userId,
-                action: params.action,
-                details: params.details as any
-            }
-        });
-    } catch (error) {
-        console.error("Error creating activity log:", error);
-        // We don't throw here to avoid failing the main action
-    }
+export async function createActivityLog(
+  params: CreateActivityLogParams,
+): Promise<void> {
+  try {
+    await db.activityLog.create({
+      data: {
+        dataModelId: params.dataModelId,
+        userId: params.userId,
+        action: params.action,
+        details: params.details as any,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating activity log:", error);
+    // We don't throw here to avoid failing the main action
+  }
 }
 
 export async function getActivityLogs(
-    workspaceSlug: string, 
-    filters?: ActivityFilters
+  workspaceSlug: string,
+  filters?: ActivityFilters,
 ): Promise<ActivityItemData[]> {
-    try {
-        const workspace = await db.workspace.findUnique({
-            where: { slug: workspaceSlug },
-            select: { id: true }
-        });
+  try {
+    const workspace = await db.workspace.findUnique({
+      where: { slug: workspaceSlug },
+      select: { id: true },
+    });
 
-        if (!workspace) {
-            throw new AppError("Workspace not found", 404);
-        }
-
-        const where: any = {
-            dataModel: {
-                workspaceId: workspace.id
-            }
-        };
-
-        // Filter by category (which is stored as 'type' in details)
-        if (filters?.category && filters.category !== "all") {
-            where.details = {
-                path: ["type"],
-                equals: filters.category
-            };
-        }
-
-        // Filter by timeframe
-        if (filters?.time && filters.time !== "max") {
-            let date = new Date();
-            if (filters.time === "24h") date = subDays(new Date(), 1);
-            if (filters.time === "7d") date = subDays(new Date(), 7);
-            if (filters.time === "30d") date = subDays(new Date(), 30);
-            
-            where.createdAt = {
-                gte: date
-            };
-        }
-
-        const logs = await db.activityLog.findMany({
-            where,
-            include: {
-                user: true,
-                dataModel: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
-            take: 50 // Limit to latest 50
-        });
-
-        return logs.map(log => {
-            const details = log.details as any;
-            return {
-                id: log.id,
-                user: log.user.name,
-                action: log.action,
-                category: details?.category || "General",
-                target: details?.target || log.dataModel.name,
-                type: (details?.type as any) || "update",
-                relativeTime: formatDistanceToNow(new Date(log.createdAt), { addSuffix: true, locale: enUS }),
-                timestamp: new Date(log.createdAt).toLocaleString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric', 
-                    hour: 'numeric', 
-                    minute: '2-digit' 
-                }),
-                changes: details?.changes || []
-            };
-        });
-    } catch (error) {
-        console.error("Error fetching activity logs:", error);
-        return [];
+    if (!workspace) {
+      throw new AppError("Workspace not found", 404);
     }
+
+    const where: any = {
+      dataModel: {
+        workspaceId: workspace.id,
+      },
+    };
+
+    // Filter by category (which is stored as 'type' in details)
+    if (filters?.category && filters.category !== "all") {
+      where.details = {
+        path: ["type"],
+        equals: filters.category,
+      };
+    }
+
+    // Filter by timeframe
+    if (filters?.time && filters.time !== "max") {
+      let date = new Date();
+      if (filters.time === "24h") date = subDays(new Date(), 1);
+      if (filters.time === "7d") date = subDays(new Date(), 7);
+      if (filters.time === "30d") date = subDays(new Date(), 30);
+
+      where.createdAt = {
+        gte: date,
+      };
+    }
+
+    const logs = await db.activityLog.findMany({
+      where,
+      include: {
+        user: true,
+        dataModel: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 50, // Limit to latest 50
+    });
+
+    return logs.map((log) => {
+      const details = log.details as any;
+      return {
+        id: log.id,
+        user: log.user.name,
+        action: log.action,
+        category: details?.category || "General",
+        target: details?.target || log.dataModel.name,
+        type: (details?.type as any) || "update",
+        relativeTime: formatDistanceToNow(new Date(log.createdAt), {
+          addSuffix: true,
+          locale: enUS,
+        }),
+        timestamp: new Date(log.createdAt).toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        }),
+        changes: details?.changes || [],
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
+    return [];
+  }
 }
 
 export async function getActivityStats(
-    workspaceSlug: string,
-    filters?: ActivityFilters
+  workspaceSlug: string,
+  filters?: ActivityFilters,
 ): Promise<ActivityStats> {
-    try {
-        const workspace = await db.workspace.findUnique({
-            where: { slug: workspaceSlug },
-            select: { id: true }
-        });
+  try {
+    const workspace = await db.workspace.findUnique({
+      where: { slug: workspaceSlug },
+      select: { id: true },
+    });
 
-        if (!workspace) return { total: 0, creations: 0, updates: 0, deletions: 0 };
+    if (!workspace) return { total: 0, creations: 0, updates: 0, deletions: 0 };
 
-        const where: any = {
-            dataModel: {
-                workspaceId: workspace.id
-            }
-        };
+    const where: any = {
+      dataModel: {
+        workspaceId: workspace.id,
+      },
+    };
 
-        // Even for stats, we might want to filter by time
-        if (filters?.time && filters.time !== "max") {
-            let date = new Date();
-            if (filters.time === "24h") date = subDays(new Date(), 1);
-            if (filters.time === "7d") date = subDays(new Date(), 7);
-            if (filters.time === "30d") date = subDays(new Date(), 30);
-            
-            where.createdAt = {
-                gte: date
-            };
-        }
+    // Even for stats, we might want to filter by time
+    if (filters?.time && filters.time !== "max") {
+      let date = new Date();
+      if (filters.time === "24h") date = subDays(new Date(), 1);
+      if (filters.time === "7d") date = subDays(new Date(), 7);
+      if (filters.time === "30d") date = subDays(new Date(), 30);
 
-        const logs = await db.activityLog.findMany({
-            where,
-            select: {
-                action: true,
-                details: true
-            }
-        });
-
-        const stats: ActivityStats = {
-            total: logs.length,
-            creations: logs.filter(l => (l.details as any)?.type === 'create').length,
-            updates: logs.filter(l => (l.details as any)?.type === 'update' || !l.details).length,
-            deletions: logs.filter(l => (l.details as any)?.type === 'delete').length
-        };
-
-        return stats;
-    } catch (error) {
-        return { total: 0, creations: 0, updates: 0, deletions: 0 };
+      where.createdAt = {
+        gte: date,
+      };
     }
+
+    const logs = await db.activityLog.findMany({
+      where,
+      select: {
+        action: true,
+        details: true,
+      },
+    });
+
+    const stats: ActivityStats = {
+      total: logs.length,
+      creations: logs.filter((l) => (l.details as any)?.type === "create")
+        .length,
+      updates: logs.filter(
+        (l) => (l.details as any)?.type === "update" || !l.details,
+      ).length,
+      deletions: logs.filter((l) => (l.details as any)?.type === "delete")
+        .length,
+    };
+
+    return stats;
+  } catch (error) {
+    return { total: 0, creations: 0, updates: 0, deletions: 0 };
+  }
 }
 
-export async function getVersionHistory(objectId: string, type: 'view' | 'trigger' | 'procedure') {
-    try {
-        const where: any = {};
-        if (type === 'view') where.viewId = objectId;
-        if (type === 'trigger') where.triggerId = objectId;
-        if (type === 'procedure') where.procedureId = objectId;
+export async function getVersionHistory(
+  objectId: string,
+  type: "view" | "trigger" | "procedure",
+) {
+  try {
+    const where: any = {};
+    if (type === "view") where.viewId = objectId;
+    if (type === "trigger") where.triggerId = objectId;
+    if (type === "procedure") where.procedureId = objectId;
 
-        return await db.versionHistory.findMany({
-            where,
-            orderBy: {
-                version: 'desc'
-            }
-        });
-    } catch (error) {
-        console.error("Error fetching version history:", error);
-        return [];
-    }
+    return await db.versionHistory.findMany({
+      where,
+      orderBy: {
+        version: "desc",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching version history:", error);
+    return [];
+  }
 }

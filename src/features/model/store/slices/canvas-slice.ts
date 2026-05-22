@@ -110,9 +110,11 @@ export const createCanvasSlice: StateCreator<
     })),
 
   isDbmlModeOpen: false,
-  toggleDbmlMode: () => set((state) => ({ isDbmlModeOpen: !state.isDbmlModeOpen })),
+  toggleDbmlMode: () =>
+    set((state) => ({ isDbmlModeOpen: !state.isDbmlModeOpen })),
 
-  getTableCount: () => get().nodes.filter((node) => node.type === "table").length,
+  getTableCount: () =>
+    get().nodes.filter((node) => node.type === "table").length,
   getViewCount: () => get().nodes.filter((node) => node.type === "view").length,
 
   onNodesChange: (changes) =>
@@ -123,7 +125,8 @@ export const createCanvasSlice: StateCreator<
 
   onConnect: (connection) => {
     const { activeTool, edges, nodes } = get();
-    const { cardinality, markerStart, markerEnd } = getRelationshipConfig(activeTool);
+    const { cardinality, markerStart, markerEnd } =
+      getRelationshipConfig(activeTool);
 
     let finalSourceId = connection.source;
     let finalTargetId = connection.target;
@@ -133,23 +136,30 @@ export const createCanvasSlice: StateCreator<
 
     // Auto-create FK column if dragging from a node
     if (connection.source && connection.target) {
-      const sourceNode = nodes.find(n => n.id === connection.source);
-      const targetNode = nodes.find(n => n.id === connection.target);
-      
+      const sourceNode = nodes.find((n) => n.id === connection.source);
+      const targetNode = nodes.find((n) => n.id === connection.target);
+
       if (sourceNode && targetNode && cardinality !== "n:m") {
-        const { parent, child } = detectRelationshipDependency(sourceNode, targetNode);
-        
+        const { parent, child } = detectRelationshipDependency(
+          sourceNode,
+          targetNode,
+        );
+
         finalSourceId = parent.id;
         finalTargetId = child.id;
 
-        const parentPk = (parent.data as any)?.columns?.find((c: any) => c.isPk);
+        const parentPk = (parent.data as any)?.columns?.find(
+          (c: any) => c.isPk,
+        );
         const parentName = (parent.data as any)?.name || "table";
-        const fkName = `${parentName.toLowerCase()}_${parentPk?.name || 'id'}`;
+        const fkName = `${parentName.toLowerCase()}_${parentPk?.name || "id"}`;
         finalFkName = fkName;
-        
+
         // Check if FK column already exists in child table
-        const existingFk = (child.data as any)?.columns?.find((c: any) => 
-          c.name === fkName || (c.isFk && c.name.includes(parentName.toLowerCase()))
+        const existingFk = (child.data as any)?.columns?.find(
+          (c: any) =>
+            c.name === fkName ||
+            (c.isFk && c.name.includes(parentName.toLowerCase())),
         );
 
         let childFkId = existingFk?.id;
@@ -166,21 +176,28 @@ export const createCanvasSlice: StateCreator<
             defaultValue: undefined,
           };
 
-          const updatedChildColumns = [...(child.data as any)?.columns || [], newFkColumn];
+          const updatedChildColumns = [
+            ...((child.data as any)?.columns || []),
+            newFkColumn,
+          ];
           get().updateNodeData(child.id, { columns: updatedChildColumns });
           childFkId = newFkColumn.id;
         }
 
-        const isGeneralHandle = connection.sourceHandle?.startsWith("source-") || connection.sourceHandle?.startsWith("target-");
-        
+        const isGeneralHandle =
+          connection.sourceHandle?.startsWith("source-") ||
+          connection.sourceHandle?.startsWith("target-");
+
         if (isGeneralHandle) {
-            finalSourceHandle = `${parentPk?.id}-source`;
-            finalTargetHandle = `${childFkId}-target`;
+          finalSourceHandle = `${parentPk?.id}-source`;
+          finalTargetHandle = `${childFkId}-target`;
         } else {
-            if (parent.id !== connection.source) {
-                finalSourceHandle = connection.targetHandle?.replace("-target", "-source") ?? null;
-                finalTargetHandle = connection.sourceHandle?.replace("-source", "-target") ?? null;
-            }
+          if (parent.id !== connection.source) {
+            finalSourceHandle =
+              connection.targetHandle?.replace("-target", "-source") ?? null;
+            finalTargetHandle =
+              connection.sourceHandle?.replace("-source", "-target") ?? null;
+          }
         }
       }
     }
@@ -210,10 +227,12 @@ export const createCanvasSlice: StateCreator<
   setEdges: (edges) => set({ edges }),
   setViewport: (v) => {
     const { viewport } = get();
-    if (v.x === viewport.x && v.y === viewport.y && v.zoom === viewport.zoom) return;
+    if (v.x === viewport.x && v.y === viewport.y && v.zoom === viewport.zoom)
+      return;
     set({ viewport: v });
   },
-  setActiveTool: (tool) => set({ activeTool: tool, pendingConnectionSourceId: null }),
+  setActiveTool: (tool) =>
+    set({ activeTool: tool, pendingConnectionSourceId: null }),
   setDragOverGroupId: (id) => set({ dragOverGroupId: id }),
   toggleAnimation: () => set((state) => ({ isAnimated: !state.isAnimated })),
   markSaved: () => set({ isDirty: false }),
@@ -231,8 +250,8 @@ export const createCanvasSlice: StateCreator<
     if (pendingConnectionSourceId === id) return;
 
     const cardinality = getRelationshipConfig(activeTool).cardinality;
-    const sourceNode = nodes.find(n => n.id === pendingConnectionSourceId);
-    const targetNode = nodes.find(n => n.id === id);
+    const sourceNode = nodes.find((n) => n.id === pendingConnectionSourceId);
+    const targetNode = nodes.find((n) => n.id === id);
 
     if (!sourceNode || !targetNode) return;
 
@@ -241,62 +260,66 @@ export const createCanvasSlice: StateCreator<
       const sourceName = (sourceNode.data as any)?.name || "table1";
       const targetName = (targetNode.data as any)?.name || "table2";
       let junctionTableName = `${sourceName}_${targetName}_junction`;
-      
+
       // Check if junction table name exists, add suffix if needed
       let suffix = 1;
-      while (nodes.some(n => (n.data as any)?.name === junctionTableName)) {
+      while (nodes.some((n) => (n.data as any)?.name === junctionTableName)) {
         junctionTableName = `${sourceName}_${targetName}_junction_${suffix}`;
         suffix++;
       }
-      
+
       const junctionId = crypto.randomUUID();
       const sourceFkName = `${sourceName.toLowerCase()}_id`;
       const targetFkName = `${targetName.toLowerCase()}_id`;
-      
+
       // Get PK columns
-      const sourcePk = (sourceNode.data as any)?.columns?.find((c: any) => c.isPk);
-      const targetPk = (targetNode.data as any)?.columns?.find((c: any) => c.isPk);
-      
+      const sourcePk = (sourceNode.data as any)?.columns?.find(
+        (c: any) => c.isPk,
+      );
+      const targetPk = (targetNode.data as any)?.columns?.find(
+        (c: any) => c.isPk,
+      );
+
       // Create junction table
       const junctionTable = {
         id: junctionId,
         type: "table",
-        position: { 
-          x: (sourceNode.position.x + targetNode.position.x) / 2, 
-          y: (sourceNode.position.y + targetNode.position.y) / 2 
+        position: {
+          x: (sourceNode.position.x + targetNode.position.x) / 2,
+          y: (sourceNode.position.y + targetNode.position.y) / 2,
         },
         data: {
           name: junctionTableName,
           color: "#6b7280",
           columns: [
-            { 
-              id: crypto.randomUUID(), 
-              name: "id", 
-              type: "INT", 
-              isPk: true, 
-              isUnique: true, 
-              isIdx: false, 
-              nullable: false 
+            {
+              id: crypto.randomUUID(),
+              name: "id",
+              type: "INT",
+              isPk: true,
+              isUnique: true,
+              isIdx: false,
+              nullable: false,
             },
-            { 
-              id: crypto.randomUUID(), 
-              name: sourceFkName, 
-              type: sourcePk?.type || "INT", 
-              nullable: false, 
-              isPk: false, 
-              isFk: true, 
-              isUnique: false, 
-              isIdx: false 
+            {
+              id: crypto.randomUUID(),
+              name: sourceFkName,
+              type: sourcePk?.type || "INT",
+              nullable: false,
+              isPk: false,
+              isFk: true,
+              isUnique: false,
+              isIdx: false,
             },
-            { 
-              id: crypto.randomUUID(), 
-              name: targetFkName, 
-              type: targetPk?.type || "INT", 
-              nullable: false, 
-              isPk: false, 
-              isFk: true, 
-              isUnique: false, 
-              isIdx: false 
+            {
+              id: crypto.randomUUID(),
+              name: targetFkName,
+              type: targetPk?.type || "INT",
+              nullable: false,
+              isPk: false,
+              isFk: true,
+              isUnique: false,
+              isIdx: false,
             },
           ],
         },
@@ -323,7 +346,7 @@ export const createCanvasSlice: StateCreator<
       };
 
       get().saveToHistory();
-      
+
       set({
         nodes: [...nodes, junctionTable],
         pendingConnectionSourceId: null,
@@ -336,20 +359,25 @@ export const createCanvasSlice: StateCreator<
     }
 
     // Handle non-n:m relationships - auto-create FK column in CHILD table
-    const { parent, child } = detectRelationshipDependency(sourceNode, targetNode);
-    
+    const { parent, child } = detectRelationshipDependency(
+      sourceNode,
+      targetNode,
+    );
+
     const parentPk = (parent.data as any)?.columns?.find((c: any) => c.isPk);
     const parentPkId = parentPk?.id || "";
     const parentName = (parent.data as any)?.name || "table";
-    const fkName = `${parentName.toLowerCase()}_${parentPk?.name || 'id'}`;
-    
+    const fkName = `${parentName.toLowerCase()}_${parentPk?.name || "id"}`;
+
     // Check if FK column already exists
-    const existingFk = (child.data as any)?.columns?.find((c: any) => 
-      c.name === fkName || (c.isFk && c.name.includes(parentName.toLowerCase()))
+    const existingFk = (child.data as any)?.columns?.find(
+      (c: any) =>
+        c.name === fkName ||
+        (c.isFk && c.name.includes(parentName.toLowerCase())),
     );
 
     let childFkId = existingFk?.id;
-    
+
     // Create FK column if it doesn't exist
     if (!existingFk) {
       const newFkColumn = {
@@ -364,13 +392,20 @@ export const createCanvasSlice: StateCreator<
       };
 
       // Add FK column to child table
-      const updatedChildColumns = [...(child.data as any)?.columns || [], newFkColumn];
+      const updatedChildColumns = [
+        ...((child.data as any)?.columns || []),
+        newFkColumn,
+      ];
       get().updateNodeData(child.id, { columns: updatedChildColumns });
       childFkId = newFkColumn.id;
     }
 
     // Create edge with FK column reference
-    const { cardinality: finalCardinality, markerStart, markerEnd } = getRelationshipConfig(activeTool);
+    const {
+      cardinality: finalCardinality,
+      markerStart,
+      markerEnd,
+    } = getRelationshipConfig(activeTool);
 
     get().saveToHistory();
     set({
@@ -402,7 +437,7 @@ export const createCanvasSlice: StateCreator<
   updateNodeData: (id, data) => {
     set({
       nodes: get().nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, ...data } } : node
+        node.id === id ? { ...node, data: { ...node.data, ...data } } : node,
       ),
       isDirty: true,
     });
@@ -411,7 +446,7 @@ export const createCanvasSlice: StateCreator<
   updateNode: (id, updates) =>
     set({
       nodes: get().nodes.map((node) =>
-        node.id === id ? { ...node, ...updates } : node
+        node.id === id ? { ...node, ...updates } : node,
       ),
       isDirty: true,
     }),
@@ -449,7 +484,7 @@ export const createCanvasSlice: StateCreator<
           return node;
         }),
       edges: get().edges.filter(
-        (edge) => edge.source !== id && edge.target !== id
+        (edge) => edge.source !== id && edge.target !== id,
       ),
       isDirty: true,
     });
@@ -479,7 +514,7 @@ export const createCanvasSlice: StateCreator<
           return node;
         }),
       edges: get().edges.filter(
-        (edge) => !ids.includes(edge.source) && !ids.includes(edge.target)
+        (edge) => !ids.includes(edge.source) && !ids.includes(edge.target),
       ),
       isDirty: true,
     });
@@ -513,12 +548,20 @@ function getRelationshipConfig(activeTool: CanvasTool): {
     if (cardinality === "0:n") cardinality = "0..n";
   }
 
-  const parts = cardinality.includes("..") ? cardinality.split("..") : cardinality.split(":");
+  const parts = cardinality.includes("..")
+    ? cardinality.split("..")
+    : cardinality.split(":");
   const source = parts[0];
   const target = parts[1];
 
-  const markerStart = source === "n" ? "marker-many" : source === "0" ? "marker-one" : "marker-one";
-  const markerEnd = target === "n" || target === "m" ? "marker-many" : "marker-one";
+  const markerStart =
+    source === "n"
+      ? "marker-many"
+      : source === "0"
+        ? "marker-one"
+        : "marker-one";
+  const markerEnd =
+    target === "n" || target === "m" ? "marker-many" : "marker-one";
 
   return { cardinality, markerStart, markerEnd };
 }
@@ -527,31 +570,38 @@ function getRelationshipConfig(activeTool: CanvasTool): {
  * Smart detection for Parent-Child dependency based on existing columns and semantic naming,
  * rather than strictly relying on the click order.
  */
-function detectRelationshipDependency(nodeA: Node, nodeB: Node): { parent: Node; child: Node } {
+function detectRelationshipDependency(
+  nodeA: Node,
+  nodeB: Node,
+): { parent: Node; child: Node } {
   const dataA = nodeA.data as any;
   const dataB = nodeB.data as any;
   const nameA = (dataA?.name || "").toLowerCase();
   const nameB = (dataB?.name || "").toLowerCase();
 
   // 1. Check existing FK columns
-  const aHasFkToB = dataA?.columns?.some((c: any) => 
-    c.name.toLowerCase() === `${nameB}_id` || 
-    c.name.toLowerCase() === `${nameB.replace(/s$/, '')}_id` ||
-    (c.isFk && c.name.toLowerCase().includes(nameB))
+  const aHasFkToB = dataA?.columns?.some(
+    (c: any) =>
+      c.name.toLowerCase() === `${nameB}_id` ||
+      c.name.toLowerCase() === `${nameB.replace(/s$/, "")}_id` ||
+      (c.isFk && c.name.toLowerCase().includes(nameB)),
   );
 
-  const bHasFkToA = dataB?.columns?.some((c: any) => 
-    c.name.toLowerCase() === `${nameA}_id` || 
-    c.name.toLowerCase() === `${nameA.replace(/s$/, '')}_id` ||
-    (c.isFk && c.name.toLowerCase().includes(nameA))
+  const bHasFkToA = dataB?.columns?.some(
+    (c: any) =>
+      c.name.toLowerCase() === `${nameA}_id` ||
+      c.name.toLowerCase() === `${nameA.replace(/s$/, "")}_id` ||
+      (c.isFk && c.name.toLowerCase().includes(nameA)),
   );
 
   if (aHasFkToB && !bHasFkToA) return { parent: nodeB, child: nodeA };
   if (bHasFkToA && !aHasFkToB) return { parent: nodeA, child: nodeB };
 
   // 2. Semantic name subsets (e.g., user vs user_profile -> user_profile is child)
-  if (nameA.length > nameB.length && nameA.includes(nameB)) return { parent: nodeB, child: nodeA };
-  if (nameB.length > nameA.length && nameB.includes(nameA)) return { parent: nodeA, child: nodeB };
+  if (nameA.length > nameB.length && nameA.includes(nameB))
+    return { parent: nodeB, child: nodeA };
+  if (nameB.length > nameA.length && nameB.includes(nameA))
+    return { parent: nodeA, child: nodeB };
 
   // 3. Fallback: preserve original order
   return { parent: nodeA, child: nodeB };

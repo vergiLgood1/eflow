@@ -2,7 +2,10 @@
 
 import { forgotPassword } from "@/features/authentication/applications/auth.action";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
-import { forgotPasswordSchema, ForgotPasswordSchema } from "@/features/authentication/types/auth.schema";
+import {
+  forgotPasswordSchema,
+  ForgotPasswordSchema,
+} from "@/features/authentication/types/auth.schema";
 import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -11,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function ForgotPasswordForm() {
-
   const {
     register,
     handleSubmit,
@@ -38,11 +40,15 @@ export function ForgotPasswordForm() {
 
   if (isSubmitted) {
     return (
-      <div className="text-center grid gap-6">
+      <div className="grid gap-6 text-center">
         <p className="text-muted-foreground text-sm">
-          If an account exists with that email, we have sent a password reset link. Please check your inbox.
+          If an account exists with that email, we have sent a password reset
+          link. Please check your inbox.
         </p>
-        <Link href="/auth/sign-in" className="text-sm font-medium hover:underline text-primary">
+        <Link
+          href="/auth/sign-in"
+          className="text-primary text-sm font-medium hover:underline"
+        >
           Return to Sign In
         </Link>
       </div>
@@ -62,7 +68,7 @@ export function ForgotPasswordForm() {
             error={errors.email}
             {...register("email")}
           />
-          <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Send Reset Link
           </Button>
@@ -70,7 +76,7 @@ export function ForgotPasswordForm() {
       </form>
       <div className="text-center text-sm">
         Remember your password?{" "}
-        <Link href="/auth/sign-in" className="underline hover:text-primary">
+        <Link href="/auth/sign-in" className="hover:text-primary underline">
           Sign In
         </Link>
       </div>

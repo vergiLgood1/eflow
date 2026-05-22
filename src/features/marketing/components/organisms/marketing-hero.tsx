@@ -11,7 +11,7 @@ export const MarketingHero = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6"
+      className="relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-10 pt-6"
       id="hero"
     >
       <MarketingHeroHeading
@@ -20,7 +20,7 @@ export const MarketingHero = () => {
       />
       <div className="mt-2">
         <MarketingButton href="/auth/sign-up" showArrow variant="primary">
-          Get started 
+          Get started
         </MarketingButton>
       </div>
     </motion.div>

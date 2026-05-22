@@ -1,7 +1,11 @@
 "use client";
 
 import { CardinalityType } from "@/features/model/types/canvas";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
 import { Edit, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -46,29 +50,35 @@ export function RelationshipEdgeContextMenu({
   };
 
   return (
-
-    <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) onClose(); }}>
+    <Popover
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) onClose();
+      }}
+    >
       <PopoverTrigger asChild>
-        <button ref={triggerRef} style={{ display: 'none' }} />
+        <button ref={triggerRef} style={{ display: "none" }} />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-56 p-1">
-        <div className="text-xs font-semibold px-2 py-1.5 text-muted-foreground">
+        <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
           Relationship {edgeId.slice(0, 8)}
         </div>
-        <div className="h-px bg-border mx-1" />
+        <div className="bg-border mx-1 h-px" />
 
         <div className="px-1 py-1">
           <div className="flex items-center gap-2 px-2 py-1.5 text-xs">
             <Edit className="h-3 w-3" />
             <span className="font-medium">Edit Cardinality</span>
           </div>
-          <div className="flex flex-col gap-0.5 mt-1">
+          <div className="mt-1 flex flex-col gap-0.5">
             {cardinalityOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => handleCardinalityChange(option.value)}
-                className={`w-full text-left px-2 py-1.5 text-xs rounded hover:bg-accent transition-colors ${currentCardinality === option.value ? "bg-accent" : ""
-                  }`}
+                className={`hover:bg-accent w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
+                  currentCardinality === option.value ? "bg-accent" : ""
+                }`}
               >
                 <div className="flex items-center justify-between">
                   <span>{option.label}</span>
@@ -81,20 +91,19 @@ export function RelationshipEdgeContextMenu({
           </div>
         </div>
 
-        <div className="h-px bg-border mx-1" />
+        <div className="bg-border mx-1 h-px" />
 
         <button
           onClick={() => {
             onDelete();
             setOpen(false);
           }}
-          className="w-full text-left px-2 py-1.5 text-xs text-destructive hover:bg-accent rounded transition-colors flex items-center gap-2"
+          className="text-destructive hover:bg-accent flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-colors"
         >
           <Trash2 className="h-3 w-3" />
           <span>Delete Relationship</span>
         </button>
       </PopoverContent>
     </Popover>
-
   );
 }

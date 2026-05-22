@@ -31,9 +31,14 @@ export function ConnectDbDialog({ children }: { children?: React.ReactNode }) {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="connection-string">Connection String</Label>
-              <Input id="connection-string" placeholder="postgresql://user:password@localhost:5432/dbname" />
+              <Input
+                id="connection-string"
+                placeholder="postgresql://user:password@localhost:5432/dbname"
+              />
             </div>
-            <Button className="w-full" onClick={() => setOpen(false)}>Connect</Button>
+            <Button className="w-full" onClick={() => setOpen(false)}>
+              Connect
+            </Button>
           </div>
         </div>
       </DialogContent>

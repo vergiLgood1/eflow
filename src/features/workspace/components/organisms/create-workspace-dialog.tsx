@@ -17,9 +17,13 @@ interface CreateWorkspaceDialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function CreateWorkspaceDialog({ children, open, onOpenChange }: CreateWorkspaceDialogProps) {
+export function CreateWorkspaceDialog({
+  children,
+  open,
+  onOpenChange,
+}: CreateWorkspaceDialogProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
-  
+
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const setIsOpen = isControlled ? onOpenChange : setInternalOpen;
@@ -31,7 +35,8 @@ export function CreateWorkspaceDialog({ children, open, onOpenChange }: CreateWo
         <DialogHeader>
           <DialogTitle>Create New Workspace</DialogTitle>
           <DialogDescription>
-            Give your workspace a name and a unique URL. You can invite your team later.
+            Give your workspace a name and a unique URL. You can invite your
+            team later.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">

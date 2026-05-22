@@ -18,7 +18,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createDataModel } from "../../applications/workspace.action";
-import { createDataModelSchema, CreateDataModelSchema } from "../../types/workspace.schema";
+import {
+  createDataModelSchema,
+  CreateDataModelSchema,
+} from "../../types/workspace.schema";
 import { WorkspaceField } from "../molecules/workspace-field";
 import { WorkspaceTextareaField } from "../molecules/workspace-textarea-field";
 
@@ -83,7 +86,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
     setValue(
       "tags",
       tags.filter((t) => t !== tagToRemove),
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
   };
 
@@ -149,13 +152,13 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
                 key={tag}
                 variant="outline"
                 size="lg"
-                className="flex items-center gap-1 bg-secondary/50 hover:bg-secondary pr-1"
+                className="bg-secondary/50 hover:bg-secondary flex items-center gap-1 pr-1"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="rounded-full p-0.5 hover:bg-muted-foreground/20 transition-colors"
+                  className="hover:bg-muted-foreground/20 rounded-full p-0.5 transition-colors"
                 >
                   <X className="h-3 w-3" />
                   <span className="sr-only">Remove {tag}</span>
@@ -165,7 +168,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
           </div>
         )}
         {errors.tags && (
-          <p className="text-xs font-medium text-destructive">
+          <p className="text-destructive text-xs font-medium">
             {errors.tags.message}
           </p>
         )}
@@ -182,7 +185,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
           }
           defaultValue={getValues("dbType")}
         >
-          <SelectTrigger id="dbType" className="flex w-full h-10">
+          <SelectTrigger id="dbType" className="flex h-10 w-full">
             <SelectValue placeholder="Select a database type" />
           </SelectTrigger>
           <SelectContent>
@@ -194,7 +197,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
           </SelectContent>
         </Select>
         {errors.dbType && (
-          <p className="text-xs font-medium text-destructive">
+          <p className="text-destructive text-xs font-medium">
             {errors.dbType.message}
           </p>
         )}
@@ -203,7 +206,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full h-10 font-semibold transition-all"
+        className="h-10 w-full font-semibold transition-all"
       >
         {isSubmitting ? (
           <>

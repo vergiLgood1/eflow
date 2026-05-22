@@ -2,7 +2,6 @@
 trigger: always_on
 ---
 
-
 ## 11. Performance
 
 ### [SHOULD] Avoid premature optimization — profile before optimizing
@@ -20,9 +19,9 @@ for (const user of users) {
 
 // GOOD — 2 queries total
 const users = await getUsers();
-const orders = await getOrdersByUserIds(users.map(u => u.id));
+const orders = await getOrdersByUserIds(users.map((u) => u.id));
 const ordersByUser = groupBy(orders, "userId");
-users.forEach(u => (u.orders = ordersByUser[u.id] ?? []));
+users.forEach((u) => (u.orders = ordersByUser[u.id] ?? []));
 ```
 
 ### [SHOULD] Paginate all list endpoints — never return unbounded results
@@ -37,7 +36,10 @@ app.get("/users", async (req, res) => {
 // GOOD
 app.get("/users", async (req, res) => {
   const { page = 1, limit = 20 } = req.query;
-  const users = await db.users.findAll({ skip: (page - 1) * limit, take: limit });
+  const users = await db.users.findAll({
+    skip: (page - 1) * limit,
+    take: limit,
+  });
   res.json({ data: users, page, limit });
 });
 ```
@@ -93,6 +95,7 @@ Copy this into your PR description and check every item before requesting review
 ## PR Checklist
 
 ### Must (CI also enforces these)
+
 - [ ] All tests pass locally (`npm test` / `pytest`)
 - [ ] No linter or type errors (`npm run lint` / `mypy`)
 - [ ] No hardcoded secrets, passwords, or API keys
@@ -101,6 +104,7 @@ Copy this into your PR description and check every item before requesting review
 - [ ] New code has at least one test for the failure/edge case
 
 ### Should (enforced in review)
+
 - [ ] Function and variable names clearly describe intent
 - [ ] No function exceeds 40 lines
 - [ ] Types are explicit on public function signatures
@@ -109,6 +113,7 @@ Copy this into your PR description and check every item before requesting review
 - [ ] PR description explains the WHY, not just the what
 
 ### Prefer (best effort)
+
 - [ ] Self-reviewed the diff line by line before requesting review
 - [ ] Dependencies audited (`npm audit` or equivalent)
 - [ ] Performance impact considered for hot paths
@@ -116,15 +121,19 @@ Copy this into your PR description and check every item before requesting review
 - [ ] Feature flag added if this is a partial implementation
 
 ## What does this PR do?
+
 <!-- 2-3 sentences max -->
 
 ## Why is this change needed?
+
 <!-- Link to ticket, issue, or explain the business reason -->
 
 ## How was this tested?
+
 <!-- Unit tests? Manual? Staging? -->
 
 ## Any known trade-offs or follow-up work?
+
 <!-- Optional — link tickets for known shortcuts -->
 ```
 
@@ -145,18 +154,18 @@ Before starting any work on a new feature, bug fix, or refactor, a GitHub issue 
 
 ## Appendix: Enforcement Tools
 
-| Rule Category | Recommended Tool |
-|---------------|-----------------|
-| Type safety | TypeScript strict mode, `tsconfig` `"strict": true` |
-| Linting | ESLint + `@typescript-eslint`, Pylint / Ruff |
-| Formatting | Prettier (JS/TS), Black (Python) — non-negotiable, auto-applied |
-| Security scanning | `bun audit`, `npm audit`, `pip-audit`, Semgrep, Trivy |
-| Secret detection | `gitleaks`, `git-secrets` (pre-commit hook) |
-| Commit format | `commitlint` + `husky` |
-| Coverage | Jest `--coverage`, Pytest-cov — CI fails below threshold |
-| Complexity | ESLint `complexity` rule (max: 10), `cognitive-complexity` |
+| Rule Category     | Recommended Tool                                                |
+| ----------------- | --------------------------------------------------------------- |
+| Type safety       | TypeScript strict mode, `tsconfig` `"strict": true`             |
+| Linting           | ESLint + `@typescript-eslint`, Pylint / Ruff                    |
+| Formatting        | Prettier (JS/TS), Black (Python) — non-negotiable, auto-applied |
+| Security scanning | `bun audit`, `npm audit`, `pip-audit`, Semgrep, Trivy           |
+| Secret detection  | `gitleaks`, `git-secrets` (pre-commit hook)                     |
+| Commit format     | `commitlint` + `husky`                                          |
+| Coverage          | Jest `--coverage`, Pytest-cov — CI fails below threshold        |
+| Complexity        | ESLint `complexity` rule (max: 10), `cognitive-complexity`      |
 
 ---
 
-*Last updated: [DATE] · Maintained by: [LEAD DEVELOPER / TEAM NAME]*
-*Raise suggestions as a PR against this file — not in chat.*
+_Last updated: [DATE] · Maintained by: [LEAD DEVELOPER / TEAM NAME]_
+_Raise suggestions as a PR against this file — not in chat._

@@ -7,13 +7,17 @@ interface MarketingNavLinkProps {
   className?: string;
 }
 
-export const MarketingNavLink = ({ href, children, className }: MarketingNavLinkProps) => {
+export const MarketingNavLink = ({
+  href,
+  children,
+  className,
+}: MarketingNavLinkProps) => {
   return (
     <Link
       href={href}
       className={cn(
-        "text-[15px] text-muted-foreground hover:text-foreground transition-colors px-2 py-1",
-        className
+        "text-muted-foreground hover:text-foreground px-2 py-1 text-[15px] transition-colors",
+        className,
       )}
     >
       {children}

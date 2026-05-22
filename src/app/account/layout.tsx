@@ -2,14 +2,15 @@ import { AccountLayoutTemplate } from "@/features/account/components/templates/a
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Account Settings | EFLOW",
-    description: "Manage your account settings, profile, and billing information.",
+  title: "Account Settings | EFLOW",
+  description:
+    "Manage your account settings, profile, and billing information.",
 };
 
 export default function AccountLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return <AccountLayoutTemplate>{children}</AccountLayoutTemplate>;
+  return <AccountLayoutTemplate>{children}</AccountLayoutTemplate>;
 }

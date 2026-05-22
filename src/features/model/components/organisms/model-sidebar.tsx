@@ -6,140 +6,159 @@ import { Plus, Trash2 } from "lucide-react";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { isTableNode } from "../../types/canvas";
 import { ModelSearchInput } from "../molecules/model-search-input";
-import { ModelSidebarColumn, ModelSidebarSection } from "../molecules/model-sidebar-column";
+import {
+  ModelSidebarColumn,
+  ModelSidebarSection,
+} from "../molecules/model-sidebar-column";
 import { ModelSidebarTable } from "../molecules/model-sidebar-table";
 import { useState } from "react";
 
 export function ModelSidebar() {
-    const nodes = useCanvasStore((s) => s.nodes);
-    const updateNode = useCanvasStore((s) => s.updateNode);
-    const updateNodeData = useCanvasStore((s) => s.updateNodeData);
-    const removeNode = useCanvasStore((s) => s.removeNode);
-    
-    const tableNodes = nodes.filter(isTableNode);
+  const nodes = useCanvasStore((s) => s.nodes);
+  const updateNode = useCanvasStore((s) => s.updateNode);
+  const updateNodeData = useCanvasStore((s) => s.updateNodeData);
+  const removeNode = useCanvasStore((s) => s.removeNode);
 
-    // Sidebar UI state
-    const [searchQuery, setSearchQuery] = useState("");
-    const [expandedTables, setExpandedTables] = useState<Record<string, boolean>>({});
+  const tableNodes = nodes.filter(isTableNode);
 
-    const filteredTables = tableNodes.filter((node) =>
-        node.data.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Sidebar UI state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedTables, setExpandedTables] = useState<Record<string, boolean>>(
+    {},
+  );
 
-    const toggleTableExpansion = (id: string) => {
-        setExpandedTables((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }));
-    };
+  const filteredTables = tableNodes.filter((node) =>
+    node.data.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
-    const toggleTableVisibility = (id: string, currentHidden: boolean) => {
-        updateNode(id, { hidden: !currentHidden });
-    };
+  const toggleTableExpansion = (id: string) => {
+    setExpandedTables((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
-    const toggleColumnVisibility = (nodeId: string, colId: string, hiddenColumns: string[] = []) => {
-        const isHidden = hiddenColumns.includes(colId);
-        const nextHidden = isHidden 
-            ? hiddenColumns.filter(id => id !== colId)
-            : [...hiddenColumns, colId];
-        
-        updateNodeData(nodeId, { hiddenColumns: nextHidden });
-    };
+  const toggleTableVisibility = (id: string, currentHidden: boolean) => {
+    updateNode(id, { hidden: !currentHidden });
+  };
 
-    return (
-        <aside className="flex w-[280px] flex-col bg-card border-r text-foreground h-full overflow-hidden">
-            <div className="px-3 pt-3 pb-2">
-                <ModelSearchInput 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
+  const toggleColumnVisibility = (
+    nodeId: string,
+    colId: string,
+    hiddenColumns: string[] = [],
+  ) => {
+    const isHidden = hiddenColumns.includes(colId);
+    const nextHidden = isHidden
+      ? hiddenColumns.filter((id) => id !== colId)
+      : [...hiddenColumns, colId];
+
+    updateNodeData(nodeId, { hiddenColumns: nextHidden });
+  };
+
+  return (
+    <aside className="bg-card text-foreground flex h-full w-[280px] flex-col overflow-hidden border-r">
+      <div className="px-3 pt-3 pb-2">
+        <ModelSearchInput
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+      <ScrollArea className="flex-1">
+        <div className="px-1 pb-2">
+          {tableNodes.length === 0 ? (
+            <div className="text-muted-foreground py-6 text-center text-xs">
+              No tables yet. Add one from the toolbar.
             </div>
-            <ScrollArea className="flex-1">
-                <div className="px-1 pb-2">
-                    {tableNodes.length === 0 ? (
-                        <div className="py-6 text-center text-xs text-muted-foreground">
-                            No tables yet. Add one from the toolbar.
+          ) : filteredTables.length === 0 ? (
+            <div className="text-muted-foreground py-6 text-center text-xs italic">
+              No tables matching &quot;{searchQuery}&quot;
+            </div>
+          ) : (
+            filteredTables.map((node) => {
+              const hiddenColumns = (node.data.hiddenColumns as string[]) || [];
+              const isExpanded = expandedTables[node.id] ?? false;
+
+              return (
+                <ModelSidebarTable
+                  key={node.id}
+                  name={node.data.name}
+                  isOpen={isExpanded}
+                  onToggle={() => toggleTableExpansion(node.id)}
+                  isHidden={node.hidden}
+                  onToggleVisibility={() =>
+                    toggleTableVisibility(node.id, !!node.hidden)
+                  }
+                  onDelete={() => removeNode(node.id)}
+                >
+                  <ModelSidebarSection title="Columns">
+                    {node.data.columns?.map((col) => (
+                      <ModelSidebarColumn
+                        key={col.id}
+                        name={col.name}
+                        type={col.type}
+                        isHidden={hiddenColumns.includes(col.id)}
+                        onToggleVisibility={() =>
+                          toggleColumnVisibility(node.id, col.id, hiddenColumns)
+                        }
+                      />
+                    ))}
+                  </ModelSidebarSection>
+
+                  <ModelSidebarSection title="Indexes" defaultOpen={false}>
+                    {node.data.indexes && node.data.indexes.length > 0 ? (
+                      node.data.indexes.map((idx) => (
+                        <div
+                          key={idx.id}
+                          className="flex items-center justify-between px-2 py-1 text-[10px]"
+                        >
+                          <span className="truncate font-medium">
+                            {idx.name}
+                          </span>
+                          <span className="text-muted-foreground ml-2 shrink-0">
+                            {idx.isUnique ? "UNIQUE " : ""}
+                            {idx.type?.toUpperCase() || "BTREE"}
+                          </span>
                         </div>
-                    ) : filteredTables.length === 0 ? (
-                        <div className="py-6 text-center text-xs text-muted-foreground italic">
-                            No tables matching &quot;{searchQuery}&quot;
-                        </div>
+                      ))
                     ) : (
-                        filteredTables.map((node) => {
-                            const hiddenColumns = (node.data.hiddenColumns as string[]) || [];
-                            const isExpanded = expandedTables[node.id] ?? false;
-
-                            return (
-                                <ModelSidebarTable 
-                                    key={node.id} 
-                                    name={node.data.name} 
-                                    isOpen={isExpanded}
-                                    onToggle={() => toggleTableExpansion(node.id)}
-                                    isHidden={node.hidden}
-                                    onToggleVisibility={() => toggleTableVisibility(node.id, !!node.hidden)}
-                                    onDelete={() => removeNode(node.id)}
-                                >
-                                    <ModelSidebarSection title="Columns">
-                                        {node.data.columns?.map((col) => (
-                                            <ModelSidebarColumn
-                                                key={col.id}
-                                                name={col.name}
-                                                type={col.type}
-                                                isHidden={hiddenColumns.includes(col.id)}
-                                                onToggleVisibility={() => toggleColumnVisibility(node.id, col.id, hiddenColumns)}
-                                            />
-                                        ))}
-                                    </ModelSidebarSection>
-                                    
-                                    <ModelSidebarSection title="Indexes" defaultOpen={false}>
-                                        {(node.data.indexes && node.data.indexes.length > 0) ? (
-                                            node.data.indexes.map((idx) => (
-                                                <div key={idx.id} className="py-1 px-2 text-[10px] flex items-center justify-between">
-                                                    <span className="truncate font-medium">{idx.name}</span>
-                                                    <span className="text-muted-foreground shrink-0 ml-2">
-                                                        {idx.isUnique ? "UNIQUE " : ""}{idx.type?.toUpperCase() || "BTREE"}
-                                                    </span>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <div className="py-1 px-2 text-[10px] text-muted-foreground italic">
-                                                No indexes defined
-                                            </div>
-                                        )}
-                                    </ModelSidebarSection>
-
-                                    <ModelSidebarSection title="Triggers" defaultOpen={false}>
-                                        <div className="py-1 px-2 text-[10px] text-muted-foreground italic">
-                                            No triggers defined
-                                        </div>
-                                    </ModelSidebarSection>
-                                </ModelSidebarTable>
-                            );
-                        })
+                      <div className="text-muted-foreground px-2 py-1 text-[10px] italic">
+                        No indexes defined
+                      </div>
                     )}
-                </div>
+                  </ModelSidebarSection>
 
-                <div className="border-t mt-2">
-                    <div className="flex flex-col gap-2 px-3 py-2">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-xs font-semibold text-foreground/70 uppercase tracking-wide">
-                                Procedures
-                            </h3>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 p-0 hover:bg-accent"
-                                disabled
-                            >
-                                <Plus className="h-3.5 w-3.5" />
-                            </Button>
-                        </div>
-                        <div className="py-6 text-center text-xs text-muted-foreground">
-                            No procedures yet.
-                        </div>
+                  <ModelSidebarSection title="Triggers" defaultOpen={false}>
+                    <div className="text-muted-foreground px-2 py-1 text-[10px] italic">
+                      No triggers defined
                     </div>
-                </div>
-            </ScrollArea>
-        </aside>
-    );
+                  </ModelSidebarSection>
+                </ModelSidebarTable>
+              );
+            })
+          )}
+        </div>
+
+        <div className="mt-2 border-t">
+          <div className="flex flex-col gap-2 px-3 py-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-foreground/70 text-xs font-semibold tracking-wide uppercase">
+                Procedures
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-accent h-6 w-6 p-0"
+                disabled
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <div className="text-muted-foreground py-6 text-center text-xs">
+              No procedures yet.
+            </div>
+          </div>
+        </div>
+      </ScrollArea>
+    </aside>
+  );
 }

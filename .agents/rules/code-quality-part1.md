@@ -28,13 +28,13 @@ Do not ignore them under any circumstances.
 
 These are the values every rule below serves. When in doubt, return to these.
 
-| Principle | What it means |
-|-----------|---------------|
-| **Readable** | Code is read 10× more than it is written. Optimize for the reader. |
-| **Simple** | Avoid accidental complexity. The simplest solution that works is correct. |
+| Principle      | What it means                                                                           |
+| -------------- | --------------------------------------------------------------------------------------- |
+| **Readable**   | Code is read 10× more than it is written. Optimize for the reader.                      |
+| **Simple**     | Avoid accidental complexity. The simplest solution that works is correct.               |
 | **Consistent** | Follow the team's conventions even if you disagree. Raise it in a discussion, not a PR. |
-| **Testable** | If something is hard to test, it is a design problem. Redesign it. |
-| **Secure** | Secure by default. Never defer security to "later". |
+| **Testable**   | If something is hard to test, it is a design problem. Redesign it.                      |
+| **Secure**     | Secure by default. Never defer security to "later".                                     |
 
 ### The Three Laws
 
@@ -66,14 +66,14 @@ function processPayment(payment) { ... }
 
 ### [MUST] Follow casing conventions consistently
 
-| Context | Convention | Example |
-|---------|-----------|---------|
-| Variables & functions | `camelCase` | `userProfile`, `fetchById` |
-| Classes & types & interfaces | `PascalCase` | `OrderProcessor`, `UserDTO` |
-| Module-level constants | `SCREAMING_SNAKE_CASE` | `MAX_RETRY_COUNT` |
-| Files & directories | `kebab-case` | `user-profile.service.ts` |
-| Database columns | `snake_case` | `created_at`, `user_id` |
-| Environment variables | `SCREAMING_SNAKE_CASE` | `DATABASE_URL` |
+| Context                      | Convention             | Example                     |
+| ---------------------------- | ---------------------- | --------------------------- |
+| Variables & functions        | `camelCase`            | `userProfile`, `fetchById`  |
+| Classes & types & interfaces | `PascalCase`           | `OrderProcessor`, `UserDTO` |
+| Module-level constants       | `SCREAMING_SNAKE_CASE` | `MAX_RETRY_COUNT`           |
+| Files & directories          | `kebab-case`           | `user-profile.service.ts`   |
+| Database columns             | `snake_case`           | `created_at`, `user_id`     |
+| Environment variables        | `SCREAMING_SNAKE_CASE` | `DATABASE_URL`              |
 
 ### [MUST] Boolean names must read as yes/no questions
 
@@ -230,7 +230,9 @@ const user = response.data as User;
 
 // GOOD — runtime check + compile-time narrowing
 function isUser(val: unknown): val is User {
-  return typeof val === "object" && val !== null && "id" in val && "email" in val;
+  return (
+    typeof val === "object" && val !== null && "id" in val && "email" in val
+  );
 }
 const user = isUser(response.data) ? response.data : null;
 ```
@@ -335,8 +337,12 @@ function getUser(id: string): User {
 }
 
 // GOOD — side effects are visible at the call site
-function getUser(id: string): User { return userCache.get(id); }
-function logUserFetch(id: string): void { logger.log(`Fetching user ${id}`); }
+function getUser(id: string): User {
+  return userCache.get(id);
+}
+function logUserFetch(id: string): void {
+  logger.log(`Fetching user ${id}`);
+}
 ```
 
 ### [SHOULD] Prefer composition over inheritance

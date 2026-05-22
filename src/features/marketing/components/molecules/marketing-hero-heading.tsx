@@ -14,15 +14,15 @@ export const MarketingHeroHeading = ({
   return (
     <div
       className={cn(
-        "relative z-20 flex flex-col items-center text-center gap-6 max-w-[850px]",
-        className
+        "relative z-20 flex max-w-[850px] flex-col items-center gap-6 text-center",
+        className,
       )}
       data-animation-on-scroll=""
     >
-      <h1 className="text-4xl lg:text-[58px] font-medium leading-[1.1] tracking-[-0.04em] text-white">
+      <h1 className="text-4xl leading-[1.1] font-medium tracking-[-0.04em] text-white lg:text-[58px]">
         {title}
       </h1>
-      <p className="text-lg lg:text-[18px] text-muted-foreground max-w-[500px] leading-[1.6]">
+      <p className="text-muted-foreground max-w-[500px] text-lg leading-[1.6] lg:text-[18px]">
         {description}
       </p>
     </div>

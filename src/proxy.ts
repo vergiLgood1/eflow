@@ -4,83 +4,87 @@ import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "./features/authentication/lib/auth-server";
 
 export default async function middleware(request: NextRequest) {
-    const session = await auth.getSession();
+  const session = await auth.getSession();
 
-    if (!session.data) {
-        return NextResponse.redirect(new URL('/auth/sign-in', request.url));
-    }
+  if (!session.data) {
+    return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+  }
 
-    const userId = session.data.user.id;
-    const { pathname } = request.nextUrl;
+  const userId = session.data.user.id;
+  const { pathname } = request.nextUrl;
 
-    const user = await db.user.findUnique({
-        where: { id: userId },
-        select: { hasCompleteOnboarding: true }
-    });
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { hasCompleteOnboarding: true },
+  });
 
-    if (!user) {
-        return NextResponse.redirect(new URL('/auth/sign-in', request.url));
-    }
+  if (!user) {
+    return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+  }
 
-    if (user.hasCompleteOnboarding && pathname === '/workspaces/onboarding') {
-        const latestWorkspace = await db.workspace.findFirst({
-            where: {
-                members: {
-                    some: {
-                        userId: userId,
-                    },
-                },
-            },
-            orderBy: {
-                updatedAt: 'desc',
-            },
-        });
-
-        if (latestWorkspace) {
-            return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
-        }
-        return NextResponse.redirect(new URL('/workspaces', request.url));
-    }
-
-    if (pathname === '/workspaces/onboarding') {
-        return NextResponse.next();
-    }
-
+  if (user.hasCompleteOnboarding && pathname === "/workspaces/onboarding") {
     const latestWorkspace = await db.workspace.findFirst({
-        where: {
-            members: {
-                some: {
-                    userId: userId,
-                },
-            },
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
         },
-        orderBy: {
-            updatedAt: 'desc',
-        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
 
-    if (!latestWorkspace && !user?.hasCompleteOnboarding) {
-        if (pathname !== '/workspaces/onboarding') {
-            return NextResponse.redirect(new URL('/workspaces/onboarding', request.url));
-        }
-        return NextResponse.next();
+    if (latestWorkspace) {
+      return NextResponse.redirect(
+        new URL(`/workspaces/${latestWorkspace.slug}`, request.url),
+      );
     }
+    return NextResponse.redirect(new URL("/workspaces", request.url));
+  }
 
-    if (pathname === '/workspaces' || pathname === '/workspaces/onboarding') {
-        if (latestWorkspace) {
-            return NextResponse.redirect(new URL(`/workspaces/${latestWorkspace.slug}`, request.url));
-        }
-    }
-
+  if (pathname === "/workspaces/onboarding") {
     return NextResponse.next();
+  }
+
+  const latestWorkspace = await db.workspace.findFirst({
+    where: {
+      members: {
+        some: {
+          userId: userId,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+
+  if (!latestWorkspace && !user?.hasCompleteOnboarding) {
+    if (pathname !== "/workspaces/onboarding") {
+      return NextResponse.redirect(
+        new URL("/workspaces/onboarding", request.url),
+      );
+    }
+    return NextResponse.next();
+  }
+
+  if (pathname === "/workspaces" || pathname === "/workspaces/onboarding") {
+    if (latestWorkspace) {
+      return NextResponse.redirect(
+        new URL(`/workspaces/${latestWorkspace.slug}`, request.url),
+      );
+    }
+  }
+
+  return NextResponse.next();
 }
 
-
-
 export const config = {
-    matcher: [
-        // Protected routes requiring authentication
-        '/account/:path*',
-        '/workspaces/:path*',
-    ],
+  matcher: [
+    // Protected routes requiring authentication
+    "/account/:path*",
+    "/workspaces/:path*",
+  ],
 };

@@ -9,11 +9,11 @@ export default function SignInPage() {
       description="Enter your credentials to access your workspace."
       form={<SignInForm />}
       footer={
-        <p className="px-8 text-sm text-muted-foreground">
+        <p className="text-muted-foreground px-8 text-sm">
           New to EFlow?{" "}
           <Link
             href="/auth/sign-up"
-            className="underline underline-offset-4 hover:text-primary transition-colors"
+            className="hover:text-primary underline underline-offset-4 transition-colors"
           >
             Sign Up
           </Link>

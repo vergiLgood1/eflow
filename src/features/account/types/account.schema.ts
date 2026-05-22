@@ -15,7 +15,9 @@ export const updateUserSchema = createUserSchema.partial();
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
 export const deleteAccountSchema = z.object({
-  confirmEmail: z.string().email("Please enter a valid email to confirm deletion"),
+  confirmEmail: z
+    .string()
+    .email("Please enter a valid email to confirm deletion"),
 });
 
 export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;

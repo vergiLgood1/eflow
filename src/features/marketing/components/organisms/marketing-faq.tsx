@@ -43,35 +43,35 @@ export default function MarketingFaq() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="mx-auto max-w-[1200px] py-14 "
+      className="mx-auto max-w-[1200px] py-14"
       id="faqs"
     >
-      <div className="flex flex-col items-center justify-center gap-2 mb-16">
-        <h2 className="mt-5 max-w-4xl text-balance font-medium text-4xl leading-[1.1] tracking-[-0.04em]">
+      <div className="mb-16 flex flex-col items-center justify-center gap-2">
+        <h2 className="mt-5 max-w-4xl text-4xl leading-[1.1] font-medium tracking-[-0.04em] text-balance">
           Frequently Asked Questions
         </h2>
-        <p className="mt-2 text-lg text-muted-foreground sm:text-xl">
+        <p className="text-muted-foreground mt-2 text-lg sm:text-xl">
           Find answers to common questions about our products and services.
         </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-1 rounded-lg border border-border/75 bg-muted p-0.75 md:grid-cols-2">
+      <div className="border-border/75 bg-muted mt-8 grid grid-cols-1 gap-1 rounded-lg border p-0.75 md:grid-cols-2">
         {faqs.map((faq, index) => (
           <div
             className={cn(
-              "relative overflow-hidden border border-border/90 bg-background text-start",
-              "first:rounded-t-md last:rounded-b-md md:nth-[2]:rounded-tr-md md:nth-last-[2]:rounded-bl-md md:last:rounded-bl-none md:first:rounded-tr-none"
+              "border-border/90 bg-background relative overflow-hidden border text-start",
+              "first:rounded-t-md last:rounded-b-md md:first:rounded-tr-none md:last:rounded-bl-none md:nth-[2]:rounded-tr-md md:nth-last-[2]:rounded-bl-md",
             )}
             key={index}
           >
             <div className="isolate">
-              <span className="absolute top-0 left-0 rounded-br-md border-border/50 border-e border-b bg-muted px-2 py-0.75 font-mono text-[11px]">
+              <span className="border-border/50 bg-muted absolute top-0 left-0 rounded-br-md border-e border-b px-2 py-0.75 font-mono text-[11px]">
                 {(index + 1).toString().padStart(2, "0")}
               </span>
-              <div className="flex items-center gap-2 border-b border-dashed px-6 py-3 ps-11 font-medium text-base">
+              <div className="flex items-center gap-2 border-b border-dashed px-6 py-3 ps-11 text-base font-medium">
                 {faq.question}
               </div>
-              <div className="px-6 py-5 ps-11 text-start text-foreground/70 text-sm">
+              <div className="text-foreground/70 px-6 py-5 ps-11 text-start text-sm">
                 {faq.answer}
               </div>
             </div>

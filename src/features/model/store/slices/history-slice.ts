@@ -23,7 +23,10 @@ export const createHistorySlice: StateCreator<
 
   saveToHistory: () => {
     const { nodes, edges, history } = get();
-    const newHistory = [...history, { nodes: [...nodes], edges: [...edges] }].slice(-50);
+    const newHistory = [
+      ...history,
+      { nodes: [...nodes], edges: [...edges] },
+    ].slice(-50);
     set({ history: newHistory, future: [] });
   },
 

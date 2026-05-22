@@ -10,7 +10,12 @@ interface SocialButtonProps {
   children: ReactNode;
 }
 
-export function SocialButton({ onClick, disabled, icon, children }: SocialButtonProps) {
+export function SocialButton({
+  onClick,
+  disabled,
+  icon,
+  children,
+}: SocialButtonProps) {
   return (
     <Button
       variant="outline"

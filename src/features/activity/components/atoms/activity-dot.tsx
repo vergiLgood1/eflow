@@ -1,5 +1,5 @@
 export function ActivityDot() {
-    return (
-        <div className="absolute left-[15px] top-[14px] h-2 w-2 rounded-full border border-border bg-background group-first:top-1 z-10" />
-    );
+  return (
+    <div className="border-border bg-background absolute top-[14px] left-[15px] z-10 h-2 w-2 rounded-full border group-first:top-1" />
+  );
 }

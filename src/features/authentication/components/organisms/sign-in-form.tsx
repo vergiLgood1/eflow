@@ -1,9 +1,15 @@
 "use client";
 
-import { signInWithEmail, signInWithGithub } from "@/features/authentication/applications/auth.action";
+import {
+  signInWithEmail,
+  signInWithGithub,
+} from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
-import { signInSchema, SignInSchema } from "@/features/authentication/types/auth.schema";
+import {
+  signInSchema,
+  SignInSchema,
+} from "@/features/authentication/types/auth.schema";
 import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GitHubIcon, GoogleIcon } from "@neondatabase/auth/react";
@@ -80,7 +86,7 @@ export function SignInForm() {
             rightElement={
               <Link
                 href="/auth/forgot-password"
-                className="text-xs font-medium text-primary hover:underline"
+                className="text-primary text-xs font-medium hover:underline"
               >
                 Forgot password?
               </Link>
@@ -98,22 +104,16 @@ export function SignInForm() {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
+          <span className="bg-background text-muted-foreground px-2">
             Or continue with
           </span>
         </div>
       </div>
-      <SocialButton
-        disabled
-        onClick={handleGithubSignIn}
-      >
+      <SocialButton disabled onClick={handleGithubSignIn}>
         <GitHubIcon />
         Coming soon
       </SocialButton>
-      <SocialButton
-        disabled
-        onClick={handleGithubSignIn}
-      >
+      <SocialButton disabled onClick={handleGithubSignIn}>
         <GoogleIcon />
         Coming soon
       </SocialButton>

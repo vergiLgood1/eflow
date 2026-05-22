@@ -1,4 +1,3 @@
-
 ## 5. Error Handling
 
 ### [MUST] Never swallow errors silently
@@ -7,7 +6,9 @@ An empty catch block is a lie. Always log, rethrow, or convert.
 
 ```ts
 // BAD
-try { doSomething(); } catch (_) {}
+try {
+  doSomething();
+} catch (_) {}
 
 // GOOD
 try {
@@ -57,11 +58,11 @@ catch (error) {
 Exceptions are for unexpected situations. For predictable failures use a Result:
 
 ```ts
-type Result<T, E = Error> =
-  | { ok: true; value: T }
-  | { ok: false; error: E };
+type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
 
-async function chargeCard(amount: number): Promise<Result<Receipt, PaymentError>> {
+async function chargeCard(
+  amount: number,
+): Promise<Result<Receipt, PaymentError>> {
   try {
     const receipt = await gateway.charge(amount);
     return { ok: true, value: receipt };
@@ -72,7 +73,10 @@ async function chargeCard(amount: number): Promise<Result<Receipt, PaymentError>
 
 // Callers are forced to handle both paths
 const result = await chargeCard(100);
-if (!result.ok) { showUserFriendlyError(result.error); return; }
+if (!result.ok) {
+  showUserFriendlyError(result.error);
+  return;
+}
 showReceipt(result.value);
 ```
 
@@ -209,7 +213,9 @@ it("returns 401 when the JWT has expired", async () => {
   const expiredToken = buildJWT({ expiresAt: yesterday() });
 
   // Act
-  const response = await api.get("/me").set("Authorization", `Bearer ${expiredToken}`);
+  const response = await api
+    .get("/me")
+    .set("Authorization", `Bearer ${expiredToken}`);
 
   // Assert
   expect(response.status).toBe(401);
@@ -221,13 +227,13 @@ it("returns 401 when the JWT has expired", async () => {
 
 ```ts
 // BAD
-it("works")
-it("test getUserById")
+it("works");
+it("test getUserById");
 
 // GOOD
-it("returns null when user does not exist")
-it("throws UserSuspendedError when account is suspended")
-it("sends welcome email after successful registration")
+it("returns null when user does not exist");
+it("throws UserSuspendedError when account is suspended");
+it("sends welcome email after successful registration");
 ```
 
 ### [MUST] Tests must be deterministic — no flaky tests allowed in main
@@ -284,16 +290,16 @@ Mock external services (HTTP, DB, email) — not internal modules. Every interna
 [optional footer: BREAKING CHANGE, closes #issue]
 ```
 
-| Type | When |
-|------|------|
-| `feat` | New feature |
-| `fix` | Bug fix |
+| Type       | When                                |
+| ---------- | ----------------------------------- |
+| `feat`     | New feature                         |
+| `fix`      | Bug fix                             |
 | `refactor` | Refactoring without behavior change |
-| `test` | Adding or fixing tests |
-| `docs` | Documentation only |
-| `chore` | Tooling, deps, config |
-| `perf` | Performance improvement |
-| `ci` | CI/CD pipeline changes |
+| `test`     | Adding or fixing tests              |
+| `docs`     | Documentation only                  |
+| `chore`    | Tooling, deps, config               |
+| `perf`     | Performance improvement             |
+| `ci`       | CI/CD pipeline changes              |
 
 ```bash
 # BAD

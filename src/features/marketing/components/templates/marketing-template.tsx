@@ -9,17 +9,17 @@ import { MarketingNavbar } from "../organisms/marketing-navbar";
 
 export const MarketingTemplate = () => {
   return (
-    <div className="bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col w-full relative">
+    <div className="bg-background text-foreground relative flex min-h-screen w-full flex-col overflow-x-hidden">
       <MarketingGridBackground />
 
       <main className="relative z-10 grow">
         <section
-          className="relative flex flex-col items-center justify-center w-full min-h-screen overflow-hidden py-32 px-10"
+          className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-10 py-32"
           id="home"
         >
           <MarketingNavbar />
 
-          <div className="relative z-10 w-full max-w-[1200px] flex flex-col items-center gap-10 pt-6">
+          <div className="relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-10 pt-6">
             <MarketingHero />
             <MarketingDashboardShowcase />
             <MarketingLogoMarquee />
@@ -28,11 +28,9 @@ export const MarketingTemplate = () => {
 
         <MarketingBentoGrid />
         <MarketingFaq />
-
       </main>
 
       <Footer />
-
     </div>
   );
 };

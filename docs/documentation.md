@@ -99,7 +99,6 @@ Auto-convertible types are mapped to equivalents (e.g., MySQL tinyint → Postgr
 Incompatible types without a mapping are marked as custom for manual review
 ER Flow handles conversions between all 5 databases with a comprehensive type mapping table covering types like uuid ↔ char, jsonb ↔ json, serial ↔ int, nvarchar ↔ varchar, number ↔ numeric, and many more.
 
-
 🔗
 Relationships & Foreign Keys
 Define foreign keys, configure cascade rules, and visualize table relationships.
@@ -128,7 +127,6 @@ One-to-many — the most common relationship, shown with a crow's foot notation
 One-to-one — when the FK column has a unique constraint
 Lines automatically route around tables and update position when you move tables on the canvas.
 
-
 ⚙️
 Views, Triggers & Procedures
 Create database views with AI assistance, define triggers, and manage stored procedures.
@@ -155,7 +153,6 @@ ER Flow supports full stored procedure modeling. Open the Procedure Modal from t
 Procedure properties: - Name — the procedure identifier - Description — optional documentation - Language — varies by database (e.g., SQL, PL/pgSQL for PostgreSQL) - Security Type — DEFINER or INVOKER - SQL Data Access — CONTAINS SQL, READS SQL DATA, MODIFIES SQL DATA, or NO SQL - Deterministic — whether the procedure always returns the same result for the same inputs - Body — the SQL implementation - Parameters — input/output parameters with name, type, mode (IN, OUT, INOUT), and optional default values
 
 Available options (languages, security types, parameter modes) adapt based on your selected database type. Procedures also have full version history.
-
 
 🎨
 Visual Editor & Canvas
@@ -263,7 +260,7 @@ CREATE INDEX and CREATE UNIQUE INDEX (standalone statements)
 Schema-qualified names: public.users, dbo.orders
 Quoted identifiers: "users", ` users , [users]`
 MySQL-specific: ENGINE=InnoDB, CHARSET=utf8mb4
-Comments: -- single-line and /* */ multi-line (ignored)
+Comments: -- single-line and /\* \*/ multi-line (ignored)
 Preview
 The parser runs in real-time as you type or upload. A preview panel shows: - Number of tables detected - Table names with column counts - Parse errors (if any)
 
@@ -347,7 +344,6 @@ Click "Restore" on any version to revert the object to that state. A confirmatio
 Applies the old version's state as new operations
 Is itself versioned (so you can undo a restore)
 Syncs to all collaborators in real-time
-
 
 ⌨️
 Keyboard Shortcuts

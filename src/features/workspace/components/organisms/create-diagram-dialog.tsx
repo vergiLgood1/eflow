@@ -18,9 +18,13 @@ interface CreateDiagramDialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function CreateDiagramDialog({ children, open, onOpenChange }: CreateDiagramDialogProps) {
+export function CreateDiagramDialog({
+  children,
+  open,
+  onOpenChange,
+}: CreateDiagramDialogProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
-  
+
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const setIsOpen = isControlled ? onOpenChange : setInternalOpen;
@@ -32,7 +36,8 @@ export function CreateDiagramDialog({ children, open, onOpenChange }: CreateDiag
         <DialogHeader>
           <DialogTitle>Create New Diagram</DialogTitle>
           <DialogDescription>
-            Give your diagram a name and select the database type to get started.
+            Give your diagram a name and select the database type to get
+            started.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">

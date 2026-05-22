@@ -1,6 +1,6 @@
 /**
  * Cardinality Inference Utility
- * 
+ *
  * Auto-detects relationship cardinality based on:
  * - FK column constraints (UNIQUE, NOT NULL)
  * - Whether source table is a junction table
@@ -15,7 +15,7 @@ import { ColumnData, CardinalityType, TableNodeData } from "../types/canvas";
 export function inferCardinality(
   fkColumn: ColumnData,
   sourceTable: TableNodeData,
-  targetTable: TableNodeData
+  targetTable: TableNodeData,
 ): CardinalityType {
   // Rule 0: Many-to-Many pattern (source is junction table)
   if (isJunctionTable(sourceTable)) {
@@ -38,17 +38,15 @@ export function inferCardinality(
 
 /**
  * Detect if table is a junction/associative table for many-to-many relationships
- * 
+ *
  * Pattern: table with 2+ FK columns and ≤3 total columns
  */
 export function isJunctionTable(table: TableNodeData): boolean {
-  const fkColumns = table.columns.filter(col => col.isFk);
-  const pkColumns = table.columns.filter(col => col.isPk);
+  const fkColumns = table.columns.filter((col) => col.isFk);
+  const pkColumns = table.columns.filter((col) => col.isPk);
 
   return (
-    fkColumns.length >= 2 &&
-    table.columns.length <= 3 &&
-    pkColumns.length <= 2
+    fkColumns.length >= 2 && table.columns.length <= 3 && pkColumns.length <= 2
   );
 }
 
@@ -67,7 +65,7 @@ export interface ValidationWarning {
 export function validateCardinality(
   fkColumn: ColumnData,
   cardinality: CardinalityType,
-  sourceTable: TableNodeData
+  sourceTable: TableNodeData,
 ): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
 
@@ -76,7 +74,8 @@ export function validateCardinality(
     warnings.push({
       level: "warning",
       message: "1:1 relationship requires UNIQUE constraint on FK column",
-      suggestion: "Add UNIQUE constraint to the FK column, or change cardinality to 1:n",
+      suggestion:
+        "Add UNIQUE constraint to the FK column, or change cardinality to 1:n",
     });
   }
 
@@ -112,7 +111,8 @@ export function validateCardinality(
     warnings.push({
       level: "warning",
       message: "n:m relationships typically use a junction table",
-      suggestion: "Create a junction table with 2 FK columns, or use 1:n relationship",
+      suggestion:
+        "Create a junction table with 2 FK columns, or use 1:n relationship",
     });
   }
 
@@ -121,18 +121,21 @@ export function validateCardinality(
 
 /**
  * Generate appropriate FK column name based on target table
- * 
+ *
  * Pattern: {singularize(targetTableName)}_id
  * Examples: posts → post_id, users → user_id, categories → category_id
  */
-export function generateFkColumnName(targetTableName: string, targetPkName: string = "id"): string {
+export function generateFkColumnName(
+  targetTableName: string,
+  targetPkName: string = "id",
+): string {
   const singular = singularize(targetTableName);
   return `${singular.toLowerCase()}_${targetPkName.toLowerCase()}`;
 }
 
 /**
  * Simple singularization (handles common patterns)
- * 
+ *
  * Examples:
  *   categories → category
  *   classes → class
@@ -140,14 +143,14 @@ export function generateFkColumnName(targetTableName: string, targetPkName: stri
  *   posts → post
  */
 function singularize(name: string): string {
-  if (name.endsWith("ies")) return name.slice(0, -3) + "y";   // categories → category
-  if (name.endsWith("zes")) return name.slice(0, -2);          // classes → class (zes→z)
-  if (name.endsWith("ses")) return name.slice(0, -2);          // classes → class
-  if (name.endsWith("xes")) return name.slice(0, -2);          // boxes → box
-  if (name.endsWith("ches")) return name.slice(0, -2);         // watches → watch
-  if (name.endsWith("shes")) return name.slice(0, -2);         // bushes → bush
-  if (name.endsWith("es")) return name.slice(0, -2);           // classes → class
-  if (name.endsWith("s")) return name.slice(0, -1);            // users → user
+  if (name.endsWith("ies")) return name.slice(0, -3) + "y"; // categories → category
+  if (name.endsWith("zes")) return name.slice(0, -2); // classes → class (zes→z)
+  if (name.endsWith("ses")) return name.slice(0, -2); // classes → class
+  if (name.endsWith("xes")) return name.slice(0, -2); // boxes → box
+  if (name.endsWith("ches")) return name.slice(0, -2); // watches → watch
+  if (name.endsWith("shes")) return name.slice(0, -2); // bushes → bush
+  if (name.endsWith("es")) return name.slice(0, -2); // classes → class
+  if (name.endsWith("s")) return name.slice(0, -1); // users → user
   return name;
 }
 
@@ -157,7 +160,11 @@ function singularize(name: string): string {
 export function hasOnlyIdColumn(table: TableNodeData): boolean {
   if (table.columns.length !== 1) return false;
   const column = table.columns[0];
-  return !!column.isPk && (column.name.toLowerCase() === "id" || column.name.toLowerCase().endsWith("_id"));
+  return (
+    !!column.isPk &&
+    (column.name.toLowerCase() === "id" ||
+      column.name.toLowerCase().endsWith("_id"))
+  );
 }
 
 /**
@@ -168,7 +175,9 @@ export interface FkColumnConstraints {
   isUnique: boolean;
 }
 
-export function getFkColumnConstraints(cardinality: CardinalityType): FkColumnConstraints {
+export function getFkColumnConstraints(
+  cardinality: CardinalityType,
+): FkColumnConstraints {
   switch (cardinality) {
     case "1:1":
       return { nullable: false, isUnique: true };

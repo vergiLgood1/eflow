@@ -2,43 +2,39 @@ import { MarketingButton } from "../atoms/marketing-button";
 
 export const MarketingNavDropdown = () => {
   return (
-    <div className="group h-full flex items-center">
-      <div className="flex items-center gap-1 cursor-pointer px-2 py-1">
-        <span className="text-[15px] text-muted-foreground group-hover:text-foreground transition-colors">
+    <div className="group flex h-full items-center">
+      <div className="flex cursor-pointer items-center gap-1 px-2 py-1">
+        <span className="text-muted-foreground group-hover:text-foreground text-[15px] transition-colors">
           Company
         </span>
         <svg
-          className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 group-hover:rotate-180"
+          className="text-muted-foreground group-hover:text-foreground h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
           viewBox="0 0 24 24"
         >
-          <path
-            d="M6 9l6 6 6-6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <div className="absolute top-[71px] left-0 w-full pt-0 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 z-[60]">
-        <div className="bg-[rgb(15,15,17)] border-x border-b border-white/10 rounded-b-xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden w-full">
-          <div className="w-full md:w-[38%] border-r border-white/5 p-6 flex flex-col gap-6 bg-white/[0.02]">
+      <div className="invisible absolute top-[71px] left-0 z-60 w-full pt-0 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">
+        <div className="flex w-full flex-col overflow-hidden rounded-b-xl border-x border-b border-white/10 bg-[rgb(15,15,17)] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] md:flex-row">
+          <div className="flex w-full flex-col gap-6 border-r border-white/5 bg-white/2 p-6 md:w-[38%]">
             <div className="group/card cursor-pointer">
-              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden mb-5 border border-white/5">
+              <div className="relative mb-5 aspect-video w-full overflow-hidden rounded-lg border border-white/5">
                 <img
                   alt="Join the mission"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-105"
                   src="https://images.unsplash.com/photo-1581092333322-31d2fd38a35e?ixid=M3w4NjU0NDF8MHwxfHNlYXJjaHwxfHxNb2Rlcm4lMjBmdXR1cmlzdGljJTIwQUklMjByZXNlYXJjaCUyMGxhYiUyMHdpdGglMjBkaXZlcnNlJTIwdGVhbSUyMGNvbGxhYm9yYXRpbmd8ZW58MHwwfHx8MTc3MjA5NDE0M3ww&ixlib=rb-4.1.0&w=800&h=450&fit=crop&fm=jpg&q=80"
                 />
               </div>
               <div className="space-y-2 text-left">
-                <h5 className="text-lg font-medium text-white tracking-tight">
+                <h5 className="text-lg font-medium tracking-tight text-white">
                   Join the mission
                 </h5>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  We're building the first truly autonomous
-                  operating system for global enterprise.
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  We're building the first truly autonomous operating system for
+                  global enterprise.
                 </p>
               </div>
               <div className="mt-6 text-left">
@@ -48,9 +44,9 @@ export const MarketingNavDropdown = () => {
               </div>
             </div>
           </div>
-          <div className="flex-1 flex flex-col md:flex-row text-left">
-            <div className="flex-1 p-6 flex flex-col gap-5">
-              <h5 className="text-sm font-semibold text-white/40 uppercase tracking-widest mb-1">
+          <div className="flex flex-1 flex-col text-left md:flex-row">
+            <div className="flex flex-1 flex-col gap-5 p-6">
+              <h5 className="mb-1 text-sm font-semibold tracking-widest text-white/40 uppercase">
                 Organization
               </h5>
               <div className="flex flex-col gap-1">
@@ -59,7 +55,7 @@ export const MarketingNavDropdown = () => {
                   description="Our mission, values, and the team"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -77,7 +73,7 @@ export const MarketingNavDropdown = () => {
                   description="How we build responsible AI"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -97,7 +93,7 @@ export const MarketingNavDropdown = () => {
                   description="Scale your enterprise with Eflow"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -111,8 +107,8 @@ export const MarketingNavDropdown = () => {
                 />
               </div>
             </div>
-            <div className="flex-1 p-6 flex flex-col gap-5 border-l border-white/5">
-              <h5 className="text-sm font-semibold text-white/40 uppercase tracking-widest mb-1">
+            <div className="flex flex-1 flex-col gap-5 border-l border-white/5 p-6">
+              <h5 className="mb-1 text-sm font-semibold tracking-widest text-white/40 uppercase">
                 Resources
               </h5>
               <div className="flex flex-col gap-1">
@@ -121,7 +117,7 @@ export const MarketingNavDropdown = () => {
                   description="API guides and integration docs"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -139,7 +135,7 @@ export const MarketingNavDropdown = () => {
                   description="Enterprise-grade data protection"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -156,7 +152,7 @@ export const MarketingNavDropdown = () => {
                   description="Help with deployments and agents"
                   icon={
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeLinecap="round"
@@ -191,17 +187,17 @@ const DropdownItem = ({
   href?: string;
 }) => (
   <a
-    className="group/item flex items-start gap-4 p-3 -mx-3 rounded-lg hover:bg-white/5 transition-colors"
+    className="group/item -mx-3 flex items-start gap-4 rounded-lg p-3 transition-colors hover:bg-white/5"
     href={href}
   >
-    <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary">
+    <div className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-md">
       {icon}
     </div>
     <div className="flex flex-col">
-      <span className="text-[15px] font-medium text-white group-hover/item:text-primary transition-colors">
+      <span className="group-hover/item:text-primary text-[15px] font-medium text-white transition-colors">
         {title}
       </span>
-      <span className="text-[13px] text-muted-foreground leading-snug">
+      <span className="text-muted-foreground text-[13px] leading-snug">
         {description}
       </span>
     </div>

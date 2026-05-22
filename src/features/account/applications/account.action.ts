@@ -2,13 +2,24 @@
 
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
-import { ActionResponse, AppError, handleActionError } from "@/shared/lib/error";
+import {
+  ActionResponse,
+  AppError,
+  handleActionError,
+} from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
-import { CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema } from "../types/account.schema";
+import {
+  CreateUserSchema,
+  createUserSchema,
+  UpdateUserSchema,
+  updateUserSchema,
+} from "../types/account.schema";
 
-export async function updateProfile(data: UpdateUserSchema): Promise<ActionResponse> {
+export async function updateProfile(
+  data: UpdateUserSchema,
+): Promise<ActionResponse> {
   try {
     const session = await auth.getSession();
 
@@ -27,7 +38,7 @@ export async function updateProfile(data: UpdateUserSchema): Promise<ActionRespo
     return {
       success: true,
       data: updatedUser,
-      message: "Profile updated successfully"
+      message: "Profile updated successfully",
     };
   } catch (error) {
     return handleActionError(error);
@@ -49,14 +60,16 @@ export async function deleteAccount(): Promise<ActionResponse> {
 
     return {
       success: true,
-      message: "Account deleted successfully"
+      message: "Account deleted successfully",
     };
   } catch (error) {
     return handleActionError(error);
   }
 }
 
-export async function registerUser(data: CreateUserSchema): Promise<ActionResponse> {
+export async function registerUser(
+  data: CreateUserSchema,
+): Promise<ActionResponse> {
   try {
     const validatedData = Validation.validate(createUserSchema, data);
 
@@ -84,4 +97,3 @@ export async function registerUser(data: CreateUserSchema): Promise<ActionRespon
     return handleActionError(error);
   }
 }
-

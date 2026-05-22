@@ -4,10 +4,10 @@ import { MarketingNavLink } from "../atoms/marketing-nav-link";
 
 export const MarketingNavbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-[72px] flex justify-center items-center px-10 border-b border-white/10 backdrop-blur-md bg-background/95">
-      <div className="w-full max-w-[1200px] h-full flex items-center justify-between border-x border-white/10 px-6 relative">
+    <nav className="bg-background/95 fixed top-0 right-0 left-0 z-50 flex h-[72px] items-center justify-center border-b border-white/10 px-10 backdrop-blur-md">
+      <div className="relative flex h-full w-full max-w-[1200px] items-center justify-between border-x border-white/10 px-6">
         <MarketingLogo />
-        <div className="hidden md:flex items-center gap-4 h-full">
+        <div className="hidden h-full items-center gap-4 md:flex">
           <MarketingNavLink href="#hero">Hero</MarketingNavLink>
           <MarketingNavLink href="#features">Features</MarketingNavLink>
           <MarketingNavLink href="#faqs">FAQs</MarketingNavLink>

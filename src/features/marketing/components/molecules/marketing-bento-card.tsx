@@ -2,12 +2,12 @@
 
 import { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/shared/components/ui/card";
 import { motion } from "framer-motion";
 
@@ -36,10 +36,10 @@ export const MarketingBentoCard = ({
       transition={{ duration: 0.5, delay }}
       className={cn("h-full", className)}
     >
-      <Card className="h-full overflow-hidden border-border/50 bg-background/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-background/80 group">
+      <Card className="border-border/50 bg-background/50 hover:border-primary/50 hover:bg-background/80 group h-full overflow-hidden backdrop-blur-sm transition-all">
         <CardHeader className="pb-2">
           {icon && (
-            <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+            <div className="bg-primary/10 text-primary mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-transform group-hover:scale-110">
               {icon}
             </div>
           )}
@@ -50,7 +50,7 @@ export const MarketingBentoCard = ({
         </CardHeader>
         <CardContent className="mt-auto flex justify-center p-0">
           {graphic && (
-            <div className="w-full overflow-hidden pt-4 opacity-80 group-hover:opacity-100 transition-opacity">
+            <div className="w-full overflow-hidden pt-4 opacity-80 transition-opacity group-hover:opacity-100">
               {graphic}
             </div>
           )}

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface WorkspaceState {
   isChatOpen: boolean;
@@ -19,7 +19,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       hideBanner: () => set({ isBannerVisible: false }),
     }),
     {
-      name: 'workspace-storage',
-    }
-  )
+      name: "workspace-storage",
+    },
+  ),
 );

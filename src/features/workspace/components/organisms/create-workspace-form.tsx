@@ -7,8 +7,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createWorkspace, initWorkspace } from "../../applications/workspace.action";
-import { createWorkspaceSchema, CreateWorkspaceSchema } from "../../types/workspace.schema";
+import {
+  createWorkspace,
+  initWorkspace,
+} from "../../applications/workspace.action";
+import {
+  createWorkspaceSchema,
+  CreateWorkspaceSchema,
+} from "../../types/workspace.schema";
 import { WorkspaceField } from "../molecules/workspace-field";
 
 export function CreateWorkspaceForm() {
@@ -67,7 +73,7 @@ export function CreateWorkspaceForm() {
         error={form.formState.errors.name}
         {...form.register("name")}
       />
-      
+
       <WorkspaceField
         id="slug"
         label="Workspace URL"
@@ -75,11 +81,17 @@ export function CreateWorkspaceForm() {
         disabled={isLoading}
         error={form.formState.errors.slug}
         description="This is your unique workspace address."
-        leftElement={<span className="text-muted-foreground text-sm">eflow.io/</span>}
+        leftElement={
+          <span className="text-muted-foreground text-sm">eflow.io/</span>
+        }
         {...form.register("slug")}
       />
 
-      <Button type="submit" disabled={isLoading} className="w-full h-10 font-semibold transition-all">
+      <Button
+        type="submit"
+        disabled={isLoading}
+        className="h-10 w-full font-semibold transition-all"
+      >
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
