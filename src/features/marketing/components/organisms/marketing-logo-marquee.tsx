@@ -1,15 +1,12 @@
 "use client";
 
-import { Marquee } from "@/shared/components/ui/marquee";
 import { motion } from "framer-motion";
 
-const LOGOS = [
-  "Vertex Core",
-  "CloudPulse",
-  "NeuralLink",
-  "ApexSolutions",
-  "ShieldFlow",
-  "Quantas",
+const launchItems = [
+  { label: "Available now", value: "Visual ERD canvas" },
+  { label: "Available now", value: "SQL import/export" },
+  { label: "Available now", value: "DBML workflow" },
+  { label: "Available now", value: "Schema checkpoints" },
 ];
 
 export const MarketingLogoMarquee = () => {
@@ -22,25 +19,33 @@ export const MarketingLogoMarquee = () => {
       className="mx-auto mt-8 w-full max-w-[1200px] px-6 opacity-90 transition-opacity duration-500 hover:opacity-100"
       id="logo-section"
     >
-      <div className="flex flex-col items-center gap-12 border-t border-white/5 pt-8 lg:flex-row">
-        <div className="min-w-[280px] shrink-0 text-center lg:text-left">
-          <h4 className="text-lg font-medium tracking-tight text-white">
-            Empowering industries worldwide
+      <div className="grid gap-4 border-t border-white/5 pt-8 lg:grid-cols-[0.9fr_1.6fr]">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md">
+          <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
+            Launch notes
+          </p>
+          <h4 className="mt-3 text-xl font-medium tracking-tight text-white">
+            A focused first version for visual schema planning.
           </h4>
+          <p className="text-muted-foreground mt-3 text-sm leading-6">
+            Eflow is starting with the core workflow: map your database shape,
+            inspect it as DBML, and export a SQL draft when the model is clear.
+          </p>
         </div>
-        <div className="relative h-[40px] w-full flex-1 overflow-hidden">
-          <Marquee duration="veryFast" className="[--gap:84px]" pauseOnHover>
-            {LOGOS.map((logo) => (
-              <span
-                key={logo}
-                className="text-lg font-medium tracking-tight whitespace-nowrap text-white"
-              >
-                {logo}
-              </span>
-            ))}
-          </Marquee>
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1/4 bg-linear-to-r from-[rgb(12,12,14)] to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-1/4 bg-linear-to-l from-[rgb(12,12,14)] to-transparent" />
+        <div className="grid gap-3 sm:grid-cols-2">
+          {launchItems.map((item) => (
+            <div
+              key={item.value}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-md"
+            >
+              <p className="font-mono text-[11px] text-emerald-300/80">
+                {item.label}
+              </p>
+              <p className="mt-2 text-sm font-medium text-white">
+                {item.value}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </motion.div>

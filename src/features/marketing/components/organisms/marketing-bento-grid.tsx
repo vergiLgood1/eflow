@@ -4,17 +4,18 @@ import {
   Database as DatabaseIcon,
   FileTextIcon,
   History as HistoryIcon,
-  SparklesIcon,
-  Users as UsersIcon,
+  LayoutDashboardIcon,
+  GitBranchIcon,
 } from "lucide-react";
+import type { SVGProps } from "react";
 import { MarketingBentoCard } from "../molecules/marketing-bento-card";
 
 export const MarketingBentoGrid = () => {
   const features = [
     {
-      title: "Infinite Visual Canvas",
+      title: "Visual schema canvas",
       description:
-        "A high-performance interactive space for designing complex database architectures with ease.",
+        "Arrange tables, notes, and relationships in one focused workspace before the schema hardens into migrations.",
       icon: <CanvasIcon className="size-5" />,
       className: "md:col-span-2 md:row-span-2",
       graphic: (
@@ -53,38 +54,38 @@ export const MarketingBentoGrid = () => {
       ),
     },
     {
-      title: "Smart SQL Ingestion",
+      title: "SQL import and export",
       description:
-        "Instantly transform raw SQL DDL or DBML files into interactive visual models.",
+        "Bring existing DDL into the canvas, then export a readable SQL draft when the model is ready.",
       icon: <DatabaseIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "Real-time Collaboration",
+      title: "Relationship-first modeling",
       description:
-        "Design alongside your team with live cursors and instant synchronization.",
-      icon: <UsersIcon className="size-5" />,
+        "Use explicit cardinality tools for 1:1, 1:n, optional, and many-to-many relationship thinking.",
+      icon: <GitBranchIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "Activity History",
+      title: "Schema checkpoints",
       description:
-        "Track every change and iteration made to your database schema, with detailed version history and rollback capabilities.",
+        "Save important modeling moments before a risky change, then compare and generate migration drafts.",
       icon: <HistoryIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "Export & Integration",
+      title: "DBML workflow",
       description:
-        "Seamlessly export your designs to SQL, DBML, or high-resolution images, and integrate with your favorite tools.",
+        "Move between visual structure and DBML when text is the faster way to inspect or refine a model.",
       icon: <FileTextIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
     {
-      title: "AI Schema Assistant",
+      title: "Workspace context",
       description:
-        "Get AI-powered suggestions for normalization, indexing, and performance optimization.",
-      icon: <SparklesIcon className="size-5" />,
+        "Keep models grouped by workspace so schema design stays close to the product area it supports.",
+      icon: <LayoutDashboardIcon className="size-5" />,
       className: "md:col-span-1 md:row-span-1",
     },
   ];
@@ -94,11 +95,12 @@ export const MarketingBentoGrid = () => {
       <div className="mx-auto max-w-[1200px]">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
-            Powerful tools for modern data teams
+            A focused workspace for schema thinking
           </h2>
           <p className="text-muted-foreground mx-auto max-w-2xl">
-            EFlow combines visual design with technical precision, giving your
-            team the most robust ERD workspace ever built.
+            Eflow helps you move from rough database ideas to readable
+            relational models without pretending to be a full enterprise
+            platform on day one.
           </p>
         </div>
 
@@ -116,8 +118,7 @@ export const MarketingBentoGrid = () => {
   );
 };
 
-// Placeholder icons if lucide-react doesn't have them exactly as named
-const CanvasIcon = (props: any) => (
+const CanvasIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"

@@ -2,10 +2,13 @@ import { MarketingGridBackground } from "../atoms/marketing-grid-background";
 import { Footer } from "../organisms/footer";
 import { MarketingBentoGrid } from "../organisms/marketing-bento-grid";
 import { MarketingDashboardShowcase } from "../organisms/marketing-dashboard-showcase";
+import { MarketingFinalCta } from "../organisms/marketing-final-cta";
 import MarketingFaq from "../organisms/marketing-faq";
 import { MarketingHero } from "../organisms/marketing-hero";
 import { MarketingLogoMarquee } from "../organisms/marketing-logo-marquee";
 import { MarketingNavbar } from "../organisms/marketing-navbar";
+import { MarketingRoadmapGrid } from "../organisms/marketing-roadmap-grid";
+import { MarketingStoryGrid } from "../organisms/marketing-story-grid";
 
 export const MarketingTemplate = () => {
   return (
@@ -26,8 +29,11 @@ export const MarketingTemplate = () => {
           </div>
         </section>
 
+        <MarketingStoryGrid />
         <MarketingBentoGrid />
+        <MarketingRoadmapGrid />
         <MarketingFaq />
+        <MarketingFinalCta />
       </main>
 
       <Footer />

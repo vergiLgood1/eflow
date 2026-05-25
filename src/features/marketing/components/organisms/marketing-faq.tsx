@@ -5,34 +5,34 @@ import { motion } from "framer-motion";
 
 const faqs = [
   {
-    question: "Can I import my existing database?",
+    question: "What stage is Eflow in?",
     answer:
-      "Yes, EFlow supports importing SQL DDL and DBML files. Simply paste your code or upload a file to instantly visualize your entire schema.",
+      "Eflow is a new product focused on the core schema planning workflow first: visual modeling, SQL import/export, DBML inspection, and checkpoints.",
   },
   {
-    question: "Does it support multiple SQL dialects?",
+    question: "Can I import SQL or DBML?",
     answer:
-      "Currently, we support PostgreSQL, MySQL, and SQLite dialects for both import and export, ensuring compatibility with your existing stack.",
+      "Yes. The current workspace includes SQL import, DBML import, a DBML panel, and SQL export for turning visual models back into a draft schema.",
   },
   {
-    question: "Is there a limit to how many tables I can design?",
+    question: "Does Eflow replace migrations?",
     answer:
-      "Our high-performance canvas is optimized to handle thousands of entities without lag, making it perfect for complex enterprise-grade database architectures.",
+      "No. Eflow helps you plan and review schema structure before migration work. Checkpoints and migration drafts are useful context, but your migration tool should remain the source of production changes.",
   },
   {
-    question: "How does real-time collaboration work?",
+    question: "Is collaboration available today?",
     answer:
-      "Much like Figma, you can invite team members to your workspace. You'll see their cursors and changes in real-time as you design and iterate together.",
+      "Workspace structure exists, but multiplayer live cursors and full real-time collaboration should be treated as planned work, not a shipped promise.",
   },
   {
-    question: "Can I export back to SQL or DBML?",
+    question: "Is AI schema review included?",
     answer:
-      "Absolutely. You can export your visual models to production-ready SQL, DBML, or high-resolution images for your technical documentation.",
+      "Not as a core shipped claim on this page. AI-assisted schema review is a planned direction and should only be promoted once it is reliable inside the product.",
   },
   {
-    question: "Is my schema data secure?",
+    question: "Who is Eflow for right now?",
     answer:
-      "Security is our top priority. We use industry-standard encryption for all stored schemas and offer granular role-based access control for teams.",
+      "Early product teams, indie builders, and engineers who want a clearer schema planning surface before committing to database migrations.",
   },
 ];
 
@@ -51,7 +51,7 @@ export default function MarketingFaq() {
           Frequently Asked Questions
         </h2>
         <p className="text-muted-foreground mt-2 text-lg sm:text-xl">
-          Find answers to common questions about our products and services.
+          Straight answers for a new product launch.
         </p>
       </div>
 

@@ -68,7 +68,7 @@ const TableNode = ({
         {/* Status Dot */}
         <div className="ml-auto flex items-center gap-1.5 rounded-full bg-black/20 px-1.5 py-0.5 ring-1 ring-white/5">
           <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span className="text-[8px] opacity-70">LIVE</span>
+          <span className="text-[8px] opacity-70">DRAFT</span>
         </div>
       </div>
 

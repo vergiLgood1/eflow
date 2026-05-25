@@ -8,8 +8,9 @@ export const MarketingNavbar = () => {
       <div className="relative flex h-full w-full max-w-[1200px] items-center justify-between border-x border-white/10 px-6">
         <MarketingLogo />
         <div className="hidden h-full items-center gap-4 md:flex">
-          <MarketingNavLink href="#hero">Hero</MarketingNavLink>
+          <MarketingNavLink href="#story">Story</MarketingNavLink>
           <MarketingNavLink href="#features">Features</MarketingNavLink>
+          <MarketingNavLink href="#roadmap">Roadmap</MarketingNavLink>
           <MarketingNavLink href="#faqs">FAQs</MarketingNavLink>
         </div>
         <div className="flex items-center gap-4">
