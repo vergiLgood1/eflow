@@ -1,4 +1,3 @@
-import { MarketingGridBackground } from "../atoms/marketing-grid-background";
 import { Footer } from "../organisms/footer";
 import { MarketingBentoGrid } from "../organisms/marketing-bento-grid";
 import { MarketingDashboardShowcase } from "../organisms/marketing-dashboard-showcase";
@@ -12,71 +11,64 @@ import { MarketingStoryGrid } from "../organisms/marketing-story-grid";
 
 export const MarketingTemplate = () => {
   return (
-    <div className="bg-background text-foreground relative flex min-h-screen w-full flex-col overflow-x-hidden">
-      <MarketingGridBackground />
+    <main className="relative z-10 grow">
+      <MarketingNavbar />
+      <section className="border-b border-white/10" id="home">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+          <MarketingHero />
+        </div>
+      </section>
 
-      <main className="relative z-10 grow">
+      <section className="border-b border-white/10" id="showcase">
+        <div className="mx-auto max-w-300 border-x border-white/10">
+          <MarketingDashboardShowcase />
+        </div>
+      </section>
 
-        <MarketingNavbar />
-
-        <section className="border-b border-white/10" id="home">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
-            <MarketingHero />
+      <section className="border-b border-white/10" id="launch-notes">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-16">
+          <div className="mx-auto mb-10 max-w-2xl text-center">
+            <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
+              Launch notes
+            </p>
+            <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
+              Core capabilities available in this launch phase.
+            </h2>
           </div>
-        </section>
+          <MarketingLogoMarquee />
+        </div>
+      </section>
 
-        <section className="border-b border-white/10" id="showcase">
-          <div className="mx-auto max-w-300 border-x border-white/10">
-            <MarketingDashboardShowcase />
-          </div>
-        </section>
+      <section className="border-b border-white/10" id="story">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+          <MarketingStoryGrid />
+        </div>
+      </section>
 
-        <section className="border-b border-white/10" id="launch-notes">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-16">
-            <div className="mx-auto mb-10 max-w-2xl text-center">
-              <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
-                Launch notes
-              </p>
-              <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
-                Core capabilities available in this launch phase.
-              </h2>
-            </div>
-            <MarketingLogoMarquee />
-          </div>
-        </section>
+      <section className="border-b border-white/10" id="features">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+          <MarketingBentoGrid />
+        </div>
+      </section>
 
-        <section className="border-b border-white/10" id="story">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
-            <MarketingStoryGrid />
-          </div>
-        </section>
+      <section className="border-b border-white/10" id="roadmap">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+          <MarketingRoadmapGrid />
+        </div>
+      </section>
 
-        <section className="border-b border-white/10" id="features">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
-            <MarketingBentoGrid />
-          </div>
-        </section>
+      <section className="border-b border-white/10" id="faqs">
+        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-14">
+          <MarketingFaq />
+        </div>
+      </section>
 
-        <section className="border-b border-white/10" id="roadmap">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
-            <MarketingRoadmapGrid />
-          </div>
-        </section>
-
-        <section className="border-b border-white/10" id="faqs">
-          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-14">
-            <MarketingFaq />
-          </div>
-        </section>
-
-        <section className="border-b border-white/10" id="start">
-          <div className="mx-auto max-w-300 border-x border-white/10">
-            <MarketingFinalCta />
-          </div>
-        </section>
-      </main>
-
+      <section className="border-b border-white/10" id="start">
+        <div className="mx-auto max-w-300 border-x border-white/10">
+          <MarketingFinalCta />
+        </div>
+      </section>
       <Footer />
-    </div>
+    </main>
   );
 };
