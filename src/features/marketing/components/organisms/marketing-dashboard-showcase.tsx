@@ -5,7 +5,7 @@ import { MarketingWorkspaceDashboardMock } from "../molecules/marketing-workspac
 
 export const MarketingDashboardShowcase = () => {
   return (
-    <section className="relative z-10 mt-6 w-full max-w-[1200px]">
+    <div className="relative z-10 w-full">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.06]">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:48px_48px]" />
@@ -49,6 +49,6 @@ export const MarketingDashboardShowcase = () => {
           <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
         </div>
       </motion.div>
-    </section>
+    </div>
   );
 };

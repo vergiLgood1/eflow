@@ -22,14 +22,14 @@ const storyCards = [
 
 export const MarketingStoryGrid = () => {
   return (
-    <section className="px-6 py-24" id="story">
-      <div className="mx-auto grid max-w-[1200px] gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+    <section className="border-b border-white/10" id="story">
+      <div className="mx-auto grid max-w-[1200px] gap-8 border-x border-white/10 px-6 py-24 lg:grid-cols-[0.85fr_1.15fr]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="rounded-[28px] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-md"
+          className="rounded-[28px] border border-white/10 bg-white/[0.03] p-8 text-start backdrop-blur-md"
         >
           <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
             Why it exists
@@ -58,10 +58,10 @@ export const MarketingStoryGrid = () => {
               <p className="font-mono text-xs text-white/40">
                 {String(index + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-4 text-lg font-medium text-white">
+              <h3 className="mt-4 text-start text-lg font-medium text-white">
                 {card.title}
               </h3>
-              <p className="text-muted-foreground mt-2 text-sm leading-6">
+              <p className="text-muted-foreground mt-2 text-start text-sm leading-6">
                 {card.description}
               </p>
             </motion.div>

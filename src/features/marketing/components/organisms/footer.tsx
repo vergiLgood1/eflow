@@ -1,6 +1,5 @@
 "use client";
 
-import { Separator } from "@/shared/components/ui/separator";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { MarketingLogo } from "../atoms/marketing-logo";
@@ -12,59 +11,124 @@ const FOOTER_LINKS = {
     { href: "#roadmap", label: "Roadmap", id: "roadmap" },
     { href: "#faqs", label: "FAQs", id: "faqs" },
   ],
+  Social: [
+    { href: "#linkedin", label: "Linkedin", id: "linkedin" },
+    { href: "#instagram", label: "Instagram", id: "instagram" },
+    { href: "#twitter", label: "Twitter", id: "twitter" },
+    { href: "#github", label: "Github", id: "github" },
+  ]
 };
 
 export const Footer = () => {
   return (
     <motion.footer
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-background border-border relative mt-24 border-t"
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="bg-background border-border relative overflow-hidden border-b border-white/10"
     >
-      <div className="mx-auto max-w-[1200px] py-14">
-        <div className="flex flex-col items-start justify-between gap-12 sm:flex-row">
-          <div className="shrink-0 space-y-2">
+      {/* Background glow */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="bg-primary/10 absolute top-0 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-[1200px] border-x border-white/10 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        {/* Top Content */}
+        <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
+          {/* Brand */}
+          <div className="max-w-sm space-y-4">
             <MarketingLogo />
-            <div className="flex flex-col">
+
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Build modern workflows with intelligent automation and seamless
+              collaboration for your growing business.
+            </p>
+
+            <div className="flex flex-col gap-1">
               <p className="text-muted-foreground text-xs">
                 © {new Date().getFullYear()} eflow
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
+
+              <p className="text-muted-foreground text-xs">
                 All rights reserved.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-10">
+          {/* Navigation */}
+          <div className="grid w-full grid-cols-2 gap-10 sm:w-auto sm:grid-cols-3 lg:grid-cols-4">
             {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-              <div key={section} className="flex flex-col gap-1">
-                <p className="text-foreground mb-2 text-xs font-semibold">
+              <div key={section} className="flex min-w-[120px] flex-col">
+                <p className="text-foreground mb-4 text-sm font-semibold tracking-wide">
                   {section}
                 </p>
-                {links.map((link) => (
-                  <Link
-                    key={link.id}
-                    href={link.href}
-                    className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+
+                <div className="flex flex-col gap-3">
+                  {links.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      className="text-muted-foreground hover:text-foreground w-fit text-sm transition-all duration-300 hover:translate-x-1"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        <Separator className="my-10" />
+        {/* Large Branding */}
+        <div className="relative mt-10 border-y border-white/10 py-6 sm:mt-14 sm:py-8">
+          <p
+            aria-hidden="true"
+            className="
+              from-foreground/10
+              to-foreground/[0.02]
+              pointer-events-none
+              bg-gradient-to-b
+              bg-clip-text
+              text-center
+              font-bold
+              tracking-[-0.08em]
+              text-transparent
+              select-none
+              text-[3.5rem]
+              leading-none
+              sm:text-[6rem]
+              md:text-[8rem]
+              lg:text-[11rem]
+              xl:text-[14rem]
+            "
+          >
+            EFLOW
+          </p>
+        </div>
 
-        <p
-          aria-hidden="true"
-          className="from-foreground/5 to-foreground/1.5 pointer-events-none bg-linear-to-b bg-clip-text text-center text-5xl font-bold text-transparent select-none md:text-9xl lg:text-[14rem]"
-        >
-          EFLOW
-        </p>
+        {/* Bottom Bar */}
+        <div className="flex flex-col items-center justify-between gap-4 pt-6 text-center sm:flex-row sm:text-left">
+          <p className="text-muted-foreground text-xs">
+            Crafted with precision and modern design systems.
+          </p>
+
+          <div className="flex items-center gap-4">
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            >
+              Privacy
+            </Link>
+
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            >
+              Terms
+            </Link>
+          </div>
+        </div>
       </div>
     </motion.footer>
   );

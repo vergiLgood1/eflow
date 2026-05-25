@@ -35,14 +35,14 @@ const roadmapColumns = [
 
 export const MarketingRoadmapGrid = () => {
   return (
-    <section className="px-6 py-24" id="roadmap">
-      <div className="mx-auto max-w-[1200px]">
+    <section className="border-b border-white/10" id="roadmap">
+      <div className="mx-auto max-w-[1200px] border-x border-white/10 px-6 py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-10 max-w-2xl"
+          className="mx-auto mb-10 max-w-2xl text-center"
         >
           <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
             Open roadmap

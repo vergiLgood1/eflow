@@ -16,10 +16,10 @@ export const MarketingLogoMarquee = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-      className="mx-auto mt-8 w-full max-w-[1200px] px-6 opacity-90 transition-opacity duration-500 hover:opacity-100"
+      className="mx-auto w-full opacity-90 transition-opacity duration-500 hover:opacity-100"
       id="logo-section"
     >
-      <div className="grid gap-4 border-t border-white/5 pt-8 lg:grid-cols-[0.9fr_1.6fr]">
+      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.6fr]">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md">
           <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
             Launch notes
