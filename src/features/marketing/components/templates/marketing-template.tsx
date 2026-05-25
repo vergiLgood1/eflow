@@ -1,3 +1,4 @@
+import ShinyText from "@/shared/components/ShinyText";
 import { Footer } from "../organisms/footer";
 import { MarketingBentoGrid } from "../organisms/marketing-bento-grid";
 import { MarketingDashboardShowcase } from "../organisms/marketing-dashboard-showcase";
@@ -28,12 +29,17 @@ export const MarketingTemplate = () => {
       <section className="border-b border-white/10" id="launch-notes">
         <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-16">
           <div className="mx-auto mb-10 max-w-2xl text-center">
-            <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
-              Launch notes
-            </p>
+            <ShinyText
+              className="text-xs font-medium tracking-[0.24em] uppercase"
+              text="Launch notes"
+            />
             <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
               Core capabilities available in this launch phase.
             </h2>
+            <p className="text-muted-foreground mx-auto mt-4 max-w-2xl leading-7">
+              The first release focuses on the schema planning flow teams need
+              before tables and relationships become production decisions.
+            </p>
           </div>
           <MarketingLogoMarquee />
         </div>

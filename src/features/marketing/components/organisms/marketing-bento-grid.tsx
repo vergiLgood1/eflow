@@ -1,11 +1,12 @@
 "use client";
 
+import ShinyText from "@/shared/components/ShinyText";
 import {
   Database as DatabaseIcon,
   FileTextIcon,
+  GitBranchIcon,
   History as HistoryIcon,
   LayoutDashboardIcon,
-  GitBranchIcon,
 } from "lucide-react";
 import type { SVGProps } from "react";
 import { MarketingBentoCard } from "../molecules/marketing-bento-card";
@@ -92,26 +93,29 @@ export const MarketingBentoGrid = () => {
 
   return (
     <div>
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
-            A focused workspace for schema thinking
-          </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl">
-            Eflow helps you move from rough database ideas to readable
-            relational models without pretending to be a full enterprise
-            platform on day one.
-          </p>
-        </div>
+      <div className="mx-auto mb-10 max-w-2xl text-center">
+        <ShinyText
+          className="text-xs font-medium tracking-[0.24em] uppercase"
+          text="Features"
+        />
+        <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
+          A focused workspace for schema thinking
+        </h2>
+        <p className="text-muted-foreground mx-auto mt-4 max-w-2xl leading-7">
+          Eflow helps you move from rough database ideas to readable relational
+          models without pretending to be a full enterprise platform on day one.
+        </p>
+      </div>
 
-        <div className="grid auto-rows-[minmax(200px,auto)] grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-3">
-          {features.map((feature, index) => (
-            <MarketingBentoCard
-              key={feature.title}
-              {...feature}
-              delay={index * 0.1}
-            />
-          ))}
-        </div>
+      <div className="grid auto-rows-[minmax(200px,auto)] grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-3">
+        {features.map((feature, index) => (
+          <MarketingBentoCard
+            key={feature.title}
+            {...feature}
+            delay={index * 0.1}
+          />
+        ))}
+      </div>
     </div>
   );
 };

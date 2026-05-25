@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
+import ShinyText from "@/shared/components/ShinyText";
 import { motion } from "framer-motion";
 
 const faqs = [
@@ -44,14 +45,18 @@ export default function MarketingFaq() {
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="mb-16 flex flex-col items-center justify-center gap-2">
-          <h2 className="mt-5 max-w-4xl text-4xl leading-[1.1] font-medium tracking-[-0.04em] text-balance">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-muted-foreground mt-2 text-lg sm:text-xl">
-            Straight answers for a new product launch.
-          </p>
-        </div>
+      <div className="mx-auto mb-10 max-w-2xl text-center">
+        <ShinyText
+          className="text-xs font-medium tracking-[0.24em] uppercase"
+          text="FAQs"
+        />
+        <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
+          Frequently Asked Questions
+        </h2>
+        <p className="text-muted-foreground mx-auto mt-4 max-w-2xl leading-7">
+          Straight answers for a new product launch.
+        </p>
+      </div>
 
       <div className="border-border/75 bg-muted mt-8 grid grid-cols-1 gap-1 rounded-lg border p-0.75 md:grid-cols-2">
         {faqs.map((faq, index) => (

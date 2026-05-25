@@ -1,5 +1,6 @@
 "use client";
 
+import ShinyText from "@/shared/components/ShinyText";
 import { motion } from "framer-motion";
 
 const launchItems = [
@@ -21,9 +22,10 @@ export const MarketingLogoMarquee = () => {
     >
       <div className="grid gap-4 lg:grid-cols-[0.9fr_1.6fr]">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md">
-          <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
-            Launch notes
-          </p>
+          <ShinyText
+            className="text-xs font-medium tracking-[0.24em] uppercase"
+            text="Launch notes"
+          />
           <h4 className="mt-3 text-xl font-medium tracking-tight text-white">
             A focused first version for visual schema planning.
           </h4>
