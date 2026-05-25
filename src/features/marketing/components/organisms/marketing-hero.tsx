@@ -1,5 +1,6 @@
 "use client";
 
+import ShinyText from "@/shared/components/ShinyText";
 import { motion } from "framer-motion";
 import { MarketingButton } from "../atoms/marketing-button";
 import { MarketingHeroHeading } from "../molecules/marketing-hero-heading";
@@ -14,9 +15,12 @@ export const MarketingHero = () => {
       className="relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-8 pt-6"
       id="hero"
     >
-      <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-medium text-white/75">
-        {/* Text animation */}
-      </div>
+
+      {/* Text animation */}
+      <ShinyText
+        className="text-xs font-medium tracking-[0.24em] uppercase"
+        text="Plan schema before migration"
+      />
 
       <MarketingHeroHeading
         description="Eflow is a visual ERD workspace for shaping tables, relationships, DBML, and SQL exports while your product is still changing fast."
