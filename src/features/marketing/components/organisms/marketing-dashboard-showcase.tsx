@@ -1,54 +1,76 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MarketingNodeCanvas } from "../molecules/marketing-node-canvas";
 
 export const MarketingDashboardShowcase = () => {
   return (
-    <div
-      className="relative z-10 mt-2 aspect-16/10 w-full max-w-[1100px]"
-      data-animation-on-scroll=""
-    >
-      {/* Background Glows & Effects */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute top-[-300px] left-1/2 h-[600px] w-[1200px] -translate-x-1/2 mask-[radial-gradient(ellipse_at_center,black_20%,transparent_70%)] opacity-40">
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,#ffffff2a_2px,transparent_2px)] mask-[linear-gradient(to_right,black_1px,transparent_1px)] bg-size-[1px_6px] mask-size-[48px_100%]" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff2a_2px,transparent_2px)] mask-[linear-gradient(to_bottom,black_1px,transparent_1px)] bg-size-[6px_1px] mask-size-[100%_48px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#ffffff40_1px,transparent_0)] bg-size-[48px_48px]" />
+    <section className="relative z-10 mt-6 w-full max-w-[1200px]">
+      {/* Ambient Background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Grid */}
+        <div className="absolute inset-0 opacity-[0.06]">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:48px_48px]" />
         </div>
 
-        {/* Top Glow */}
-        <div className="absolute top-[-120px] left-1/2 flex h-[250px] w-[700px] -translate-x-1/2 items-center justify-center">
-          <div className="bg-primary/30 absolute h-[200px] w-[600px] rounded-full blur-[90px]" />
-          <div className="absolute h-[140px] w-[400px] rounded-full bg-sky-400/20 blur-[70px]" />
-        </div>
+        {/* Aurora Glow */}
+        {/* <div className="absolute top-[-10%] left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-[140px]" />
+        <div className="absolute bottom-[-20%] right-[10%] h-[400px] w-[500px] rounded-full bg-fuchsia-500/10 blur-[120px]" />
+        <div className="absolute top-[30%] left-[5%] h-[300px] w-[300px] rounded-full bg-primary/10 blur-[100px]" /> */}
 
-        {/* Top Edge Light */}
-        <div className="absolute -top-px left-1/2 z-10 h-[1.5px] w-[60%] -translate-x-1/2 bg-linear-to-r from-transparent via-white/80 to-transparent" />
-
-        {/* Bottom Glow */}
-        <div className="bg-primary/10 absolute bottom-[-80px] left-1/2 h-[180px] w-[600px] -translate-x-1/2 rounded-full blur-[100px]" />
+        {/* Floating Rings */}
+        <div className="absolute top-10 left-10 h-48 w-48 rounded-full border border-white/10" />
+        <div className="absolute right-20 bottom-10 h-72 w-72 rounded-full border border-white/5" />
       </div>
 
-      {/* Main Showcase Container */}
+      {/* Main Container */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.96, y: 40 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-card relative z-10 h-full w-full overflow-hidden rounded-[14px] p-px shadow-2xl ring-1 ring-white/10"
+        transition={{
+          duration: 0.9,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] shadow-[0_0_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl"
       >
-        <div className="bg-muted group relative h-full w-full overflow-hidden rounded-[13px]">
-          {/* Dashboard Visual (Node Flow) */}
-          <MarketingNodeCanvas />
+        {/* Noise Texture */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay">
+          <div className="h-full w-full bg-[url('/noise.png')]" />
+        </div>
 
-          {/* Overlay for glass effect */}
-          <div className="from-background/10 pointer-events-none absolute inset-0 bg-linear-to-t via-transparent to-transparent" />
+        {/* Gradient Border */}
+        <div className="pointer-events-none absolute inset-0 rounded-[32px] bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02),transparent)] p-px">
+          <div className="h-full w-full rounded-[32px] bg-transparent" />
+        </div>
 
-          {/* Decorative frame light */}
-          <div className="pointer-events-none absolute inset-0 rounded-[13px] border border-white/5" />
+        {/* Header */}
+        <div className="relative flex items-center justify-between border-b border-white/5 px-6 py-4">
+          <div className="flex items-center gap-2">
+            <div className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+            <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
+            <div className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
+          </div>
+
+          <div className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-1 text-[11px] tracking-[0.24em] text-white/40 uppercase backdrop-blur-md">
+            Neural Dashboard
+          </div>
+        </div>
+
+        {/* Showcase Content */}
+        <div className="relative aspect-[16/9] overflow-hidden">
+          {/* Background Gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_60%)]" />
+
+          {/* Canvas */}
+          {/* <MarketingNodeCanvas /> */}
+
+          {/* Bottom Overlay */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/40 to-transparent" />
+
+          {/* Edge Glow */}
+          <div className="pointer-events-none absolute inset-0 rounded-[32px] ring-1 ring-inset ring-white/10" />
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 };

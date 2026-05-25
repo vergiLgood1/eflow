@@ -17,8 +17,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EFlow - Enterprise Flow",
-  description: "Modern enterprise workflow management",
+  title: "Eflow - Professional ERD Modeler",
+  description: "Professional web-based ERD modeling platform with intelligent relationship detection, visual canvas persistence, and DBML/SQL import.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon-512.svg", sizes: "512x512", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({

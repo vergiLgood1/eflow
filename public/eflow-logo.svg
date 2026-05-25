@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main E shape with flow lines -->
+  <g id="eflow-logo">
+    <!-- Outer E structure -->
+    <path d="M60 50 L140 50 L140 65 L75 65 L75 92.5 L130 92.5 L130 107.5 L75 107.5 L75 135 L140 135 L140 150 L60 150 Z" fill="currentColor"/>
+    
+    <!-- Flow lines - representing data flow -->
+    <path d="M145 55 L165 55 C170 55 175 60 175 65 L175 75" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M145 100 L170 100 C175 100 180 105 180 110 L180 120" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M145 145 L165 145 C170 145 175 140 175 135 L175 125" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+    
+    <!-- Connection nodes -->
+    <circle cx="175" cy="75" r="4" fill="currentColor"/>
+    <circle cx="180" cy="120" r="4" fill="currentColor"/>
+    <circle cx="175" cy="125" r="4" fill="currentColor"/>
+  </g>
+</svg>

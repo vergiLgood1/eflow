@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Eflow Icon - High Resolution -->
+  <rect width="512" height="512" rx="96" fill="#18181B"/>
+  
+  <!-- Main E structure -->
+  <path d="M128 128 L384 128 L384 176 L192 176 L192 236 L352 236 L352 276 L192 276 L192 336 L384 336 L384 384 L128 384 Z" fill="#FAFAFA"/>
+  
+  <!-- Flow lines -->
+  <path d="M394 140 L430 140 C445 140 456 151 456 166 L456 196" stroke="#3B82F6" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <path d="M394 256 L440 256 C455 256 466 267 466 282 L466 312" stroke="#3B82F6" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <path d="M394 372 L430 372 C445 372 456 361 456 346 L456 316" stroke="#3B82F6" stroke-width="12" stroke-linecap="round" fill="none"/>
+  
+  <!-- Connection nodes -->
+  <circle cx="456" cy="196" r="12" fill="#3B82F6"/>
+  <circle cx="466" cy="312" r="12" fill="#3B82F6"/>
+  <circle cx="456" cy="316" r="12" fill="#3B82F6"/>
+</svg>
