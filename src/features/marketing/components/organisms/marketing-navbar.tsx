@@ -5,7 +5,7 @@ import { MarketingNavLink } from "../atoms/marketing-nav-link";
 export const MarketingNavbar = () => {
   return (
     <nav className="bg-background/95 fixed top-0 right-0 left-0 z-50 flex h-[72px] items-center justify-center border-b border-white/10 px-10 backdrop-blur-md">
-      <div className="relative flex h-full w-full max-w-[1200px] items-center justify-between border-x border-white/10 px-6">
+      <div className="relative flex h-full w-full max-w-[1200px] items-center justify-between px-6">
         <MarketingLogo />
         <div className="hidden h-full items-center gap-4 md:flex">
           <MarketingNavLink href="#story">Story</MarketingNavLink>
