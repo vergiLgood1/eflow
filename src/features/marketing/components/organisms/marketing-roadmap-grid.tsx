@@ -35,8 +35,7 @@ const roadmapColumns = [
 
 export const MarketingRoadmapGrid = () => {
   return (
-    <section className="border-b border-white/10" id="roadmap">
-      <div className="mx-auto max-w-[1200px] border-x border-white/10 px-6 py-24">
+    <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -80,7 +79,6 @@ export const MarketingRoadmapGrid = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </div>
   );
 };

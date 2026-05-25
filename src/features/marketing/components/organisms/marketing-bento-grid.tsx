@@ -91,8 +91,7 @@ export const MarketingBentoGrid = () => {
   ];
 
   return (
-    <section id="features" className="border-b border-white/10">
-      <div className="mx-auto max-w-[1200px] border-x border-white/10 px-6 py-24">
+    <div>
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
             A focused workspace for schema thinking
@@ -113,8 +112,7 @@ export const MarketingBentoGrid = () => {
             />
           ))}
         </div>
-      </div>
-    </section>
+    </div>
   );
 };
 

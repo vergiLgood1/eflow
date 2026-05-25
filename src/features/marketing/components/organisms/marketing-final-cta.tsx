@@ -5,14 +5,12 @@ import { MarketingButton } from "../atoms/marketing-button";
 
 export const MarketingFinalCta = () => {
   return (
-    <section className="border-b border-white/10" id="start">
-      <div className="mx-auto max-w-[1200px] border-x border-white/10 px-6 py-20">
-        <motion.div
+    <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-16 text-center shadow-[0_0_80px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-12"
+          className="relative overflow-hidden bg-white/[0.04] px-6 py-16 text-center shadow-[0_0_80px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-12"
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_55%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:42px_42px] opacity-40" />
@@ -37,8 +35,6 @@ export const MarketingFinalCta = () => {
               </MarketingButton>
             </div>
           </div>
-        </motion.div>
-      </div>
-    </section>
+    </motion.div>
   );
 };

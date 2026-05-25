@@ -16,21 +16,23 @@ export const MarketingTemplate = () => {
       <MarketingGridBackground />
 
       <main className="relative z-10 grow">
-        <section
-          className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden border-y border-white/10"
-          id="home"
-        >
-          <MarketingNavbar />
 
-          <div className="relative z-10 flex w-full max-w-[1200px] flex-col items-center border-x border-white/10 px-6 py-32 space-y-12">
+        <MarketingNavbar />
+
+        <section className="border-b border-white/10" id="home">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
             <MarketingHero />
+          </div>
+        </section>
 
+        <section className="border-b border-white/10" id="showcase">
+          <div className="mx-auto max-w-300 border-x border-white/10">
             <MarketingDashboardShowcase />
           </div>
         </section>
 
         <section className="border-b border-white/10" id="launch-notes">
-          <div className="mx-auto max-w-[1200px] border-x border-white/10 px-6 py-16">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-16">
             <div className="mx-auto mb-10 max-w-2xl text-center">
               <p className="text-xs font-medium tracking-[0.24em] text-white/45 uppercase">
                 Launch notes
@@ -43,11 +45,35 @@ export const MarketingTemplate = () => {
           </div>
         </section>
 
-        <MarketingStoryGrid />
-        <MarketingBentoGrid />
-        <MarketingRoadmapGrid />
-        <MarketingFaq />
-        <MarketingFinalCta />
+        <section className="border-b border-white/10" id="story">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+            <MarketingStoryGrid />
+          </div>
+        </section>
+
+        <section className="border-b border-white/10" id="features">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+            <MarketingBentoGrid />
+          </div>
+        </section>
+
+        <section className="border-b border-white/10" id="roadmap">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+            <MarketingRoadmapGrid />
+          </div>
+        </section>
+
+        <section className="border-b border-white/10" id="faqs">
+          <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-14">
+            <MarketingFaq />
+          </div>
+        </section>
+
+        <section className="border-b border-white/10" id="start">
+          <div className="mx-auto max-w-300 border-x border-white/10">
+            <MarketingFinalCta />
+          </div>
+        </section>
       </main>
 
       <Footer />

@@ -15,16 +15,9 @@ export const MarketingHero = () => {
       id="hero"
     >
       <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-medium text-white/75">
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
-          New launch
-        </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
-          Early product preview
-        </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
-          Built for schema planning
-        </span>
+        {/* Text animation */}
       </div>
+
       <MarketingHeroHeading
         description="Eflow is a visual ERD workspace for shaping tables, relationships, DBML, and SQL exports while your product is still changing fast."
         title="Design database schemas before they become production debt"

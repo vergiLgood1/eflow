@@ -22,8 +22,7 @@ const storyCards = [
 
 export const MarketingStoryGrid = () => {
   return (
-    <section className="border-b border-white/10" id="story">
-      <div className="mx-auto grid max-w-[1200px] gap-8 border-x border-white/10 px-6 py-24 lg:grid-cols-[0.85fr_1.15fr]">
+    <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,7 +66,6 @@ export const MarketingStoryGrid = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </div>
   );
 };
