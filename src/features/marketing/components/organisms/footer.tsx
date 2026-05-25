@@ -20,6 +20,8 @@ const FOOTER_LINKS = {
 };
 
 export const Footer = () => {
+  const footerSections = Object.entries(FOOTER_LINKS).reverse();
+
   return (
     <motion.footer
       initial={{ opacity: 0, y: 24 }}
@@ -57,9 +59,16 @@ export const Footer = () => {
           </div>
 
           {/* Navigation */}
-          <div className="grid w-full grid-cols-2 gap-10 sm:w-auto sm:grid-cols-3 lg:grid-cols-4">
-            {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-              <div key={section} className="flex min-w-[120px] flex-col">
+          <div className="grid w-full grid-cols-2 gap-10 sm:w-auto sm:grid-cols-2 lg:grid-cols-4">
+            {footerSections.map(([section, links], index) => (
+              <div
+                key={section}
+                className={
+                  index === 0
+                    ? "flex min-w-[120px] flex-col lg:col-start-3"
+                    : "flex min-w-[120px] flex-col lg:col-start-4"
+                }
+              >
                 <p className="text-foreground mb-4 text-sm font-semibold tracking-wide">
                   {section}
                 </p>
@@ -81,27 +90,10 @@ export const Footer = () => {
         </div>
 
         {/* Large Branding */}
-        <div className="relative mt-10 border-y border-white/10 py-6 sm:mt-14 sm:py-8">
+        <div className="relative -mx-4 mt-10 border-y border-white/10 px-4 py-6 sm:-mx-6 sm:mt-14 sm:px-6 sm:py-8 lg:-mx-8 lg:px-8">
           <p
             aria-hidden="true"
-            className="
-              from-foreground/10
-              to-foreground/[0.02]
-              pointer-events-none
-              bg-gradient-to-b
-              bg-clip-text
-              text-center
-              font-bold
-              tracking-[-0.08em]
-              text-transparent
-              select-none
-              text-[3.5rem]
-              leading-none
-              sm:text-[6rem]
-              md:text-[8rem]
-              lg:text-[11rem]
-              xl:text-[14rem]
-            "
+            className="from-foreground/10 to-foreground/[0.02] pointer-events-none w-full bg-gradient-to-b bg-clip-text text-center font-bold tracking-[0.18em] text-transparent select-none text-[4.5rem] leading-none sm:text-[7rem] md:text-[9.5rem] lg:text-[13rem] xl:text-[16rem]"
           >
             EFLOW
           </p>
