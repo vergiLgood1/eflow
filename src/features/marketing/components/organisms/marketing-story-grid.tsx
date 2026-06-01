@@ -2,6 +2,11 @@
 
 import ShinyText from "@/shared/components/ShinyText";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLayoutEffect, useRef } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const storyCards = [
   {
@@ -22,8 +27,54 @@ const storyCards = [
 ];
 
 export const MarketingStoryGrid = () => {
+  const storyRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const storyElement = storyRef.current;
+
+    if (!storyElement) return;
+
+    const context = gsap.context(() => {
+      const stepContents = gsap.utils.toArray<HTMLElement>(
+        "[data-story-step-content]",
+      );
+      const progressLine = storyElement.querySelector<HTMLElement>(
+        "[data-story-progress]",
+      );
+
+      gsap.set(stepContents, { opacity: 0.35, x: 28 });
+
+      gsap.to(progressLine, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: progressLine,
+          start: "top 65%",
+          end: "bottom 45%",
+          scrub: true,
+        },
+      });
+
+      stepContents.forEach((stepContent) => {
+        gsap.to(stepContent, {
+          opacity: 1,
+          x: 0,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: stepContent,
+            start: "top 72%",
+            end: "top 42%",
+            scrub: true,
+          },
+        });
+      });
+    }, storyElement);
+
+    return () => context.revert();
+  }, []);
+
   return (
-    <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+    <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]" ref={storyRef}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -46,6 +97,10 @@ export const MarketingStoryGrid = () => {
       </motion.div>
 
       <div className="relative border-l border-white/10 pl-6 sm:pl-10">
+        <div
+          className="absolute top-1 bottom-1 -left-px w-px origin-top scale-y-0 bg-linear-to-b from-emerald-300 via-emerald-300/80 to-emerald-300"
+          data-story-progress
+        />
         {storyCards.map((card, index) => (
           <motion.div
             key={card.title}
@@ -54,17 +109,20 @@ export const MarketingStoryGrid = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
             className="group relative pb-12 last:pb-0"
+            data-story-step
           >
             <div className="bg-background absolute top-1 -left-[31px] h-3 w-3 rounded-full border border-white/30 shadow-[0_0_0_8px_rgba(255,255,255,0.03)] sm:-left-[47px]" />
-            <p className="font-mono text-xs text-white/40 transition-colors group-hover:text-white/70">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <h3 className="mt-3 text-start text-2xl font-medium tracking-[-0.04em] text-white">
-              {card.title}
-            </h3>
-            <p className="text-muted-foreground mt-3 max-w-2xl text-start leading-7">
-              {card.description}
-            </p>
+            <div data-story-step-content>
+              <p className="font-mono text-xs text-white/40 transition-colors group-hover:text-white/70">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <h3 className="mt-3 text-start text-2xl font-medium tracking-[-0.04em] text-white">
+                {card.title}
+              </h3>
+              <p className="text-muted-foreground mt-3 max-w-2xl text-start leading-7">
+                {card.description}
+              </p>
+            </div>
           </motion.div>
         ))}
       </div>
