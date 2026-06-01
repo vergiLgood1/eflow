@@ -2,6 +2,7 @@
 
 import { registerUser } from "@/features/account/applications/account.action";
 import {
+  ResetPasswordSchema,
   SignInSchema,
   SignUpSchema,
 } from "@/features/authentication/types/auth.schema";
@@ -15,6 +16,7 @@ import { auth } from "../lib/auth-server";
 import {
   forgotPasswordSchema,
   ForgotPasswordSchema,
+  resetPasswordSchema,
   signInSchema,
   signUpSchema,
 } from "../types/auth.schema";
@@ -111,28 +113,46 @@ export async function forgotPassword(
   try {
     const data = Validation.validate(forgotPasswordSchema, req);
 
-    // In a real scenario, this would call Neon Auth's forget password endpoint
-    // If it's exposed on auth, it would be auth.api.forgetPassword or similar.
-    // We simulate success here.
-    const res = await fetch(
-      `${process.env.NEON_AUTH_BASE_URL}/forget-password`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          redirectTo: "/auth/reset-password",
-        }),
-      },
-    );
+    const { error } = await auth.requestPasswordReset({
+      email: data.email,
+      redirectTo: "/auth/reset-password",
+    });
 
-    if (!res.ok) {
-      throw new AppError("Failed to send password reset email", 400);
+    if (error) {
+      throw new AppError(
+        error.message || "Failed to send password reset email",
+        400,
+      );
     }
 
     return {
       success: true,
       message: "If an account exists, a reset link has been sent.",
+    };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
+export async function resetPassword(
+  req: ResetPasswordSchema,
+): Promise<ActionResponse> {
+  try {
+    const data = Validation.validate(resetPasswordSchema, req);
+
+    const { error } = await auth.resetPassword({
+      newPassword: data.password,
+      token: data.token,
+    });
+
+    if (error) {
+      throw new AppError(error.message || "Failed to reset password", 400);
+    }
+
+    return {
+      success: true,
+      message: "Password reset successfully. You can now sign in.",
+      redirectTo: "/auth/sign-in",
     };
   } catch (error) {
     return handleActionError(error);

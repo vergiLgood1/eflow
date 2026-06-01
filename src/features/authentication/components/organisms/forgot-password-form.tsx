@@ -10,14 +10,16 @@ import { Button } from "@/shared/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function ForgotPasswordForm() {
+  const [isResetLinkSent, setIsResetLinkSent] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -32,13 +34,14 @@ export function ForgotPasswordForm() {
         toast.error(result.error);
       } else {
         toast.success(result.message || "Reset link sent!");
+        setIsResetLinkSent(true);
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred.");
     }
   };
 
-  if (isSubmitted) {
+  if (isResetLinkSent) {
     return (
       <div className="grid gap-6 text-center">
         <p className="text-muted-foreground text-sm">
