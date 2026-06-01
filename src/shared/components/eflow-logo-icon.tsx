@@ -1,0 +1,30 @@
+import { cn } from "@/shared/lib/utils";
+
+interface EflowLogoIconProps extends React.SVGProps<SVGSVGElement> {
+  readonly title?: string;
+}
+
+export const EflowLogoIcon = ({
+  className,
+  title = "Eflow",
+  ...props
+}: EflowLogoIconProps) => {
+  return (
+    <svg
+      aria-label={title}
+      className={cn("size-7", className)}
+      fill="none"
+      role="img"
+      viewBox="0 0 27 27"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        clipRule="evenodd"
+        d="M13.5 27C20.9559 27 27 20.9558 27 13.5C27 6.04416 20.9559 0 13.5 0C6.04415 0 0 6.04416 0 13.5C0 20.9558 6.04415 27 13.5 27ZM17.7116 6.28887C17.9166 5.56069 17.2099 5.13009 16.5645 5.58988L7.55536 12.008C6.85545 12.5066 6.96555 13.5 7.72074 13.5H10.0931V13.4816H14.7167L10.9493 14.8109L9.28849 20.7112C9.0835 21.4393 9.79008 21.8699 10.4355 21.4101L19.4447 14.9921C20.1446 14.4935 20.0344 13.5 19.2793 13.5H15.6817L17.7116 6.28887Z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+};

@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   description: "Professional web-based ERD modeling platform with intelligent relationship detection, visual canvas persistence, and DBML/SQL import.",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icon-512.svg", sizes: "512x512", type: "image/svg+xml" },
+      { url: "/eflow-logo-dark.svg", type: "image/svg+xml" },
+      { url: "/eflow-logo-dark.svg", sizes: "512x512", type: "image/svg+xml" },
     ],
   },
 };
