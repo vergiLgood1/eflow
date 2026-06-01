@@ -28,7 +28,7 @@ export const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="bg-background border-border relative overflow-hidden border-b border-white/10"
+      className="border-border relative overflow-hidden border-b border-white/10"
     >
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden">
