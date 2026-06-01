@@ -30,6 +30,7 @@ import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 
 import { ModelToolbarButton } from "@/features/model/components/atoms/model-toolbar-button";
+import { EflowLogoIcon } from "@/shared/components/eflow-logo-icon";
 import { WorkspaceDataModelSelector } from "../molecules/workspace-data-model-selector";
 import { WorkspaceNotificationPopover } from "../molecules/workspace-notification-popover";
 import { WorkspaceSupportDialog } from "../molecules/workspace-support-dialog";
@@ -83,6 +84,7 @@ export function WorkspaceHeader({
           onClick={() => handleNavigation(`/workspaces/${slug}`)}
         >
           {/* Mock Brand logo */}
+          <EflowLogoIcon className="size-4"/>
           <span className="text-primary px-2 font-bold tracking-tight">
             EFLOW
           </span>

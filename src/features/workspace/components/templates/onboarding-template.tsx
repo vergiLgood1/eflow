@@ -1,3 +1,4 @@
+import { EflowLogoIcon } from "@/shared/components/eflow-logo-icon";
 import {
   Card,
   CardContent,
@@ -16,11 +17,9 @@ export function OnboardingTemplate() {
     <div className="from-background to-muted/20 flex min-h-screen items-center justify-center bg-linear-to-b p-6">
       <div className="animate-in fade-in slide-in-from-bottom-4 w-full max-w-md space-y-8 duration-700">
         <div className="flex flex-col items-center space-y-3 text-center">
-          <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-2xl">
-            <span className="text-primary text-2xl font-bold">e</span>
-          </div>
+          <EflowLogoIcon />
           <h1 className="text-foreground text-3xl font-bold tracking-tight">
-            Welcome to eflow
+            Welcome to Eflow
           </h1>
           <p className="text-muted-foreground max-w-[280px]">
             To get started, let's set up a workspace for your projects.

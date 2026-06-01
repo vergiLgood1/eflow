@@ -1,3 +1,4 @@
+import { EflowLogoIcon } from "@/shared/components/eflow-logo-icon";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -10,11 +11,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="w-full max-w-md space-y-8">
           <div className="flex flex-col items-center lg:items-start">
             <Link href="/" className="mb-8 flex items-center gap-2">
-              <div className="bg-primary flex size-8 items-center justify-center rounded-lg">
-                <span className="text-primary-foreground text-xl font-bold">
-                  E
-                </span>
-              </div>
+              <EflowLogoIcon />
               <span className="text-2xl font-bold tracking-tight">EFlow</span>
             </Link>
           </div>
