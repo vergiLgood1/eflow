@@ -38,25 +38,6 @@ export function AuthBrandPanel() {
 
           <div className="relative h-80 overflow-hidden rounded-2xl border border-white/10 bg-black/25">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
-            <svg
-              className="text-primary/60 pointer-events-none absolute inset-0 size-full"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M142 98 C210 96 220 78 292 78"
-                fill="none"
-                stroke="currentColor"
-                strokeDasharray="6 6"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M298 135 C278 190 225 205 170 206"
-                fill="none"
-                stroke="currentColor"
-                strokeDasharray="6 6"
-                strokeWidth="1.5"
-              />
-            </svg>
 
             <SchemaNode
               className="absolute top-8 left-8"
@@ -73,10 +54,6 @@ export function AuthBrandPanel() {
               name={schemaTables[2].name}
               rows={schemaTables[2].rows}
             />
-
-            <div className="absolute top-[7.25rem] left-1/2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-2.5 py-1 font-mono text-[10px] text-emerald-200">
-              1:n
-            </div>
 
             <div className="bg-background/85 absolute right-6 bottom-6 w-44 rounded-xl border border-white/10 p-3 shadow-xl">
               <p className="text-primary font-mono text-[10px]">DBML</p>
