@@ -1,7 +1,12 @@
 "use client";
 
-import { cn } from "@/shared/lib/utils";
 import ShinyText from "@/shared/components/ShinyText";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/shared/components/ui/accordion";
 import { motion } from "framer-motion";
 
 const faqs = [
@@ -45,41 +50,45 @@ export default function MarketingFaq() {
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="mx-auto mb-10 max-w-2xl text-center">
-        <ShinyText
-          className="text-xs font-medium tracking-[0.24em] uppercase"
-          text="FAQs"
-        />
-        <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-muted-foreground mx-auto mt-4 max-w-2xl leading-7">
-          Straight answers for a new product launch.
-        </p>
-      </div>
+      <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+        <div className="text-start">
+          <ShinyText
+            className="text-xs font-medium tracking-[0.24em] uppercase"
+            text="FAQs"
+          />
+          <h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] text-white sm:text-4xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-muted-foreground mt-4 max-w-md leading-7">
+            Straight answers for a new product launch.
+          </p>
+        </div>
 
-      <div className="border-border/75 bg-muted mt-8 grid grid-cols-1 gap-1 rounded-lg border p-0.75 md:grid-cols-2">
-        {faqs.map((faq, index) => (
-          <div
-            className={cn(
-              "border-border/90 bg-background relative overflow-hidden border text-start",
-              "first:rounded-t-md last:rounded-b-md md:first:rounded-tr-none md:last:rounded-bl-none md:nth-[2]:rounded-tr-md md:nth-last-[2]:rounded-bl-md",
-            )}
-            key={index}
-          >
-            <div className="isolate">
-              <span className="border-border/50 bg-muted absolute top-0 left-0 rounded-br-md border-e border-b px-2 py-0.75 font-mono text-[11px]">
-                {(index + 1).toString().padStart(2, "0")}
-              </span>
-              <div className="flex items-center gap-2 border-b border-dashed px-6 py-3 ps-11 text-base font-medium">
-                {faq.question}
-              </div>
-              <div className="text-foreground/70 px-6 py-5 ps-11 text-start text-sm">
+        <Accordion
+          className="border-y border-white/10"
+          collapsible
+          type="single"
+        >
+          {faqs.map((faq, index) => (
+            <AccordionItem
+              className="border-white/10"
+              key={faq.question}
+              value={faq.question}
+            >
+              <AccordionTrigger className="grid gap-3 rounded-none py-6 text-start hover:no-underline md:grid-cols-[4rem_1fr_auto]">
+                <span className="font-mono text-xs text-white/35">
+                  {(index + 1).toString().padStart(2, "0")}
+                </span>
+                <span className="text-base font-medium text-white">
+                  {faq.question}
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground pb-6 text-start text-sm leading-6 md:pl-16">
                 {faq.answer}
-              </div>
-            </div>
-          </div>
-        ))}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </motion.div>
   );

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 const roadmapColumns = [
   {
     title: "Available now",
+    eyebrow: "Now",
     items: [
       "Visual ERD canvas",
       "SQL import and export",
@@ -16,6 +17,7 @@ const roadmapColumns = [
   },
   {
     title: "Being refined",
+    eyebrow: "Next",
     items: [
       "Migration diff quality",
       "Activity history clarity",
@@ -25,6 +27,7 @@ const roadmapColumns = [
   },
   {
     title: "Planned next",
+    eyebrow: "Later",
     items: [
       "Multiplayer collaboration",
       "AI-assisted schema review",
@@ -36,13 +39,13 @@ const roadmapColumns = [
 
 export const MarketingRoadmapGrid = () => {
   return (
-    <div>
+    <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="mx-auto mb-10 max-w-2xl text-center"
+        className="max-w-xl text-start"
       >
         <ShinyText
           className="text-xs font-medium tracking-[0.24em] uppercase"
@@ -57,7 +60,7 @@ export const MarketingRoadmapGrid = () => {
         </p>
       </motion.div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="relative grid gap-8">
         {roadmapColumns.map((column, index) => (
           <motion.div
             key={column.title}
@@ -65,16 +68,24 @@ export const MarketingRoadmapGrid = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md"
+            className="grid gap-4 border-t border-white/10 pt-6 md:grid-cols-[0.35fr_1fr]"
           >
-            <h3 className="text-lg font-medium text-white">{column.title}</h3>
-            <div className="mt-6 grid gap-3">
+            <div>
+              <p className="font-mono text-xs text-emerald-300/80">
+                {column.eyebrow}
+              </p>
+              <h3 className="mt-2 text-xl font-medium tracking-[-0.04em] text-white">
+                {column.title}
+              </h3>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
               {column.items.map((item) => (
                 <div
                   key={item}
-                  className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/75"
+                  className="flex items-center gap-3 text-sm text-white/75"
                 >
-                  {item}
+                  <span className="h-px w-6 bg-white/20" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>

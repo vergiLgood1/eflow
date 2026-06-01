@@ -16,8 +16,6 @@ export const MarketingTemplate = () => {
       <MarketingNavbar />
       <section className="border-b border-white/10" id="home">
         <div className="relative mx-auto max-w-300 overflow-hidden border-x border-white/10 px-6 py-32">
-          {/* <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_55%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:42px_42px] opacity-40" /> */}
           <MarketingHero />
         </div>
       </section>
@@ -29,7 +27,7 @@ export const MarketingTemplate = () => {
       </section>
 
       <section className="border-b border-white/10" id="launch-notes">
-        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-16">
+        <div className="mx-auto max-w-300 border-x border-white/10 py-16">
           <div className="mx-auto mb-10 max-w-2xl text-center">
             <ShinyText
               className="text-xs font-medium tracking-[0.24em] uppercase"
@@ -48,7 +46,7 @@ export const MarketingTemplate = () => {
       </section>
 
       <section className="border-b border-white/10" id="story">
-        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-24">
+        <div className="mx-auto max-w-300 px-6 py-24">
           <MarketingStoryGrid />
         </div>
       </section>
@@ -66,13 +64,13 @@ export const MarketingTemplate = () => {
       </section>
 
       <section className="border-b border-white/10" id="faqs">
-        <div className="mx-auto max-w-300 border-x border-white/10 px-6 py-14">
+        <div className="mx-auto max-w-300 px-6 py-24">
           <MarketingFaq />
         </div>
       </section>
 
       <section className="border-b border-white/10" id="start">
-        <div className="mx-auto max-w-300 border-x border-white/10">
+        <div className="mx-auto max-w-300 border-x border-white/10 ">
           <MarketingFinalCta />
         </div>
       </section>

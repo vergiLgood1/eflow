@@ -31,9 +31,9 @@ export const Footer = () => {
       className="border-border relative overflow-hidden border-b border-white/10"
     >
       {/* Background glow */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         <div className="bg-primary/10 absolute top-0 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full blur-3xl" />
-      </div>
+      </div> */}
 
       <div className="relative mx-auto w-full max-w-[1200px] border-x border-white/10 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* Top Content */}

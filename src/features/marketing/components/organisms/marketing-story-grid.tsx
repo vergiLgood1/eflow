@@ -23,13 +23,13 @@ const storyCards = [
 
 export const MarketingStoryGrid = () => {
   return (
-    <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+    <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="rounded-[28px] border border-white/10 bg-white/[0.03] p-8 text-start backdrop-blur-md"
+        className="text-start lg:sticky lg:top-28 lg:self-start"
       >
         <ShinyText
           className="text-xs font-medium tracking-[0.24em] uppercase"
@@ -45,7 +45,7 @@ export const MarketingStoryGrid = () => {
         </p>
       </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+      <div className="relative border-l border-white/10 pl-6 sm:pl-10">
         {storyCards.map((card, index) => (
           <motion.div
             key={card.title}
@@ -53,16 +53,16 @@ export const MarketingStoryGrid = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md"
+            className="group relative pb-12 last:pb-0"
           >
-            <div className="absolute inset-y-0 left-0 w-px bg-linear-to-b from-transparent via-white/30 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            <p className="font-mono text-xs text-white/40">
+            <div className="bg-background absolute top-1 -left-[31px] h-3 w-3 rounded-full border border-white/30 shadow-[0_0_0_8px_rgba(255,255,255,0.03)] sm:-left-[47px]" />
+            <p className="font-mono text-xs text-white/40 transition-colors group-hover:text-white/70">
               {String(index + 1).padStart(2, "0")}
             </p>
-            <h3 className="mt-4 text-start text-lg font-medium text-white">
+            <h3 className="mt-3 text-start text-2xl font-medium tracking-[-0.04em] text-white">
               {card.title}
             </h3>
-            <p className="text-muted-foreground mt-2 text-start text-sm leading-6">
+            <p className="text-muted-foreground mt-3 max-w-2xl text-start leading-7">
               {card.description}
             </p>
           </motion.div>
