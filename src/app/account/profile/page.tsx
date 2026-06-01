@@ -1,5 +1,5 @@
-import { auth } from "@/features/authentication/lib/auth-server";
 import { ProfileTemplate } from "@/features/account/components/templates/profile-template";
+import { auth } from "@/features/authentication/lib/auth-server";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
