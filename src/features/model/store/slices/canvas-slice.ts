@@ -115,33 +115,13 @@ export const createCanvasSlice: StateCreator<
   dragOverGroupId: null,
   pendingEdges: [],
   flushPendingEdges: () => {
-    const { pendingEdges, edges, nodes } = get();
+    const { pendingEdges, edges } = get();
     if (pendingEdges.length === 0) return;
     set({
       edges: [...edges, ...pendingEdges],
       pendingEdges: [],
       isDirty: true,
     });
-    const relatedNodes = new Map<string, CanvasNode>();
-
-    for (const edge of pendingEdges) {
-      if (edge.type !== "relationship") continue;
-
-      const sourceNode = nodes.find((node) => node.id === edge.source);
-      const targetNode = nodes.find((node) => node.id === edge.target);
-
-      if (sourceNode && isCanvasNode(sourceNode)) {
-        relatedNodes.set(sourceNode.id, sourceNode);
-      }
-
-      if (targetNode && isCanvasNode(targetNode)) {
-        relatedNodes.set(targetNode.id, targetNode);
-      }
-    }
-
-    for (const node of relatedNodes.values()) {
-      get().enqueueOperation({ type: "node.upsert", node });
-    }
 
     for (const edge of pendingEdges) {
       if (edge.type === "relationship") {

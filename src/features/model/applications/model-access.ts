@@ -18,16 +18,23 @@ export async function requireDataModelMember(dataModelId: string) {
     where: { id: dataModelId },
     select: {
       id: true,
-      workspace: { select: { members: { select: { userId: true } } } },
+      workspaceId: true,
     },
   });
 
   if (!model) throw new AppError("Data model not found", 404);
 
-  const isMember = model.workspace.members.some(
-    (member) => member.userId === user.id,
-  );
-  if (!isMember) throw new AppError("Unauthorized", 403);
+  const membership = await db.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: model.workspaceId,
+        userId: user.id,
+      },
+    },
+    select: { id: true },
+  });
+
+  if (!membership) throw new AppError("Unauthorized", 403);
 
   return { user, model };
 }

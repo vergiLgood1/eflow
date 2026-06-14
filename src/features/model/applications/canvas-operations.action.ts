@@ -80,35 +80,25 @@ export async function persistCanvasOperations(
 function compactCanvasOperations(
   operations: CanvasOperation[],
 ): CanvasOperation[] {
-  const compacted: CanvasOperation[] = [];
+  const latestByKey = new Map<string, CanvasOperation>();
+  const keyOrder: string[] = [];
 
   for (const operation of operations) {
-    if (operation.type === "node.upsert") {
-      removePriorOperation(compacted, "node.upsert", operation.node.id);
-    }
+    const key = getCompactionKey(operation);
 
-    if (operation.type === "edge.upsert") {
-      removePriorOperation(compacted, "edge.upsert", operation.edge.id);
-    }
-
-    compacted.push(operation);
+    if (!latestByKey.has(key)) keyOrder.push(key);
+    latestByKey.set(key, operation);
   }
 
-  return compacted;
+  return keyOrder
+    .map((key) => latestByKey.get(key))
+    .filter((operation): operation is CanvasOperation => Boolean(operation));
 }
 
-function removePriorOperation(
-  operations: CanvasOperation[],
-  type: "node.upsert" | "edge.upsert",
-  id: string,
-): void {
-  const index = operations.findIndex((operation) => {
-    if (type === "node.upsert") {
-      return operation.type === type && operation.node.id === id;
-    }
-
-    return operation.type === type && operation.edge.id === id;
-  });
-
-  if (index >= 0) operations.splice(index, 1);
+function getCompactionKey(operation: CanvasOperation): string {
+  if (operation.type === "node.upsert") return `node.upsert:${operation.node.id}`;
+  if (operation.type === "edge.upsert") return `edge.upsert:${operation.edge.id}`;
+  if (operation.type === "node.move") return `node.move:${operation.nodeId}`;
+  if (operation.type === "node.delete") return `node.delete:${operation.nodeId}`;
+  return `edge.delete:${operation.edgeId}`;
 }

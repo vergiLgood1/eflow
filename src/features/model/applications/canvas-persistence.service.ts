@@ -30,16 +30,18 @@ export async function persistCanvasOperation(
       await upsertCanvasNode(tx, dataModelId, diagramId, operation.node);
       return;
     case "node.move":
-      await moveCanvasNode(tx, diagramId, operation);
+      await moveCanvasNode(tx, dataModelId, diagramId, operation);
       return;
     case "node.delete":
-      await deleteCanvasNode(tx, operation.nodeId);
+      await deleteCanvasNode(tx, dataModelId, diagramId, operation.nodeId);
       return;
     case "edge.upsert":
       await upsertRelationshipEdge(tx, dataModelId, operation.edge);
       return;
     case "edge.delete":
-      await tx.relationship.deleteMany({ where: { id: operation.edgeId } });
+      await tx.relationship.deleteMany({
+        where: { id: operation.edgeId, dataModelId },
+      });
       return;
   }
 }
@@ -61,7 +63,7 @@ async function upsertCanvasNode(
   }
 
   if (node.type === "group") {
-    await upsertGroupNode(tx, diagramId, node);
+      await upsertGroupNode(tx, diagramId, node);
     return;
   }
 
@@ -75,22 +77,35 @@ async function upsertTableNode(
   node: TableNode,
 ): Promise<void> {
   const data = node.data;
-  const table = await tx.table.upsert({
+  const existingTable = await tx.table.findUnique({
     where: { id: node.id },
-    update: {
-      name: data.name,
-      color: data.color,
-      notes: data.notes,
-    },
-    create: {
-      id: node.id,
-      dataModelId,
-      name: data.name,
-      color: data.color,
-      notes: data.notes,
-    },
-    select: { id: true },
+    select: { id: true, dataModelId: true },
   });
+
+  if (existingTable && existingTable.dataModelId !== dataModelId) {
+    throw new AppError("Table does not belong to this data model", 403);
+  }
+
+  const table = existingTable
+    ? await tx.table.update({
+        where: { id: node.id },
+        data: {
+          name: data.name,
+          color: data.color,
+          notes: data.notes,
+        },
+        select: { id: true },
+      })
+    : await tx.table.create({
+        data: {
+          id: node.id,
+          dataModelId,
+          name: data.name,
+          color: data.color,
+          notes: data.notes,
+        },
+        select: { id: true },
+      });
 
   await tx.tableNode.upsert({
     where: { diagramId_tableId: { diagramId, tableId: table.id } },
@@ -111,24 +126,7 @@ async function upsertTableNode(
     },
   });
 
-  await tx.column.deleteMany({ where: { tableId: table.id } });
-  if (data.columns.length > 0) {
-    await tx.column.createMany({
-      data: data.columns.map((column) => ({
-        id: column.id,
-        tableId: table.id,
-        name: column.name,
-        type: column.type,
-        isNullable: column.nullable ?? true,
-        default: column.defaultValue,
-        isUnique: column.isUnique ?? false,
-        isPrimaryKey: column.isPk ?? false,
-        isAutoIncrement: column.isAutoIncrement ?? false,
-        customType: column.customType,
-      })),
-      skipDuplicates: true,
-    });
-  }
+  await persistTableColumns(tx, table.id, data.columns);
 }
 
 async function upsertViewNode(
@@ -137,16 +135,31 @@ async function upsertViewNode(
   node: ViewNode,
 ): Promise<void> {
   const data = node.data;
-  await tx.view.upsert({
+  const existingView = await tx.view.findUnique({
     where: { id: node.id },
-    update: {
-      name: data.name,
-      sql: data.query,
-      parentId: node.parentId ?? null,
-      x: node.position.x,
-      y: node.position.y,
-    },
-    create: {
+    select: { id: true, dataModelId: true },
+  });
+
+  if (existingView && existingView.dataModelId !== dataModelId) {
+    throw new AppError("View does not belong to this data model", 403);
+  }
+
+  if (existingView) {
+    await tx.view.update({
+      where: { id: node.id },
+      data: {
+        name: data.name,
+        sql: data.query,
+        parentId: node.parentId ?? null,
+        x: node.position.x,
+        y: node.position.y,
+      },
+    });
+    return;
+  }
+
+  await tx.view.create({
+    data: {
       id: node.id,
       dataModelId,
       name: data.name,
@@ -168,21 +181,36 @@ async function upsertGroupNode(
   const width = typeof style.width === "number" ? style.width : 600;
   const height = typeof style.height === "number" ? style.height : 400;
 
-  await tx.group.upsert({
+  const existingGroup = await tx.group.findUnique({
     where: { id: node.id },
-    update: {
-      parentId: node.parentId ?? null,
-      name: data.name,
-      description: data.description,
-      color: data.color ?? "#3b82f6",
-      isCollapsed: data.isCollapsed ?? false,
-      expandedHeight: data.expandedHeight,
-      x: node.position.x,
-      y: node.position.y,
-      width,
-      height,
-    },
-    create: {
+    select: { id: true, diagramId: true },
+  });
+
+  if (existingGroup && existingGroup.diagramId !== diagramId) {
+    throw new AppError("Group does not belong to this diagram", 403);
+  }
+
+  if (existingGroup) {
+    await tx.group.update({
+      where: { id: node.id },
+      data: {
+        parentId: node.parentId ?? null,
+        name: data.name,
+        description: data.description,
+        color: data.color ?? "#3b82f6",
+        isCollapsed: data.isCollapsed ?? false,
+        expandedHeight: data.expandedHeight,
+        x: node.position.x,
+        y: node.position.y,
+        width,
+        height,
+      },
+    });
+    return;
+  }
+
+  await tx.group.create({
+    data: {
       id: node.id,
       diagramId,
       parentId: node.parentId ?? null,
@@ -205,15 +233,30 @@ async function upsertNoteNode(
   node: NoteNode,
 ): Promise<void> {
   const data = node.data;
-  await tx.note.upsert({
+  const existingNote = await tx.note.findUnique({
     where: { id: node.id },
-    update: {
-      parentId: node.parentId ?? null,
-      content: data.content,
-      x: node.position.x,
-      y: node.position.y,
-    },
-    create: {
+    select: { id: true, diagramId: true },
+  });
+
+  if (existingNote && existingNote.diagramId !== diagramId) {
+    throw new AppError("Note does not belong to this diagram", 403);
+  }
+
+  if (existingNote) {
+    await tx.note.update({
+      where: { id: node.id },
+      data: {
+        parentId: node.parentId ?? null,
+        content: data.content,
+        x: node.position.x,
+        y: node.position.y,
+      },
+    });
+    return;
+  }
+
+  await tx.note.create({
+    data: {
       id: node.id,
       diagramId,
       parentId: node.parentId ?? null,
@@ -226,6 +269,7 @@ async function upsertNoteNode(
 
 async function moveCanvasNode(
   tx: PrismaTransaction,
+  dataModelId: string,
   diagramId: string,
   operation: CanvasMoveOperation,
 ): Promise<void> {
@@ -239,7 +283,7 @@ async function moveCanvasNode(
       },
     }),
     tx.view.updateMany({
-      where: { id: operation.nodeId },
+      where: { id: operation.nodeId, dataModelId },
       data: {
         x: operation.position.x,
         y: operation.position.y,
@@ -267,13 +311,15 @@ async function moveCanvasNode(
 
 async function deleteCanvasNode(
   tx: PrismaTransaction,
+  dataModelId: string,
+  diagramId: string,
   nodeId: string,
 ): Promise<void> {
   await Promise.all([
-    tx.table.deleteMany({ where: { id: nodeId } }),
-    tx.view.deleteMany({ where: { id: nodeId } }),
-    tx.group.deleteMany({ where: { id: nodeId } }),
-    tx.note.deleteMany({ where: { id: nodeId } }),
+    tx.table.deleteMany({ where: { id: nodeId, dataModelId } }),
+    tx.view.deleteMany({ where: { id: nodeId, dataModelId } }),
+    tx.group.deleteMany({ where: { id: nodeId, diagramId } }),
+    tx.note.deleteMany({ where: { id: nodeId, diagramId } }),
   ]);
 }
 
@@ -297,11 +343,11 @@ async function upsertRelationshipEdge(
   const [sourceColumn, targetColumn] = await Promise.all([
     tx.column.findUnique({
       where: { id: sourceColumnId },
-      select: { id: true, tableId: true },
+      select: { id: true, table: { select: { dataModelId: true } } },
     }),
     tx.column.findUnique({
       where: { id: targetColumnId },
-      select: { id: true, tableId: true },
+      select: { id: true, table: { select: { dataModelId: true } } },
     }),
   ]);
 
@@ -320,25 +366,92 @@ async function upsertRelationshipEdge(
     );
   }
 
-  await tx.relationship.upsert({
+  if (
+    sourceColumn.table.dataModelId !== dataModelId ||
+    targetColumn.table.dataModelId !== dataModelId
+  ) {
+    throw new AppError(
+      "Relationship columns must belong to this data model",
+      403,
+      "RELATIONSHIP_COLUMN_INVALID",
+      { edgeId: edge.id, sourceColumnId, targetColumnId },
+    );
+  }
+
+  const existingRelationship = await tx.relationship.findUnique({
     where: { id: edge.id },
-    update: {
-      sourceColumnId,
-      targetColumnId,
-      onDelete: edge.data?.onDelete ?? "NO ACTION",
-      onUpdate: edge.data?.onUpdate ?? "NO ACTION",
-      cardinality: edge.data?.cardinality ?? "1:n",
-      fkName: edge.data?.fkName,
-    },
-    create: {
+    select: { id: true, dataModelId: true },
+  });
+
+  if (existingRelationship && existingRelationship.dataModelId !== dataModelId) {
+    throw new AppError("Relationship does not belong to this data model", 403);
+  }
+
+  const relationshipData = {
+    sourceColumnId,
+    targetColumnId,
+    onDelete: edge.data?.onDelete ?? "NO ACTION",
+    onUpdate: edge.data?.onUpdate ?? "NO ACTION",
+    cardinality: edge.data?.cardinality ?? "1:n",
+    fkName: edge.data?.fkName,
+  };
+
+  if (existingRelationship) {
+    await tx.relationship.update({
+      where: { id: edge.id },
+      data: relationshipData,
+    });
+    return;
+  }
+
+  await tx.relationship.create({
+    data: {
       id: edge.id,
       dataModelId,
-      sourceColumnId,
-      targetColumnId,
-      onDelete: edge.data?.onDelete ?? "NO ACTION",
-      onUpdate: edge.data?.onUpdate ?? "NO ACTION",
-      cardinality: edge.data?.cardinality ?? "1:n",
-      fkName: edge.data?.fkName,
+      ...relationshipData,
     },
   });
+}
+
+async function persistTableColumns(
+  tx: PrismaTransaction,
+  tableId: string,
+  columns: TableNode["data"]["columns"],
+): Promise<void> {
+  const incomingColumnIds = columns.map((column) => column.id);
+
+  await tx.column.deleteMany({
+    where: {
+      tableId,
+      id: { notIn: incomingColumnIds },
+    },
+  });
+
+  for (const column of columns) {
+    await tx.column.upsert({
+      where: { id: column.id },
+      update: {
+        name: column.name,
+        type: column.type,
+        isNullable: column.nullable ?? true,
+        default: column.defaultValue,
+        isUnique: column.isUnique ?? false,
+        isPrimaryKey: column.isPk ?? false,
+        isAutoIncrement: column.isAutoIncrement ?? false,
+        customType: column.customType,
+      },
+      create: {
+        id: column.id,
+        tableId,
+        name: column.name,
+        type: column.type,
+        isNullable: column.nullable ?? true,
+        default: column.defaultValue,
+        isUnique: column.isUnique ?? false,
+        isPrimaryKey: column.isPk ?? false,
+        isAutoIncrement: column.isAutoIncrement ?? false,
+        customType: column.customType,
+      },
+    });
+  }
 }
