@@ -1,11 +1,10 @@
 import { Prisma } from "../../../../prisma/generated";
 import { AppError } from "@/shared/lib/error";
 import {
-  GroupNodeData,
-  NoteNodeData,
-  RelationshipEdgeData,
-  TableNodeData,
-  ViewNodeData,
+  GroupNode,
+  NoteNode,
+  TableNode,
+  ViewNode,
 } from "../types/canvas";
 import { CanvasOperation } from "../types/canvas-operation.schema";
 
@@ -73,9 +72,9 @@ async function upsertTableNode(
   tx: PrismaTransaction,
   dataModelId: string,
   diagramId: string,
-  node: CanvasOperationNode,
+  node: TableNode,
 ): Promise<void> {
-  const data = node.data as TableNodeData;
+  const data = node.data;
   const table = await tx.table.upsert({
     where: { id: node.id },
     update: {
@@ -135,9 +134,9 @@ async function upsertTableNode(
 async function upsertViewNode(
   tx: PrismaTransaction,
   dataModelId: string,
-  node: CanvasOperationNode,
+  node: ViewNode,
 ): Promise<void> {
-  const data = node.data as ViewNodeData;
+  const data = node.data;
   await tx.view.upsert({
     where: { id: node.id },
     update: {
@@ -162,9 +161,9 @@ async function upsertViewNode(
 async function upsertGroupNode(
   tx: PrismaTransaction,
   diagramId: string,
-  node: CanvasOperationNode,
+  node: GroupNode,
 ): Promise<void> {
-  const data = node.data as GroupNodeData;
+  const data = node.data;
   const style = node.style ?? {};
   const width = typeof style.width === "number" ? style.width : 600;
   const height = typeof style.height === "number" ? style.height : 400;
@@ -203,9 +202,9 @@ async function upsertGroupNode(
 async function upsertNoteNode(
   tx: PrismaTransaction,
   diagramId: string,
-  node: CanvasOperationNode,
+  node: NoteNode,
 ): Promise<void> {
-  const data = node.data as NoteNodeData;
+  const data = node.data;
   await tx.note.upsert({
     where: { id: node.id },
     update: {

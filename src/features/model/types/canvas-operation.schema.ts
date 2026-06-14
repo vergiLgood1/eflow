@@ -1,12 +1,17 @@
 import { z } from "zod";
-import type { CanvasNode, RelationshipEdge } from "./canvas";
+import type {
+  GroupNode,
+  NoteNode,
+  RelationshipEdge,
+  TableNode,
+  ViewNode,
+} from "./canvas";
 
 const positionSchema = z.object({
   x: z.number().finite(),
   y: z.number().finite(),
 });
 
-const nodeTypeSchema = z.enum(["table", "view", "note", "group"]);
 const edgeTypeSchema = z.literal("relationship");
 
 const columnSchema = z
@@ -21,38 +26,82 @@ const columnSchema = z
     isAutoIncrement: z.boolean().optional(),
     isUuid: z.boolean().optional(),
     nullable: z.boolean().optional(),
-    defaultValue: z.string().optional(),
+    defaultValue: z.string().nullable().optional(),
     notes: z.string().optional(),
-    customType: z.string().optional(),
+    customType: z.string().nullable().optional(),
   })
   .passthrough();
 
-const nodeDataSchema = z.record(z.string(), z.unknown()).and(
-  z.object({
-    name: z.string().optional(),
-    columns: z.array(columnSchema).optional(),
+const tableDataSchema = z
+  .object({
+    name: z.string().min(1),
+    columns: z.array(columnSchema),
     indexes: z.array(z.record(z.string(), z.unknown())).optional(),
     records: z.array(z.record(z.string(), z.string())).optional(),
     color: z.string().optional(),
     notes: z.string().optional(),
     hiddenColumns: z.array(z.string()).optional(),
-    query: z.string().optional(),
-    content: z.string().optional(),
+    dbType: z.string().optional(),
+    isNew: z.boolean().optional(),
+    isEditing: z.boolean().optional(),
+  })
+  .passthrough();
+
+const viewDataSchema = z
+  .object({
+    name: z.string().min(1),
+    query: z.string(),
+    isNew: z.boolean().optional(),
+    isEditing: z.boolean().optional(),
+  })
+  .passthrough();
+
+const noteDataSchema = z
+  .object({
+    content: z.string(),
+    color: z.string().optional(),
+    isNew: z.boolean().optional(),
+  })
+  .passthrough();
+
+const groupDataSchema = z
+  .object({
+    name: z.string().min(1),
     description: z.string().optional(),
+    color: z.string().optional(),
     isCollapsed: z.boolean().optional(),
     expandedHeight: z.number().finite().optional(),
-  }),
-);
+    isNew: z.boolean().optional(),
+    isEditing: z.boolean().optional(),
+  })
+  .passthrough();
 
-const nodeSnapshotSchema = z.object({
+const baseNodeSnapshotSchema = z.object({
   id: z.string().min(1),
-  type: nodeTypeSchema,
   position: positionSchema,
   parentId: z.string().nullable().optional(),
   hidden: z.boolean().optional(),
   style: z.record(z.string(), z.unknown()).optional(),
-  data: nodeDataSchema,
 });
+
+const nodeSnapshotSchema = z.discriminatedUnion("type", [
+  baseNodeSnapshotSchema.extend({
+    type: z.literal("table"),
+    data: tableDataSchema,
+  }),
+  baseNodeSnapshotSchema.extend({
+    type: z.literal("view"),
+    data: viewDataSchema,
+  }),
+  baseNodeSnapshotSchema.extend({
+    type: z.literal("note"),
+    data: noteDataSchema,
+  }),
+  baseNodeSnapshotSchema.extend({
+    type: z.literal("group"),
+    data: groupDataSchema,
+  }),
+]);
 
 const relationshipDataSchema = z
   .object({
@@ -96,7 +145,7 @@ export const persistCanvasOperationsSchema = z.object({
 });
 
 export type CanvasOperation =
-  | { type: "node.upsert"; node: CanvasNode }
+  | { type: "node.upsert"; node: TableNode | ViewNode | NoteNode | GroupNode }
   | {
       type: "node.move";
       nodeId: string;
