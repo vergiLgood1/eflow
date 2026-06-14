@@ -43,6 +43,9 @@ export const createWorkspaceSlice: StateCreator<
       viewport: target.viewport,
       workspaces: nextWorkspaces,
       isDirty: false,
+      pendingOperations: [],
+      saveStatus: "idle",
+      lastSaveError: null,
     });
   },
 
@@ -63,6 +66,9 @@ export const createWorkspaceSlice: StateCreator<
         nodes: nodes,
         edges: edges,
         isDirty: false,
+        pendingOperations: [],
+        saveStatus: "idle",
+        lastSaveError: null,
       };
     });
   },

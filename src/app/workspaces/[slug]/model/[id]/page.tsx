@@ -22,6 +22,7 @@ export default async function ModelPage({
         dataModelId={id}
         initialNodes={response.data?.nodes || []}
         initialEdges={response.data?.edges || []}
+        initialRevision={response.data?.version ?? null}
       />
     </div>
   );

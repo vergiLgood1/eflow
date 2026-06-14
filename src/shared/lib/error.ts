@@ -6,14 +6,22 @@ export class AppError extends Error {
   constructor(
     public message: string,
     public statusCode: number = 400,
+    public code?: string,
+    public data?: unknown,
   ) {
     super(message);
   }
 }
 
-export type ActionResponse<T = any> =
+export type ActionResponse<T = any, E = unknown> =
   | { success: true; data?: T; message?: string; redirectTo?: string }
-  | { success: false; error: string };
+  | {
+      success: false;
+      error: string;
+      code?: string;
+      data?: E;
+      statusCode?: number;
+    };
 
 export function handleError(err: unknown) {
   if (err instanceof AppError) {
@@ -31,10 +39,18 @@ export function handleError(err: unknown) {
   return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 }
 
-export function handleActionError(err: unknown): ActionResponse {
+export function handleActionError<T = unknown, E = unknown>(
+  err: unknown,
+): ActionResponse<T, E> {
   unstable_rethrow(err);
   if (err instanceof AppError) {
-    return { success: false, error: err.message };
+    return {
+      success: false,
+      error: err.message,
+      code: err.code,
+      data: err.data as E,
+      statusCode: err.statusCode,
+    };
   }
   if (err instanceof ZodError) {
     return {

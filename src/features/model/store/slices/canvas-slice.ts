@@ -5,12 +5,19 @@ import {
   type Node,
   type NodeChange,
   type Viewport,
-  addEdge,
   applyEdgeChanges,
   applyNodeChanges,
 } from "@xyflow/react";
 import type { StateCreator } from "zustand";
-import type { CanvasNode, CanvasTool, ModelSettings } from "../../types/canvas";
+import type {
+  CanvasNode,
+  CanvasTool,
+  ModelSettings,
+  RelationshipEdgeData,
+} from "../../types/canvas";
+import type { CanvasOperation } from "../../types/canvas-operation.schema";
+
+export type CanvasSaveStatus = "idle" | "saving" | "saved" | "error";
 
 export interface CanvasSlice {
   dataModelId: string | null;
@@ -19,6 +26,11 @@ export interface CanvasSlice {
   edges: Edge[];
   viewport: Viewport;
   isDirty: boolean;
+  pendingOperations: CanvasOperation[];
+  saveStatus: CanvasSaveStatus;
+  lastSavedAt: Date | null;
+  lastSaveError: string | null;
+  revision: number | null;
   activeTool: CanvasTool;
   isAnimated: boolean;
   pendingConnectionSourceId: string | null;
@@ -36,6 +48,17 @@ export interface CanvasSlice {
   setActiveTool: (tool: CanvasTool) => void;
   toggleAnimation: () => void;
   markSaved: () => void;
+  enqueueOperation: (operation: CanvasOperation) => void;
+  takePendingOperations: () => CanvasOperation[];
+  restorePendingOperations: (operations: CanvasOperation[]) => void;
+  markSaving: () => void;
+  markSaveFailed: (
+    error: string,
+    operations: CanvasOperation[],
+    shouldRestoreOperations?: boolean,
+  ) => void;
+  markOperationsSaved: (version: number) => void;
+  setRevision: (version: number) => void;
   handleNodeClick: (id: string) => void;
 
   addNode: (node: CanvasNode) => void;
@@ -79,19 +102,61 @@ export const createCanvasSlice: StateCreator<
   edges: [],
   viewport: { x: 0, y: 0, zoom: 1 },
   isDirty: false,
+  pendingOperations: [],
+  saveStatus: "idle",
+  lastSavedAt: null,
+  lastSaveError: null,
+  revision: null,
   activeTool: "select",
   isAnimated: false,
   pendingConnectionSourceId: null,
   dragOverGroupId: null,
   pendingEdges: [],
   flushPendingEdges: () => {
-    const { pendingEdges, edges } = get();
+    const { pendingEdges, edges, nodes } = get();
     if (pendingEdges.length === 0) return;
     set({
       edges: [...edges, ...pendingEdges],
       pendingEdges: [],
       isDirty: true,
     });
+    const relatedNodes = new Map<string, CanvasNode>();
+
+    for (const edge of pendingEdges) {
+      if (edge.type !== "relationship") continue;
+
+      const sourceNode = nodes.find((node) => node.id === edge.source);
+      const targetNode = nodes.find((node) => node.id === edge.target);
+
+      if (sourceNode && isCanvasNode(sourceNode)) {
+        relatedNodes.set(sourceNode.id, sourceNode);
+      }
+
+      if (targetNode && isCanvasNode(targetNode)) {
+        relatedNodes.set(targetNode.id, targetNode);
+      }
+    }
+
+    for (const node of relatedNodes.values()) {
+      get().enqueueOperation({ type: "node.upsert", node });
+    }
+
+    for (const edge of pendingEdges) {
+      if (edge.type === "relationship") {
+        get().enqueueOperation({
+          type: "edge.upsert",
+          edge: {
+            id: edge.id,
+            type: "relationship",
+            source: edge.source,
+            target: edge.target,
+            sourceHandle: edge.sourceHandle,
+            targetHandle: edge.targetHandle,
+            data: normalizeRelationshipEdgeData(edge.data),
+          },
+        });
+      }
+    }
   },
 
   modelSettings: {
@@ -120,8 +185,19 @@ export const createCanvasSlice: StateCreator<
   onNodesChange: (changes) =>
     set({ nodes: applyNodeChanges(changes, get().nodes), isDirty: true }),
 
-  onEdgesChange: (changes) =>
-    set({ edges: applyEdgeChanges(changes, get().edges), isDirty: true }),
+  onEdgesChange: (changes) => {
+    const previousEdges = get().edges;
+    const nextEdges = applyEdgeChanges(changes, previousEdges);
+    const removedEdgeIds = changes
+      .filter((change) => change.type === "remove")
+      .map((change) => change.id);
+
+    set({ edges: nextEdges, isDirty: true });
+
+    for (const edgeId of removedEdgeIds) {
+      get().enqueueOperation({ type: "edge.delete", edgeId });
+    }
+  },
 
   onConnect: (connection) => {
     const { activeTool, edges, nodes } = get();
@@ -236,6 +312,40 @@ export const createCanvasSlice: StateCreator<
   setDragOverGroupId: (id) => set({ dragOverGroupId: id }),
   toggleAnimation: () => set((state) => ({ isAnimated: !state.isAnimated })),
   markSaved: () => set({ isDirty: false }),
+  enqueueOperation: (operation) =>
+    set((state) => ({
+      pendingOperations: [...state.pendingOperations, operation],
+      saveStatus: state.saveStatus === "saving" ? "saving" : "idle",
+      lastSaveError: null,
+    })),
+  takePendingOperations: () => {
+    const operations = get().pendingOperations;
+    set({ pendingOperations: [] });
+    return operations;
+  },
+  restorePendingOperations: (operations) =>
+    set((state) => ({
+      pendingOperations: [...operations, ...state.pendingOperations],
+    })),
+  markSaving: () => set({ saveStatus: "saving", lastSaveError: null }),
+  markSaveFailed: (error, operations, shouldRestoreOperations = true) =>
+    set((state) => ({
+      pendingOperations: shouldRestoreOperations
+        ? [...operations, ...state.pendingOperations]
+        : state.pendingOperations,
+      saveStatus: "error",
+      lastSaveError: error,
+      isDirty: shouldRestoreOperations || state.pendingOperations.length > 0,
+    })),
+  markOperationsSaved: (version) =>
+    set({
+      saveStatus: "saved",
+      lastSavedAt: new Date(),
+      lastSaveError: null,
+      revision: version,
+      isDirty: get().pendingOperations.length > 0,
+    }),
+  setRevision: (version) => set({ revision: version }),
 
   handleNodeClick: (id) => {
     const { activeTool, pendingConnectionSourceId, edges, nodes } = get();
@@ -432,33 +542,52 @@ export const createCanvasSlice: StateCreator<
   addNode: (node) => {
     get().saveToHistory();
     set({ nodes: [...get().nodes, node], isDirty: true });
+    get().enqueueOperation({ type: "node.upsert", node });
   },
 
   updateNodeData: (id, data) => {
+    const nextNodes = get().nodes.map((node) =>
+      node.id === id ? { ...node, data: { ...node.data, ...data } } : node,
+    );
     set({
-      nodes: get().nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, ...data } } : node,
-      ),
+      nodes: nextNodes,
       isDirty: true,
     });
+    const updatedNode = nextNodes.find((node) => node.id === id);
+    if (updatedNode && isCanvasNode(updatedNode)) {
+      get().enqueueOperation({ type: "node.upsert", node: updatedNode });
+    }
   },
 
-  updateNode: (id, updates) =>
+  updateNode: (id, updates) => {
+    const nextNodes = get().nodes.map((node) =>
+      node.id === id ? { ...node, ...updates } : node,
+    );
     set({
-      nodes: get().nodes.map((node) =>
-        node.id === id ? { ...node, ...updates } : node,
-      ),
+      nodes: nextNodes,
       isDirty: true,
-    }),
+    });
+    const updatedNode = nextNodes.find((node) => node.id === id);
+    if (updatedNode && isCanvasNode(updatedNode)) {
+      get().enqueueOperation({ type: "node.upsert", node: updatedNode });
+    }
+  },
 
-  batchUpdateNodes: (updates) =>
+  batchUpdateNodes: (updates) => {
+    const nextNodes = get().nodes.map((node) => {
+      const nodeUpdates = updates[node.id];
+      return nodeUpdates ? { ...node, ...nodeUpdates } : node;
+    });
     set({
-      nodes: get().nodes.map((node) => {
-        const nodeUpdates = updates[node.id];
-        return nodeUpdates ? { ...node, ...nodeUpdates } : node;
-      }),
+      nodes: nextNodes,
       isDirty: true,
-    }),
+    });
+    for (const node of nextNodes) {
+      if (updates[node.id] && isCanvasNode(node)) {
+        get().enqueueOperation({ type: "node.upsert", node });
+      }
+    }
+  },
 
   removeNode: (id) => {
     get().saveToHistory();
@@ -488,6 +617,7 @@ export const createCanvasSlice: StateCreator<
       ),
       isDirty: true,
     });
+    get().enqueueOperation({ type: "node.delete", nodeId: id });
   },
 
   removeNodes: (ids) => {
@@ -518,6 +648,9 @@ export const createCanvasSlice: StateCreator<
       ),
       isDirty: true,
     });
+    for (const id of ids) {
+      get().enqueueOperation({ type: "node.delete", nodeId: id });
+    }
   },
 
   duplicateNode: (id) => {
@@ -532,6 +665,9 @@ export const createCanvasSlice: StateCreator<
       selected: false,
     };
     set({ nodes: [...get().nodes, duplicated], isDirty: true });
+    if (isCanvasNode(duplicated)) {
+      get().enqueueOperation({ type: "node.upsert", node: duplicated });
+    }
   },
 });
 
@@ -564,6 +700,28 @@ function getRelationshipConfig(activeTool: CanvasTool): {
     target === "n" || target === "m" ? "marker-many" : "marker-one";
 
   return { cardinality, markerStart, markerEnd };
+}
+
+function isCanvasNode(node: Node): node is CanvasNode {
+  return (
+    node.type === "table" ||
+    node.type === "view" ||
+    node.type === "note" ||
+    node.type === "group"
+  );
+}
+
+function normalizeRelationshipEdgeData(
+  data: Record<string, unknown> | undefined,
+): RelationshipEdgeData {
+  return {
+    ...data,
+    cardinality:
+      typeof data?.cardinality === "string" ? data.cardinality : "1:n",
+    fkName: typeof data?.fkName === "string" ? data.fkName : undefined,
+    onDelete: typeof data?.onDelete === "string" ? data.onDelete : undefined,
+    onUpdate: typeof data?.onUpdate === "string" ? data.onUpdate : undefined,
+  } as RelationshipEdgeData;
 }
 
 /**

@@ -291,6 +291,7 @@ model Diagram {
   dataModelId String
   name        String
   isDraft     Boolean  @default(false)
+  version     Int      @default(1)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

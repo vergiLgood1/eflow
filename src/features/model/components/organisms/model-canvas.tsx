@@ -13,7 +13,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect } from "react";
 
-import { useCanvasDebouncedSync } from "../../hooks/use-canvas-debounced-sync";
+import { useCanvasOperationSync } from "../../hooks/use-canvas-operation-sync";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import { useWorkspaceStore } from "../../store/use-workspace-store";
 import type { GroupNodeData } from "../../types/canvas";
@@ -54,6 +54,7 @@ interface ModelCanvasProps {
   dataModelId: string;
   initialNodes?: Node[];
   initialEdges?: Edge[];
+  initialRevision?: number | null;
 }
 
 /**
@@ -63,15 +64,20 @@ function ModelCanvasInner({
   dataModelId,
   initialNodes = [],
   initialEdges = [],
+  initialRevision = null,
 }: ModelCanvasProps) {
   const activeTabId = useWorkspaceStore((s) => s.activeTabId);
   const diagramId = `${dataModelId}-default`;
 
-  const { setWorkspaceData, setDataModelId } = useCanvasStore();
+  const { setWorkspaceData, setDataModelId, setRevision } = useCanvasStore();
 
   useEffect(() => {
     setDataModelId(dataModelId);
   }, [dataModelId, setDataModelId]);
+
+  useEffect(() => {
+    if (initialRevision !== null) setRevision(initialRevision);
+  }, [initialRevision, setRevision]);
 
   useEffect(() => {
     if (initialNodes.length > 0 || initialEdges.length > 0) {
@@ -82,7 +88,7 @@ function ModelCanvasInner({
     }
   }, [diagramId, initialNodes, initialEdges, setWorkspaceData]);
 
-  useCanvasDebouncedSync(dataModelId);
+  useCanvasOperationSync(dataModelId);
 
   const nodes = useCanvasStore((s) => s.nodes);
   const edges = useCanvasStore((s) => s.edges);
@@ -123,7 +129,13 @@ function ModelCanvasInner({
   // Flush pending edges to allow React Flow to mount handles first
   useEffect(() => {
     if (pendingEdges && pendingEdges.length > 0) {
-      flushPendingEdges();
+      const frameId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          flushPendingEdges();
+        });
+      });
+
+      return () => cancelAnimationFrame(frameId);
     }
   }, [pendingEdges, flushPendingEdges]);
 
@@ -247,6 +259,7 @@ function ModelCanvasInner({
   const handleNodeClick = useCanvasStore((s) => s.handleNodeClick);
   const pendingSourceId = useCanvasStore((s) => s.pendingConnectionSourceId);
   const updateNode = useCanvasStore((s) => s.updateNode);
+  const enqueueOperation = useCanvasStore((s) => s.enqueueOperation);
   const setDragOverGroupId = useCanvasStore((s) => s.setDragOverGroupId);
 
   const onNodeDrag = useCallback(
@@ -343,9 +356,17 @@ function ModelCanvasInner({
             extent: undefined,
           });
         }
+      } else {
+        enqueueOperation({
+          type: "node.move",
+          nodeId: node.id,
+          position: node.position,
+          parentId: node.parentId ?? null,
+          hidden: node.hidden,
+        });
       }
     },
-    [nodes, updateNode, setDragOverGroupId],
+    [enqueueOperation, nodes, updateNode, setDragOverGroupId],
   );
 
   const proOptions = { hideAttribution: true };
