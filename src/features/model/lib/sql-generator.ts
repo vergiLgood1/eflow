@@ -44,20 +44,20 @@ export function generateSQL(
 
     if (!sourceNode || !targetNode) return;
 
-    // In a real app, we might need to know which columns are being linked.
-    // For now, let's assume the relationship implies a FK from source to target PK
-    // or we use the data in the edge if available.
-    // NOTE: Our current schema doesn't explicitly store which columns are linked in the edge.
-    // We might need to guess or extend the schema.
-
-    // Simple heuristic for now: assume target PK is being referenced by a column in source named [target_table]_id
-    const targetPk = targetNode.data.columns.find((c) => c.isPk)?.name || "id";
+    const sourceColumnId = edge.sourceHandle
+      ?.replace(/-source$/, "")
+      .replace(/-target$/, "");
+    const targetColumnId = edge.targetHandle
+      ?.replace(/-source$/, "")
+      .replace(/-target$/, "");
     const fkColumn =
-      sourceNode.data.columns.find(
-        (c) =>
-          c.isFk &&
-          c.name.toLowerCase().includes(targetNode.data.name.toLowerCase()),
-      )?.name || `${targetNode.data.name.toLowerCase()}_id`;
+      sourceNode.data.columns.find((column) => column.id === sourceColumnId)
+        ?.name ?? resolveLegacyFkColumn(sourceNode, targetNode);
+    const targetPk =
+      targetNode.data.columns.find((column) => column.id === targetColumnId)
+        ?.name ?? targetNode.data.columns.find((column) => column.isPk)?.name;
+
+    if (!fkColumn || !targetPk) return;
 
     sql += `ALTER TABLE "${sourceNode.data.name}" ADD CONSTRAINT "${edge.data?.fkName || `fk_${sourceNode.data.name}_${targetNode.data.name}`}" \n`;
     sql += `FOREIGN KEY ("${fkColumn}") REFERENCES "${targetNode.data.name}" ("${targetPk}")`;
@@ -74,4 +74,23 @@ export function generateSQL(
     console.error("SQL Formatting failed", e);
     return sql;
   }
+}
+
+function resolveLegacyFkColumn(
+  sourceNode: TableNode,
+  targetNode: TableNode,
+): string | undefined {
+  const targetName = targetNode.data.name.toLowerCase();
+
+  return (
+    sourceNode.data.columns.find(
+      (column) => column.isFk && column.name.toLowerCase().includes(targetName),
+    )?.name ??
+    sourceNode.data.columns.find((column) => column.isFk)?.name ??
+    sourceNode.data.columns.find(
+      (column) =>
+        column.name.toLowerCase().endsWith("_id") &&
+        column.name.toLowerCase().includes(targetName),
+    )?.name
+  );
 }

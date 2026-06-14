@@ -13,7 +13,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Camera, FileCode, History, Plus } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useCallback } from "react";
 import { toast } from "sonner";
 import {
   createCheckpoint,
@@ -40,22 +40,28 @@ export function CheckpointDialog({ dataModelId }: { dataModelId: string }) {
   // Migration state
   const [migrationSql, setMigrationSql] = useState<string | null>(null);
 
-  const loadCheckpoints = () => {
+  const loadCheckpoints = useCallback(() => {
     startTransition(async () => {
       const res = await getCheckpoints(dataModelId);
       if (res.success && res.data) {
         setCheckpoints(res.data);
       }
     });
-  };
+  }, [dataModelId]);
 
   useEffect(() => {
     if (open) {
       loadCheckpoints();
+    }
+  }, [open, loadCheckpoints]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (nextOpen) {
       setMigrationSql(null);
       setNewCpName("");
     }
-  }, [open, dataModelId]);
+  };
 
   const handleCreateCheckpoint = () => {
     if (!newCpName.trim()) {
@@ -88,7 +94,7 @@ export function CheckpointDialog({ dataModelId }: { dataModelId: string }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <ModelToolbarButton
           tooltip="Checkpoints & Migrations"

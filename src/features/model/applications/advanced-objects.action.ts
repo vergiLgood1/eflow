@@ -1,13 +1,33 @@
 "use server";
 
 import { db } from "@/db/prisma";
-import { auth } from "@/features/authentication/lib/auth-server";
-import {
-  ActionResponse,
-  AppError,
-  handleActionError,
-} from "@/shared/lib/error";
+import { ActionResponse, handleActionError } from "@/shared/lib/error";
 import { createActivityLog } from "@/features/activity/applications/activity.action";
+import {
+  requireDataModelMember,
+  requireProcedureMember,
+  requireTableMember,
+  requireTriggerMember,
+} from "./model-access";
+
+type TriggerPayload = {
+  name: string;
+  event: string;
+  timing: string;
+  body: string;
+  level: string;
+};
+
+type ProcedurePayload = {
+  name: string;
+  description?: string;
+  language: string;
+  securityType: string;
+  dataAccess: string;
+  isDeterministic: boolean;
+  body: string;
+  parameters?: Record<string, unknown> | unknown[];
+};
 
 // ---------------------------------------------------------------------------
 // Trigger Actions
@@ -15,31 +35,10 @@ import { createActivityLog } from "@/features/activity/applications/activity.act
 
 export async function createTrigger(
   tableId: string,
-  payload: {
-    name: string;
-    event: string;
-    timing: string;
-    body: string;
-    level: string;
-  },
+  payload: TriggerPayload,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
-
-    const table = await db.table.findUnique({
-      where: { id: tableId },
-      include: {
-        dataModel: { include: { workspace: { include: { members: true } } } },
-      },
-    });
-
-    if (!table) throw new AppError("Table not found", 404);
-
-    const isMember = table.dataModel.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
+    const { user, table } = await requireTableMember(tableId);
 
     const trigger = await db.trigger.create({
       data: {
@@ -58,13 +57,13 @@ export async function createTrigger(
         triggerId: trigger.id,
         version: 1,
         snapshot: { ...payload },
-        userId: session.data.user.id,
+        userId: user.id,
       },
     });
 
     await createActivityLog({
       dataModelId: table.dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Created trigger "${payload.name}" on table "${table.name}"`,
       details: {
         type: "create",
@@ -81,39 +80,12 @@ export async function createTrigger(
 
 export async function updateTrigger(
   triggerId: string,
-  payload: {
-    name: string;
-    event: string;
-    timing: string;
-    body: string;
-    level: string;
-  },
+  payload: TriggerPayload,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
+    const { user, trigger: existing } = await requireTriggerMember(triggerId);
 
-    const existing = await db.trigger.findUnique({
-      where: { id: triggerId },
-      include: {
-        table: {
-          include: {
-            dataModel: {
-              include: { workspace: { include: { members: true } } },
-            },
-          },
-        },
-      },
-    });
-
-    if (!existing) throw new AppError("Trigger not found", 404);
-
-    const isMember = existing.table.dataModel.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
-
-    const updated = await db.trigger.update({
+    await db.trigger.update({
       where: { id: triggerId },
       data: { ...payload },
     });
@@ -128,14 +100,14 @@ export async function updateTrigger(
           triggerId,
           version: versionCount + 1,
           snapshot: { ...payload },
-          userId: session.data.user.id,
+          userId: user.id,
         },
       });
     }
 
     await createActivityLog({
       dataModelId: existing.table.dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Updated trigger "${payload.name}"`,
       details: {
         type: "update",
@@ -154,28 +126,7 @@ export async function deleteTrigger(
   triggerId: string,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
-
-    const trigger = await db.trigger.findUnique({
-      where: { id: triggerId },
-      include: {
-        table: {
-          include: {
-            dataModel: {
-              include: { workspace: { include: { members: true } } },
-            },
-          },
-        },
-      },
-    });
-
-    if (!trigger) throw new AppError("Trigger not found", 404);
-
-    const isMember = trigger.table.dataModel.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
+    const { user, trigger } = await requireTriggerMember(triggerId);
 
     await db.trigger.delete({
       where: { id: triggerId },
@@ -183,7 +134,7 @@ export async function deleteTrigger(
 
     await createActivityLog({
       dataModelId: trigger.table.dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Deleted trigger "${trigger.name}"`,
       details: {
         type: "delete",
@@ -204,32 +155,10 @@ export async function deleteTrigger(
 
 export async function createProcedure(
   dataModelId: string,
-  payload: {
-    name: string;
-    description?: string;
-    language: string;
-    securityType: string;
-    dataAccess: string;
-    isDeterministic: boolean;
-    body: string;
-    parameters?: any;
-  },
+  payload: ProcedurePayload,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
-
-    const model = await db.dataModel.findUnique({
-      where: { id: dataModelId },
-      include: { workspace: { include: { members: true } } },
-    });
-
-    if (!model) throw new AppError("Data model not found", 404);
-
-    const isMember = model.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
+    const { user } = await requireDataModelMember(dataModelId);
 
     const procedure = await db.procedure.create({
       data: {
@@ -251,13 +180,13 @@ export async function createProcedure(
         procedureId: procedure.id,
         version: 1,
         snapshot: { ...payload },
-        userId: session.data.user.id,
+        userId: user.id,
       },
     });
 
     await createActivityLog({
       dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Created procedure "${payload.name}"`,
       details: {
         type: "create",
@@ -274,36 +203,13 @@ export async function createProcedure(
 
 export async function updateProcedure(
   procedureId: string,
-  payload: {
-    name: string;
-    description?: string;
-    language: string;
-    securityType: string;
-    dataAccess: string;
-    isDeterministic: boolean;
-    body: string;
-    parameters?: any;
-  },
+  payload: ProcedurePayload,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
+    const { user, procedure: existing } =
+      await requireProcedureMember(procedureId);
 
-    const existing = await db.procedure.findUnique({
-      where: { id: procedureId },
-      include: {
-        dataModel: { include: { workspace: { include: { members: true } } } },
-      },
-    });
-
-    if (!existing) throw new AppError("Procedure not found", 404);
-
-    const isMember = existing.dataModel.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
-
-    const updated = await db.procedure.update({
+    await db.procedure.update({
       where: { id: procedureId },
       data: { ...payload },
     });
@@ -318,14 +224,14 @@ export async function updateProcedure(
           procedureId,
           version: versionCount + 1,
           snapshot: { ...payload },
-          userId: session.data.user.id,
+          userId: user.id,
         },
       });
     }
 
     await createActivityLog({
       dataModelId: existing.dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Updated procedure "${payload.name}"`,
       details: {
         type: "update",
@@ -344,22 +250,7 @@ export async function deleteProcedure(
   procedureId: string,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) throw new AppError("Unauthorized", 401);
-
-    const procedure = await db.procedure.findUnique({
-      where: { id: procedureId },
-      include: {
-        dataModel: { include: { workspace: { include: { members: true } } } },
-      },
-    });
-
-    if (!procedure) throw new AppError("Procedure not found", 404);
-
-    const isMember = procedure.dataModel.workspace.members.some(
-      (m) => m.userId === session.data?.user.id,
-    );
-    if (!isMember) throw new AppError("Unauthorized", 403);
+    const { user, procedure } = await requireProcedureMember(procedureId);
 
     await db.procedure.delete({
       where: { id: procedureId },
@@ -367,7 +258,7 @@ export async function deleteProcedure(
 
     await createActivityLog({
       dataModelId: procedure.dataModelId,
-      userId: session.data.user.id,
+      userId: user.id,
       action: `Deleted procedure "${procedure.name}"`,
       details: {
         type: "delete",

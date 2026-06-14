@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { AlertCircle, Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { PopoverHeader } from "../../../atoms/popover-header";
 
@@ -46,10 +46,6 @@ export function FKConfigPopover({
   const [cardinality, setCardinality] = useState<CardinalityType>("1:n");
   const [onDeleteAction, setOnDeleteAction] = useState("NO ACTION");
   const [onUpdateAction, setOnUpdateAction] = useState("NO ACTION");
-  const [autoCreateFk, setAutoCreateFk] = useState(false);
-  const [validationWarnings, setValidationWarnings] = useState<
-    Array<{ level: string; message: string; suggestion: string }>
-  >([]);
 
   const targetTable = allTables.find((t) => t.id === targetTableId);
   const sourceFkColumn = sourceTable?.columns.find(
@@ -57,40 +53,25 @@ export function FKConfigPopover({
   );
   const targetPkColumn = targetTable?.data.columns?.find((c) => c.isPk);
 
-  // Auto-detect cardinality when FK column changes
-  useEffect(() => {
-    if (
-      sourceColumn &&
-      targetTableId &&
-      sourceFkColumn &&
-      targetTable?.data &&
-      sourceTable
-    ) {
-      const detected = inferCardinality(
-        sourceFkColumn,
-        sourceTable,
-        targetTable.data as TableNodeData,
-      );
-      setCardinality(detected);
-
-      // Validate constraints
-      const warnings = validateCardinality(
-        sourceFkColumn,
-        detected,
-        sourceTable,
-      );
-      setValidationWarnings(warnings);
-    }
-  }, [sourceColumn, targetTableId, sourceFkColumn, sourceTable, targetTable]);
-
-  // Auto-suggest FK creation if source table has only ID column
-  useEffect(() => {
-    if (targetTableId && sourceTable && hasOnlyIdColumn(sourceTable)) {
-      setAutoCreateFk(true);
-    } else {
-      setAutoCreateFk(false);
-    }
-  }, [targetTableId, sourceTable]);
+  const autoCreateFk = Boolean(
+    targetTableId && sourceTable && hasOnlyIdColumn(sourceTable),
+  );
+  const detectedCardinality =
+    sourceColumn &&
+    targetTableId &&
+    sourceFkColumn &&
+    targetTable?.data &&
+    sourceTable
+      ? inferCardinality(
+          sourceFkColumn,
+          sourceTable,
+          targetTable.data as TableNodeData,
+        )
+      : cardinality;
+  const validationWarnings =
+    sourceColumn && sourceFkColumn && sourceTable
+      ? validateCardinality(sourceFkColumn, detectedCardinality, sourceTable)
+      : [];
 
   const handleSave = () => {
     if (!sourceColumn && !autoCreateFk) {
@@ -119,10 +100,11 @@ export function FKConfigPopover({
       const newColumn = {
         name: fkName,
         type: targetPkColumn?.type || "INT",
-        nullable: cardinality.includes("0"),
+        nullable: detectedCardinality.includes("0"),
         isPk: false,
         isFk: true,
-        isUnique: cardinality === "1:1" || cardinality === "0..1",
+        isUnique:
+          detectedCardinality === "1:1" || detectedCardinality === "0..1",
         defaultValue: undefined as string | undefined,
       };
 
@@ -144,7 +126,7 @@ export function FKConfigPopover({
       targetHandle: `${targetColumn}-target`,
       type: "relationship" as const,
       data: {
-        cardinality,
+        cardinality: detectedCardinality,
         onDelete: onDeleteAction,
         onUpdate: onUpdateAction,
         fkName:
@@ -313,7 +295,7 @@ export function FKConfigPopover({
             Cardinality <span className="text-blue-600">(Auto-detected)</span>
           </Label>
           <Select
-            value={cardinality}
+            value={detectedCardinality}
             onValueChange={(val) => setCardinality(val as CardinalityType)}
           >
             <SelectTrigger className="h-8 w-full text-xs">
