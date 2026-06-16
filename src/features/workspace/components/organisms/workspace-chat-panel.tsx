@@ -5,8 +5,8 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useResizeObserver } from "@/shared/hooks/use-resize-observer";
 import {
   ChevronDown,
-  Coins,
   Database,
+  Sparkles,
   MessageSquare,
   Send,
 } from "lucide-react";
@@ -93,14 +93,19 @@ export function WorkspaceChatPanel() {
           </div>
         </div>
 
-        {/* Warning / Limit */}
-        <div className="mx-3 mt-3 flex items-center justify-between gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700">
+        {/* Coming Soon Notice */}
+        <div className="mx-3 mt-3 flex items-center justify-between gap-3 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs text-blue-700 dark:text-blue-300">
           <div className="flex items-center gap-2">
-            <Coins className="h-4 w-4" />
-            <span>You have reached the message limit of the free plan.</span>
+            <Sparkles className="h-4 w-4" />
+            <span>Workspace chat is coming soon.</span>
           </div>
-          <Button size="sm" className="h-8 rounded-md px-3 text-xs">
-            Upgrade plan
+          <Button
+            size="sm"
+            variant="secondary"
+            className="h-8 rounded-md px-3 text-xs"
+            disabled
+          >
+            Preview
           </Button>
         </div>
 
@@ -112,9 +117,12 @@ export function WorkspaceChatPanel() {
                 <div className="bg-accent/10 mb-4 inline-block rounded-full p-4">
                   <Database className="text-accent h-12 w-12" />
                 </div>
-                <h3 className="mb-2 text-sm font-medium">Data Model Mode</h3>
-                <p className="text-muted-foreground mb-8 text-xs">
-                  Create tables, add columns, define relationships
+                <h3 className="mb-2 text-sm font-medium">
+                  Chat assistant coming soon
+                </h3>
+                <p className="text-muted-foreground mx-auto mb-8 max-w-[280px] text-xs leading-relaxed">
+                  Soon you will be able to ask questions, generate schema ideas,
+                  and refine your data model directly from this workspace.
                 </p>
               </div>
             </div>
@@ -130,6 +138,7 @@ export function WorkspaceChatPanel() {
                 placeholder="Ask something..."
                 rows={1}
                 style={{ height: "42px" }}
+                disabled
               />
             </div>
             <Button
@@ -137,6 +146,7 @@ export function WorkspaceChatPanel() {
               size="icon"
               className="mb-1 h-10 w-10 shrink-0"
               title="Send"
+              disabled
             >
               <Send className="h-4 w-4" />
             </Button>
@@ -154,11 +164,12 @@ export function WorkspaceChatPanel() {
                 size="sm"
                 className="text-muted-foreground hover:text-foreground h-7 px-2 text-xs"
                 title="Refine your message before sending"
+                disabled
               >
                 Refine
               </Button>
               <p className="text-muted-foreground text-[11px]">
-                Enter to send · Shift+Enter new line
+                Chat features are not available yet
               </p>
             </div>
           </div>
