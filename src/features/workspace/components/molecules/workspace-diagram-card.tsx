@@ -3,6 +3,7 @@ import { cn } from "@/shared/lib/utils";
 import { Globe, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { ShareDiagramDialog } from "../organisms/share-diagram-dialog";
 import { useDiagramActions } from "../../hooks/use-diagram-actions";
 import { WorkspaceDiagramDropdown } from "./workspace-diagram-dropdown";
@@ -17,6 +18,7 @@ interface WorkspaceDiagramCardProps {
   isPublic?: boolean;
   isPinned?: boolean;
   className?: string;
+  subscriptionAccess: SubscriptionAccess;
 }
 
 export function WorkspaceDiagramCard({
@@ -29,6 +31,7 @@ export function WorkspaceDiagramCard({
   isPublic = true,
   isPinned: initialIsPinned = false,
   className,
+  subscriptionAccess,
 }: WorkspaceDiagramCardProps) {
   const router = useRouter();
   const { handlePin, handleDelete, handleActionClick } = useDiagramActions(id);
@@ -108,6 +111,7 @@ export function WorkspaceDiagramCard({
               isPublic={isPublic}
               isPinned={initialIsPinned}
               onDelete={handleDelete}
+              subscriptionAccess={subscriptionAccess}
             />
           </div>
         </div>

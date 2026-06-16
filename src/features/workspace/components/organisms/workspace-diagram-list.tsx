@@ -8,6 +8,7 @@ import { Database, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { EmptyDiagramState } from "../molecules/empty-diagram-state";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { ShareDiagramDialog } from "./share-diagram-dialog";
@@ -20,6 +21,7 @@ interface WorkspaceDiagramListProps {
   viewMode?: "grid" | "list";
   searchQuery?: string;
   onClearSearch?: () => void;
+  subscriptionAccess: SubscriptionAccess;
 }
 
 function DiagramGrid({
@@ -27,11 +29,13 @@ function DiagramGrid({
   workspaces,
   searchQuery,
   onClearSearch,
+  subscriptionAccess,
 }: {
   models: DataModel[];
   workspaces: Workspace[];
   searchQuery?: string;
   onClearSearch?: () => void;
+  subscriptionAccess: SubscriptionAccess;
 }) {
   if (models.length === 0) {
     return (
@@ -60,6 +64,7 @@ function DiagramGrid({
           })}
           isPinned={model.isPinned}
           isPublic={model.isPublic}
+          subscriptionAccess={subscriptionAccess}
         />
       ))}
     </div>
@@ -71,11 +76,13 @@ function DiagramList({
   workspaces,
   searchQuery,
   onClearSearch,
+  subscriptionAccess,
 }: {
   models: DataModel[];
   workspaces: Workspace[];
   searchQuery?: string;
   onClearSearch?: () => void;
+  subscriptionAccess: SubscriptionAccess;
 }) {
   if (models.length === 0) {
     return (
@@ -105,6 +112,7 @@ function DiagramList({
             workspaceMap.get(model.workspaceId)?.name ?? "Unknown Workspace"
           }
           workspaceSlug={workspaceMap.get(model.workspaceId)?.slug ?? ""}
+          subscriptionAccess={subscriptionAccess}
         />
       ))}
     </div>
@@ -115,10 +123,12 @@ function DiagramListItem({
   model,
   workspaceName,
   workspaceSlug,
+  subscriptionAccess,
 }: {
   model: DataModel;
   workspaceName: string;
   workspaceSlug: string;
+  subscriptionAccess: SubscriptionAccess;
 }) {
   const router = useRouter();
   const { handlePin, handleActionClick } = useDiagramActions(model.id);
@@ -186,6 +196,7 @@ function DiagramListItem({
           id={model.id}
           isPublic={model.isPublic}
           isPinned={model.isPinned}
+          subscriptionAccess={subscriptionAccess}
         />
       </div>
     </div>
@@ -198,6 +209,7 @@ export function WorkspaceDiagramList({
   viewMode = "grid",
   searchQuery,
   onClearSearch,
+  subscriptionAccess,
 }: WorkspaceDiagramListProps) {
   return (
     <section className="mb-10">
@@ -217,6 +229,7 @@ export function WorkspaceDiagramList({
           workspaces={workspaces}
           searchQuery={searchQuery}
           onClearSearch={onClearSearch}
+          subscriptionAccess={subscriptionAccess}
         />
       ) : (
         <DiagramList
@@ -224,6 +237,7 @@ export function WorkspaceDiagramList({
           workspaces={workspaces}
           searchQuery={searchQuery}
           onClearSearch={onClearSearch}
+          subscriptionAccess={subscriptionAccess}
         />
       )}
     </section>

@@ -6,13 +6,18 @@ import { useRouter } from "next/navigation";
 
 export function WorkspaceProUpsellCard() {
   const router = useRouter();
+  const isProduction = process.env.NODE_ENV === "production";
+  const price = isProduction ? "$9,999" : "$19";
+  const billingNote = isProduction
+    ? "Intentionally high showcase price • Do not purchase casually"
+    : "Demo activation • No real checkout in development";
   const features = [
-    "Unlimited workspaces & diagrams",
-    "Private diagrams & security",
-    "Real-time collaboration",
-    "SQL Migration generation",
-    "AI integration (MCP)",
-    "Priority 24/7 support",
+    "Unlimited workspaces",
+    "Unlimited public diagrams",
+    "Private diagrams",
+    "No Free plan creation limits",
+    "Stripe-ready billing flow",
+    "Portfolio-safe upgrade path",
   ];
 
   const handleUpgrade = () => {
@@ -38,8 +43,8 @@ export function WorkspaceProUpsellCard() {
               </Badge>
             </h3>
             <p className="text-muted-foreground mb-8 text-lg">
-              Elevate your workflow with professional tools designed for power
-              users and scaling teams.
+              Upgrade removes the Free plan limits: create more workspaces,
+              build unlimited diagrams, and keep diagrams private when needed.
             </p>
 
             <div className="mb-8 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -67,11 +72,11 @@ export function WorkspaceProUpsellCard() {
               </Button>
               <div className="flex flex-col">
                 <span className="text-foreground text-sm font-semibold">
-                  Demo Pro{" "}
-                  <span className="text-primary text-lg">$19</span> / month
+                  Pro plan{" "}
+                  <span className="text-primary text-lg">{price}</span> / month
                 </span>
                 <span className="text-muted-foreground text-xs font-medium tracking-tighter uppercase">
-                  Showcase-only activation • No real checkout
+                  {billingNote}
                 </span>
               </div>
             </div>

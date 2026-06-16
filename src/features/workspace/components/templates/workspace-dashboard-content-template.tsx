@@ -69,6 +69,7 @@ export function WorkspaceDashboardContentTemplate({
         viewMode={viewMode}
         searchQuery={searchQuery}
         onClearSearch={() => setSearchQuery("")}
+        subscriptionAccess={subscriptionAccess}
       />
 
       {!subscriptionAccess.entitlements.isPro && <WorkspaceProUpsellCard />}

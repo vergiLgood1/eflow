@@ -6,8 +6,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { Ellipsis, Globe, Lock, Pencil, Star, Trash2 } from "lucide-react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import {
+  Ellipsis,
+  Globe,
+  Lock,
+  Pencil,
+  Sparkles,
+  Star,
+  Trash2,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import type React from "react";
+import { toast } from "sonner";
 import { useDiagramActions } from "../../hooks/use-diagram-actions";
 
 interface WorkspaceDiagramDropdownProps {
@@ -16,6 +27,7 @@ interface WorkspaceDiagramDropdownProps {
   isPinned: boolean;
   onEdit?: () => void;
   onDelete?: (event: React.MouseEvent) => void;
+  subscriptionAccess: SubscriptionAccess;
 }
 
 export function WorkspaceDiagramDropdown({
@@ -24,8 +36,20 @@ export function WorkspaceDiagramDropdown({
   isPinned,
   onEdit,
   onDelete,
+  subscriptionAccess,
 }: WorkspaceDiagramDropdownProps) {
+  const router = useRouter();
   const { handlePin, handleVisibility } = useDiagramActions(id);
+  const canCreatePrivateModels =
+    subscriptionAccess.entitlements.canCreatePrivateModels;
+  const isPrivateActionLocked = isPublic && !canCreatePrivateModels;
+
+  const handleLockedPrivateAction = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toast.error("Private diagrams require Pro.");
+    router.push("/account/billing");
+  };
 
   return (
     <DropdownMenu>
@@ -44,12 +68,16 @@ export function WorkspaceDiagramDropdown({
       >
         <DropdownMenuItem
           className="cursor-pointer gap-2 rounded-lg py-2 font-medium"
-          onClick={handleVisibility}
+          onClick={isPrivateActionLocked ? handleLockedPrivateAction : handleVisibility}
         >
           {isPublic ? (
             <>
-              <Lock className="h-3.5 w-3.5" />
-              Make Private
+              {isPrivateActionLocked ? (
+                <Sparkles className="h-3.5 w-3.5" />
+              ) : (
+                <Lock className="h-3.5 w-3.5" />
+              )}
+              {isPrivateActionLocked ? "Private requires Pro" : "Make Private"}
             </>
           ) : (
             <>
