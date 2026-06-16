@@ -19,6 +19,7 @@ export default async function ModelPage({
   return (
     <div className="h-full w-full">
       <ModelCanvas
+        key={id}
         dataModelId={id}
         initialNodes={response.data?.nodes || []}
         initialEdges={response.data?.edges || []}

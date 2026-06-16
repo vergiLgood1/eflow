@@ -63,7 +63,7 @@ export interface CanvasSlice {
     shouldRestoreOperations?: boolean,
   ) => void;
   markOperationsSaved: (version: number) => void;
-  setRevision: (version: number) => void;
+  setRevision: (version: number | null) => void;
   handleNodeClick: (id: string) => void;
 
   addNode: (node: CanvasNode) => void;

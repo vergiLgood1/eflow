@@ -67,6 +67,10 @@ export const createWorkspaceSlice: StateCreator<
         edges: edges,
         isDirty: false,
         pendingOperations: [],
+        pendingEdges: [],
+        activeTool: "select",
+        pendingConnectionSourceId: null,
+        dragOverGroupId: null,
         saveStatus: "idle",
         lastSaveError: null,
       };

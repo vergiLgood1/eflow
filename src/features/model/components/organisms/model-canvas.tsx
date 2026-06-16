@@ -78,17 +78,12 @@ function ModelCanvasInner({
   }, [dataModelId, setDataModelId]);
 
   useEffect(() => {
-    if (initialRevision !== null) setRevision(initialRevision);
-  }, [initialRevision, setRevision]);
-
-  useEffect(() => {
-    if (initialNodes.length > 0 || initialEdges.length > 0) {
-      setWorkspaceData(diagramId, {
-        nodes: initialNodes,
-        edges: initialEdges,
-      });
-    }
-  }, [diagramId, initialNodes, initialEdges, setWorkspaceData]);
+    setWorkspaceData(diagramId, {
+      nodes: initialNodes,
+      edges: initialEdges,
+    });
+    setRevision(initialRevision);
+  }, [diagramId, initialNodes, initialEdges, initialRevision, setRevision, setWorkspaceData]);
 
   useCanvasOperationSync(dataModelId);
 
