@@ -31,7 +31,7 @@ export function WorkspaceDiagramCard({
   className,
 }: WorkspaceDiagramCardProps) {
   const router = useRouter();
-  const { handlePin, handleActionClick } = useDiagramActions(id);
+  const { handlePin, handleDelete, handleActionClick } = useDiagramActions(id);
 
   const handleClick = () => {
     router.push(`/workspaces/${workspaceSlug}/model/${id}`);
@@ -107,6 +107,7 @@ export function WorkspaceDiagramCard({
               id={id}
               isPublic={isPublic}
               isPinned={initialIsPinned}
+              onDelete={handleDelete}
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
+  deleteDataModel,
   togglePinDataModel,
   toggleVisibilityDataModel,
 } from "../applications/workspace.action";
@@ -35,6 +36,20 @@ export function useDiagramActions(id: string) {
     }
   };
 
+  const handleDelete = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const response = await deleteDataModel(id);
+
+    if (response.success) {
+      toast.success(response.message ?? "Diagram deleted");
+      router.refresh();
+      return true;
+    }
+
+    toast.error(response.error || "Failed to delete diagram");
+    return false;
+  };
+
   const handleActionClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -42,6 +57,7 @@ export function useDiagramActions(id: string) {
   return {
     handlePin,
     handleVisibility,
+    handleDelete,
     handleActionClick,
   };
 }

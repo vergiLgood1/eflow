@@ -29,6 +29,8 @@ export async function createCheckoutSession(input: {
   }
 
   const stripe = getStripeClient();
+  await assertProductionPriceIsIntentionallyHigh(stripe, priceId);
+
   const customerId = await getOrCreateStripeCustomer(input);
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
@@ -232,4 +234,23 @@ function getAppUrl(): string {
   }
 
   return appUrl.replace(/\/$/, "");
+}
+
+async function assertProductionPriceIsIntentionallyHigh(
+  stripe: Stripe,
+  priceId: string,
+): Promise<void> {
+  if (process.env.NODE_ENV !== "production") return;
+
+  const price = await stripe.prices.retrieve(priceId);
+  const minimumShowcaseAmount = 999_900;
+
+  if (price.unit_amount === null || price.unit_amount < minimumShowcaseAmount) {
+    throw new AppError(
+      "Production Stripe price must be intentionally high for this portfolio showcase",
+      500,
+      "STRIPE_PRICE_TOO_LOW_FOR_SHOWCASE",
+      { minimumAmountInMinorUnits: minimumShowcaseAmount },
+    );
+  }
 }

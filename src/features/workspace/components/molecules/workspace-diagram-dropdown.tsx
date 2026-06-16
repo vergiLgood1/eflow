@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Ellipsis, Globe, Lock, Pencil, Star, Trash2 } from "lucide-react";
+import type React from "react";
 import { useDiagramActions } from "../../hooks/use-diagram-actions";
 
 interface WorkspaceDiagramDropdownProps {
@@ -14,7 +15,7 @@ interface WorkspaceDiagramDropdownProps {
   isPublic: boolean;
   isPinned: boolean;
   onEdit?: () => void;
-  onDelete?: () => void;
+  onDelete?: (event: React.MouseEvent) => void;
 }
 
 export function WorkspaceDiagramDropdown({

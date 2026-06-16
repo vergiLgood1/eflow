@@ -357,6 +357,50 @@ export async function createDataModel(
   }
 }
 
+export async function deleteDataModel(id: string): Promise<ActionResponse> {
+  try {
+    const session = await auth.getSession();
+    const userId = session.data?.user?.id;
+
+    if (!userId) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const model = await db.dataModel.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        workspace: {
+          select: {
+            members: {
+              where: { userId },
+              select: { id: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!model) {
+      throw new AppError("Data model not found", 404);
+    }
+
+    if (model.workspace.members.length === 0) {
+      throw new AppError("Forbidden", 403);
+    }
+
+    await db.dataModel.delete({ where: { id } });
+
+    return {
+      success: true,
+      message: `Deleted data model "${model.name}"`,
+    };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
 export async function updateDataModelTags(
   modelId: string,
   tags: string[],

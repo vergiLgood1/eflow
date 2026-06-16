@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useTransition } from "react";
-import { CreditCard } from "lucide-react";
+import { AlertTriangle, CreditCard } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/alert";
 import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import {
   activateDemoProSubscription,
@@ -21,6 +26,7 @@ export function BillingPlanList({
   const { entitlements } = subscriptionAccess;
   const isDemoBilling = process.env.NODE_ENV !== "production";
   const isStripeBilling = subscriptionAccess.subscription?.provider === "stripe";
+  const proPrice = isDemoBilling ? "$19" : "$9,999";
 
   const handleActivatePro = () => {
     startTransition(async () => {
@@ -61,6 +67,18 @@ export function BillingPlanList({
 
   return (
     <div className="grid gap-6 pt-6">
+      {!isDemoBilling && (
+        <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Portfolio showcase billing</AlertTitle>
+          <AlertDescription>
+            Stripe is connected for production-readiness, but the Pro price is
+            intentionally unrealistic to discourage real purchases. Do not
+            upgrade unless this is a controlled test checkout.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <BillingPlanCard
         name="Free Plan"
         description="1 workspace, 3 public data models, and no private diagrams."
@@ -81,8 +99,9 @@ export function BillingPlanList({
               Pro Plan
             </h3>
             <p className="text-muted-foreground mt-1 text-sm">
-              Pro unlocks unlimited workspace and data model creation. Demo
-              activation is available outside production.
+              Pro unlocks unlimited workspace and data model creation. The
+              production Stripe price is intentionally unrealistic for portfolio
+              safety.
             </p>
             <ul className="mt-4 space-y-2">
               <li className="text-muted-foreground flex items-center gap-2 text-xs">
@@ -95,12 +114,12 @@ export function BillingPlanList({
               </li>
               <li className="text-muted-foreground flex items-center gap-2 text-xs">
                 <div className="bg-primary h-1 w-1 rounded-full" /> Stripe-ready
-                production billing
+                production billing with anti-purchase pricing
               </li>
             </ul>
           </div>
           <h2 className="text-3xl font-bold tracking-tighter">
-            $19
+            {proPrice}
             <span className="text-muted-foreground text-sm font-normal">
               /mo
             </span>
@@ -123,8 +142,14 @@ export function BillingPlanList({
                 : "Current Plan"
               : isDemoBilling
                 ? "Activate Demo Pro"
-                : "Upgrade to Pro"}
+                : "Test Stripe Checkout"}
           </button>
+          {!isDemoBilling && !entitlements.isPro && (
+            <p className="text-muted-foreground mt-3 max-w-md text-xs">
+              This checkout uses an intentionally high Stripe price. It exists
+              only to demonstrate production billing flow readiness.
+            </p>
+          )}
         </div>
       </div>
     </div>
