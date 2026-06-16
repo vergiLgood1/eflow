@@ -3,6 +3,7 @@
 import { Center } from "@/shared/components/layout/Center";
 import { Loader2 } from "lucide-react";
 import { Suspense, use } from "react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
 import { WorkspaceDashboardContentTemplate } from "./workspace-dashboard-content-template";
@@ -10,17 +11,21 @@ import { WorkspaceDashboardContentTemplate } from "./workspace-dashboard-content
 interface WorkspaceDashboardTemplateProps {
   modelsPromise: Promise<DataModel[]>;
   workspacePromise: Promise<Workspace[]>;
+  subscriptionAccessPromise: Promise<SubscriptionAccess>;
 }
 
 function DashboardContent({
   modelsPromise,
   workspacePromise,
+  subscriptionAccessPromise,
 }: {
   modelsPromise: Promise<DataModel[]>;
   workspacePromise: Promise<Workspace[]>;
+  subscriptionAccessPromise: Promise<SubscriptionAccess>;
 }) {
   const models = use(modelsPromise);
   const workspaces = use(workspacePromise);
+  const subscriptionAccess = use(subscriptionAccessPromise);
 
   if (models.length === 0) {
     return <WorkspaceDashboardEmptyState />;
@@ -30,6 +35,7 @@ function DashboardContent({
     <WorkspaceDashboardContentTemplate
       models={models}
       workspaces={workspaces}
+      subscriptionAccess={subscriptionAccess}
     />
   );
 }
@@ -50,6 +56,7 @@ function DashboardLoading() {
 export function WorkspaceDashboardTemplate({
   modelsPromise,
   workspacePromise,
+  subscriptionAccessPromise,
 }: WorkspaceDashboardTemplateProps) {
   return (
     <div className="bg-background flex min-w-0 flex-1 flex-col">
@@ -57,6 +64,7 @@ export function WorkspaceDashboardTemplate({
         <DashboardContent
           modelsPromise={modelsPromise}
           workspacePromise={workspacePromise}
+          subscriptionAccessPromise={subscriptionAccessPromise}
         />
       </Suspense>
     </div>

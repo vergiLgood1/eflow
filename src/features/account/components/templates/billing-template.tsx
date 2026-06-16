@@ -1,7 +1,12 @@
 import React from "react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { BillingPlanList } from "../organisms/billing-plan-list";
 
-export function BillingTemplate() {
+export function BillingTemplate({
+  subscriptionAccess,
+}: {
+  subscriptionAccess: SubscriptionAccess;
+}) {
   return (
     <div className="max-w-3xl space-y-6">
       <div>
@@ -12,7 +17,7 @@ export function BillingTemplate() {
           Manage your billing information and subscription plan.
         </p>
       </div>
-      <BillingPlanList />
+      <BillingPlanList subscriptionAccess={subscriptionAccess} />
     </div>
   );
 }

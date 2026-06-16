@@ -48,6 +48,7 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
     defaultValues: {
       name: "",
       description: "",
+      isPublic: true,
       tags: [],
       dbType: "POSTGRESQL",
     },
@@ -202,6 +203,11 @@ export function CreateDiagramForm({ onSuccess }: CreateDiagramFormProps) {
           </p>
         )}
       </div>
+
+      <p className="text-muted-foreground rounded-md border border-dashed px-3 py-2 text-xs">
+        New diagrams are public on the Free plan. Demo Pro unlocks private
+        diagrams for showcase purposes.
+      </p>
 
       <Button
         type="submit"

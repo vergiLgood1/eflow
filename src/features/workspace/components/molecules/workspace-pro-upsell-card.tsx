@@ -67,11 +67,11 @@ export function WorkspaceProUpsellCard() {
               </Button>
               <div className="flex flex-col">
                 <span className="text-foreground text-sm font-semibold">
-                  Starting at{" "}
-                  <span className="text-primary text-lg">$9.97</span> / month
+                  Demo Pro{" "}
+                  <span className="text-primary text-lg">$19</span> / month
                 </span>
                 <span className="text-muted-foreground text-xs font-medium tracking-tighter uppercase">
-                  Billed annually • Save 20%
+                  Showcase-only activation • No real checkout
                 </span>
               </div>
             </div>

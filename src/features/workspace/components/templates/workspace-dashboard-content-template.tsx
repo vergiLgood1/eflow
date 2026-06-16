@@ -3,6 +3,7 @@ import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { WorkspaceProUpsellCard } from "../molecules/workspace-pro-upsell-card";
 import { WorkspaceUpgradeBanner } from "../molecules/workspace-upgrade-banner";
 import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-header";
@@ -11,11 +12,13 @@ import { WorkspaceDiagramList } from "../organisms/workspace-diagram-list";
 interface WorkspaceDashboardContentTemplateProps {
   models: DataModel[];
   workspaces: Workspace[];
+  subscriptionAccess: SubscriptionAccess;
 }
 
 export function WorkspaceDashboardContentTemplate({
   models,
   workspaces,
+  subscriptionAccess,
 }: WorkspaceDashboardContentTemplateProps) {
   const params = useParams();
   const slug = params?.slug as string;
@@ -39,8 +42,7 @@ export function WorkspaceDashboardContentTemplate({
   const currentWorkspace = workspaces.find((w) => w.slug === slug);
   const workspaceName = currentWorkspace?.name || "Workspace";
 
-  // Mock subscription data - in real app, this would come from a useSubscription hook
-  const maxModels = 3;
+  const maxModels = subscriptionAccess.entitlements.maxPublicModels;
 
   return (
     <div className="mx-auto w-full p-6 pb-20 md:p-10">
@@ -53,9 +55,9 @@ export function WorkspaceDashboardContentTemplate({
         onViewModeChange={setViewMode}
       />
 
-      {isMounted && isBannerVisible && (
+      {isMounted && isBannerVisible && maxModels !== null && (
         <WorkspaceUpgradeBanner
-          modelCount={models.length}
+          modelCount={models.filter((model) => model.isPublic).length}
           maxModels={maxModels}
           onDismiss={hideBanner}
         />
@@ -69,7 +71,7 @@ export function WorkspaceDashboardContentTemplate({
         onClearSearch={() => setSearchQuery("")}
       />
 
-      <WorkspaceProUpsellCard />
+      {!subscriptionAccess.entitlements.isPro && <WorkspaceProUpsellCard />}
     </div>
   );
 }

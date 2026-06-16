@@ -8,6 +8,9 @@ interface BillingPlanCardProps {
   price: string;
   isActive?: boolean;
   priceInterval?: string;
+  actionLabel?: string;
+  actionDisabled?: boolean;
+  onAction?: () => void;
 }
 
 export function BillingPlanCard({
@@ -16,6 +19,9 @@ export function BillingPlanCard({
   price,
   isActive = false,
   priceInterval = "/mo",
+  actionLabel = "View Features",
+  actionDisabled = false,
+  onAction,
 }: BillingPlanCardProps) {
   return (
     <div className="border-border bg-card rounded-2xl border p-6">
@@ -40,8 +46,13 @@ export function BillingPlanCard({
       </div>
 
       <div className="mt-6">
-        <Button className="w-full sm:w-auto" variant="outline">
-          View Features
+        <Button
+          className="w-full sm:w-auto"
+          variant="outline"
+          disabled={actionDisabled}
+          onClick={onAction}
+        >
+          {actionLabel}
         </Button>
       </div>
     </div>

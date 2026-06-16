@@ -14,6 +14,7 @@ export const createWorkspaceSchema = z.object({
 export const createDataModelSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   description: z.string().optional(),
+  isPublic: z.boolean().default(true),
   tags: z
     .array(
       z
@@ -30,4 +31,4 @@ export const createDataModelSchema = z.object({
 });
 
 export type CreateWorkspaceSchema = z.infer<typeof createWorkspaceSchema>;
-export type CreateDataModelSchema = z.infer<typeof createDataModelSchema>;
+export type CreateDataModelSchema = z.input<typeof createDataModelSchema>;

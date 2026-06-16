@@ -2,7 +2,7 @@
 
 import { CardinalityType } from "@/features/model/types/canvas";
 import { Button } from "@/shared/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export interface RelationshipEdgeContextMenuProps {
@@ -74,14 +74,40 @@ export function RelationshipEdgeContextMenu({
         </div>
       ) : (
         <>
+          <div className="px-1 py-1">
+            <div className="flex items-center gap-2 px-2 py-1.5 text-xs">
+              <Edit className="h-3 w-3" />
+              <span className="font-medium">Edit Cardinality</span>
+            </div>
+            <div className="mt-1 flex flex-col gap-0.5">
+              {cardinalityOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleCardinalityChange(option.value)}
+                  className={`hover:bg-accent w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
+                    currentCardinality === option.value ? "bg-accent" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{option.label}</span>
+                    {currentCardinality === option.value && (
+                      <span className="text-xs">✓</span>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-border mx-1 h-px" />
 
           <button
-              onClick={() => setIsConfirmingDelete(true)}
-              className="text-destructive hover:bg-accent flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-colors"
-            >
-              <Trash2 className="h-3 w-3" />
-              <span>Delete Relationship</span>
-            </button>
+            onClick={() => setIsConfirmingDelete(true)}
+            className="text-destructive hover:bg-accent flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-colors"
+          >
+            <Trash2 className="h-3 w-3" />
+            <span>Delete Relationship</span>
+          </button>
         </>
       )}
     </div>

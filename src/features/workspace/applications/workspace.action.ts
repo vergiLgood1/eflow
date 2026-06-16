@@ -9,6 +9,10 @@ import {
 } from "@/shared/lib/error";
 import { DataModel } from "../../../../prisma/generated";
 import {
+  requireCanCreateDataModel,
+  requireCanCreateWorkspace,
+} from "@/features/subscription/applications/subscription.action";
+import {
   CreateDataModelSchema,
   createDataModelSchema,
   createWorkspaceSchema,
@@ -152,6 +156,14 @@ export async function createWorkspace(data: {
 
     const validatedData = createWorkspaceSchema.parse(data);
 
+    if (!session.data) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const userId = session.data.user.id;
+
+    await requireCanCreateWorkspace(userId);
+
     const workspace = await db.$transaction(async (tx) => {
       const record = await tx.workspaceSlug.upsert({
         where: { base: validatedData.slug },
@@ -164,17 +176,13 @@ export async function createWorkspace(data: {
           ? validatedData.slug
           : `${validatedData.slug}-${record.count}`;
 
-      if (!session.data) {
-        throw new AppError("Unauthorized", 401);
-      }
-
       const workspace = await tx.workspace.create({
         data: {
           name: validatedData.name,
           slug,
           members: {
             create: {
-              userId: session.data.user.id,
+              userId,
               role: "OWNER",
             },
           },
@@ -208,6 +216,14 @@ export async function initWorkspace(data: {
 
     const validatedData = createWorkspaceSchema.parse(data);
 
+    if (!session.data) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const userId = session.data.user.id;
+
+    await requireCanCreateWorkspace(userId);
+
     const workspace = await db.$transaction(async (tx) => {
       const record = await tx.workspaceSlug.upsert({
         where: { base: validatedData.slug },
@@ -220,17 +236,13 @@ export async function initWorkspace(data: {
           ? validatedData.slug
           : `${validatedData.slug}-${record.count}`;
 
-      if (!session.data) {
-        throw new AppError("Unauthorized", 401);
-      }
-
       const workspace = await tx.workspace.create({
         data: {
           name: validatedData.name,
           slug,
           members: {
             create: {
-              userId: session.data.user.id,
+              userId,
               role: "OWNER",
             },
           },
@@ -238,7 +250,7 @@ export async function initWorkspace(data: {
       });
 
       await tx.user.update({
-        where: { id: session.data.user.id },
+        where: { id: userId },
         data: { hasCompleteOnboarding: true },
       });
 
@@ -264,6 +276,11 @@ export async function createDataModel(
   data: CreateDataModelSchema,
 ): Promise<ActionResponse> {
   try {
+    const session = await auth.getSession();
+    if (!session.data?.user) {
+      throw new AppError("Unauthorized", 401);
+    }
+
     const validatedData = createDataModelSchema.parse(data);
 
     const workspace = await db.workspace.findUnique({
@@ -275,11 +292,18 @@ export async function createDataModel(
       throw new AppError("Workspace not found", 404);
     }
 
+    await requireCanCreateDataModel(
+      session.data.user.id,
+      workspace.id,
+      validatedData.isPublic,
+    );
+
     const dataModel = await db.$transaction(async (tx) => {
       const model = await tx.dataModel.create({
         data: {
           name: validatedData.name,
           description: validatedData.description,
+          isPublic: validatedData.isPublic,
           dbType: validatedData.dbType,
           workspace: {
             connect: { id: workspace.id },
@@ -310,7 +334,6 @@ export async function createDataModel(
       return model;
     });
 
-    const session = await auth.getSession();
     if (session.data?.user) {
       await createActivityLog({
         dataModelId: dataModel.id,
@@ -501,27 +524,37 @@ export async function toggleVisibilityDataModel(
   id: string,
 ): Promise<ActionResponse<DataModel>> {
   try {
+    const session = await auth.getSession();
+    if (!session.data?.user) {
+      throw new AppError("Unauthorized", 401);
+    }
+
     const model = await db.dataModel.findUnique({ where: { id } });
     if (!model) throw new AppError("Data model not found");
+
+    if (model.isPublic) {
+      await requireCanCreateDataModel(
+        session.data.user.id,
+        model.workspaceId,
+        false,
+      );
+    }
 
     const updated = await db.dataModel.update({
       where: { id },
       data: { isPublic: !model.isPublic },
     });
 
-    const session = await auth.getSession();
-    if (session.data?.user) {
-      await createActivityLog({
-        dataModelId: id,
-        userId: session.data.user.id,
-        action: `Changed visibility of data model "${model.name}" to ${updated.isPublic ? "Public" : "Private"}`,
-        details: {
-          type: "update",
-          category: "General",
-          target: model.name,
-        },
-      });
-    }
+    await createActivityLog({
+      dataModelId: id,
+      userId: session.data.user.id,
+      action: `Changed visibility of data model "${model.name}" to ${updated.isPublic ? "Public" : "Private"}`,
+      details: {
+        type: "update",
+        category: "General",
+        target: model.name,
+      },
+    });
 
     return { success: true, data: updated };
   } catch (error) {

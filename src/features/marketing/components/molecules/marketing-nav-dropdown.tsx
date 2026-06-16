@@ -33,7 +33,7 @@ export const MarketingNavDropdown = () => {
                   Join the mission
                 </h5>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  We're building the first truly autonomous operating system for
+                  We&apos;re building the first truly autonomous operating system for
                   global enterprise.
                 </p>
               </div>

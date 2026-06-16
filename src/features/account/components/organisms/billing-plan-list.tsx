@@ -1,15 +1,74 @@
-import React from "react";
+"use client";
+
+import React, { useTransition } from "react";
 import { CreditCard } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import {
+  activateDemoProSubscription,
+  resetDemoFreeSubscription,
+} from "@/features/subscription/applications/subscription.action";
 import { BillingPlanCard } from "../molecules/billing-plan-card";
 
-export function BillingPlanList() {
+export function BillingPlanList({
+  subscriptionAccess,
+}: {
+  subscriptionAccess: SubscriptionAccess;
+}) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const { entitlements } = subscriptionAccess;
+  const isDemoBilling = process.env.NODE_ENV !== "production";
+  const isStripeBilling = subscriptionAccess.subscription?.provider === "stripe";
+
+  const handleActivatePro = () => {
+    startTransition(async () => {
+      if (!isDemoBilling) {
+        await redirectToBillingRoute("/api/billing/checkout");
+        return;
+      }
+
+      const result = await activateDemoProSubscription();
+      if (result.success) {
+        toast.success(result.message ?? "Pro plan activated");
+        router.refresh();
+        return;
+      }
+
+      toast.error(result.error);
+    });
+  };
+
+  const handleManageBilling = () => {
+    startTransition(async () => {
+      await redirectToBillingRoute("/api/billing/portal");
+    });
+  };
+
+  const handleResetFree = () => {
+    startTransition(async () => {
+      const result = await resetDemoFreeSubscription();
+      if (result.success) {
+        toast.success(result.message ?? "Free plan restored");
+        router.refresh();
+        return;
+      }
+
+      toast.error(result.error);
+    });
+  };
+
   return (
     <div className="grid gap-6 pt-6">
       <BillingPlanCard
         name="Free Plan"
-        description="You are currently on the free plan. Perfect for individuals."
+        description="1 workspace, 3 public data models, and no private diagrams."
         price="$0"
-        isActive={true}
+        isActive={!entitlements.isPro}
+        actionLabel={entitlements.isPro ? "Switch to Free" : "Current Plan"}
+        actionDisabled={!entitlements.isPro || !isDemoBilling || isPending}
+        onAction={handleResetFree}
       />
 
       <div className="border-primary/20 bg-primary/5 relative overflow-hidden rounded-2xl border p-6">
@@ -22,20 +81,21 @@ export function BillingPlanList() {
               Pro Plan
             </h3>
             <p className="text-muted-foreground mt-1 text-sm">
-              Advanced features for professional developers and teams.
+              Pro unlocks unlimited workspace and data model creation. Demo
+              activation is available outside production.
             </p>
             <ul className="mt-4 space-y-2">
               <li className="text-muted-foreground flex items-center gap-2 text-xs">
                 <div className="bg-primary h-1 w-1 rounded-full" /> Unlimited
-                workspaces
+                workspaces and data models
               </li>
               <li className="text-muted-foreground flex items-center gap-2 text-xs">
-                <div className="bg-primary h-1 w-1 rounded-full" /> Priority
-                support
+                <div className="bg-primary h-1 w-1 rounded-full" /> Private data
+                models
               </li>
               <li className="text-muted-foreground flex items-center gap-2 text-xs">
-                <div className="bg-primary h-1 w-1 rounded-full" /> Advanced
-                history
+                <div className="bg-primary h-1 w-1 rounded-full" /> Stripe-ready
+                production billing
               </li>
             </ul>
           </div>
@@ -48,11 +108,37 @@ export function BillingPlanList() {
         </div>
 
         <div className="mt-6">
-          <button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20 w-full rounded-xl px-6 py-2.5 font-medium shadow-lg transition-colors sm:w-auto">
-            Upgrade to Pro
+          <button
+            className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20 disabled:bg-muted disabled:text-muted-foreground w-full rounded-xl px-6 py-2.5 font-medium shadow-lg transition-colors disabled:cursor-not-allowed disabled:shadow-none sm:w-auto"
+            disabled={isPending}
+            onClick={
+              entitlements.isPro && isStripeBilling
+                ? handleManageBilling
+                : handleActivatePro
+            }
+          >
+            {entitlements.isPro
+              ? isStripeBilling
+                ? "Manage Billing"
+                : "Current Plan"
+              : isDemoBilling
+                ? "Activate Demo Pro"
+                : "Upgrade to Pro"}
           </button>
         </div>
       </div>
     </div>
   );
+}
+
+async function redirectToBillingRoute(path: string): Promise<void> {
+  const response = await fetch(path, { method: "POST" });
+  const result = (await response.json()) as { url?: string; error?: string };
+
+  if (!response.ok || !result.url) {
+    toast.error(result.error ?? "Unable to start billing session");
+    return;
+  }
+
+  window.location.href = result.url;
 }

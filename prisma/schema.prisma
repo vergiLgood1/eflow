@@ -24,6 +24,19 @@ enum DatabaseType {
   SQLITE
 }
 
+enum SubscriptionPlan {
+  FREE
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+}
+
 ///////////////////////
 // CORE MODELS
 ///////////////////////
@@ -39,10 +52,36 @@ model User {
   updatedAt             DateTime @updatedAt
   hasCompleteOnboarding Boolean  @default(false)
 
-  memberships WorkspaceMember[]
-  activities  ActivityLog[]
+  memberships  WorkspaceMember[]
+  activities   ActivityLog[]
+  subscription Subscription?
 
   @@map("users")
+}
+
+model Subscription {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan   SubscriptionPlan   @default(FREE)
+  status SubscriptionStatus @default(ACTIVE)
+
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+
+  provider               String?
+  providerCustomerId     String? @unique
+  providerSubscriptionId String? @unique
+  providerPriceId        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([plan, status])
+  @@map("subscriptions")
 }
 
 model Workspace {
@@ -86,16 +125,16 @@ model WorkspaceMember {
 ///////////////////////
 
 model DataModel {
-  id          String       @id @default(uuid())
-  name        String
-  description String?
-  isPinned    Boolean      @default(false)
-  isPublic    Boolean      @default(false)
+  id           String       @id @default(uuid())
+  name         String
+  description  String?
+  isPinned     Boolean      @default(false)
+  isPublic     Boolean      @default(false)
   previewColor String?
-  dbType      DatabaseType
-  workspaceId String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  dbType       DatabaseType
+  workspaceId  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   tags          DataModelTag[]
@@ -153,7 +192,7 @@ model Table {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  dataModel DataModel      @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
+  dataModel DataModel     @relation(fields: [dataModelId], references: [id], onDelete: Cascade)
   columns   Column[]
   indexes   Index[]
   triggers  Trigger[]
@@ -322,7 +361,7 @@ model TableNode {
 }
 
 model Group {
-  id        String @id @default(uuid())
+  id             String  @id @default(uuid())
   diagramId      String
   parentId       String?
   name           String
@@ -342,7 +381,7 @@ model Group {
 }
 
 model Note {
-  id        String @id @default(uuid())
+  id        String  @id @default(uuid())
   diagramId String
   parentId  String?
   content   String
@@ -372,10 +411,10 @@ model TableRecord {
 }
 
 model RecordValue {
-  id        String @id @default(uuid())
-  recordId  String
+  id         String @id @default(uuid())
+  recordId   String
   columnName String
-  value     String
+  value      String
 
   record TableRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
 
