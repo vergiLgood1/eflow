@@ -43,8 +43,7 @@ export function ModelToolbar() {
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
 
-  const { tabs, closeTab, addTab, renameTab, activeTabId } =
-    useWorkspaceStore();
+  const { tabs, closeTab, addTab, renameTab } = useWorkspaceStore();
 
   const { zoomIn, zoomOut } = useReactFlow();
   const {
@@ -171,6 +170,14 @@ export function ModelToolbar() {
             className={activeTool === "select" ? ACTIVE_TOOL_CLASS : undefined}
             onClick={() => setActiveTool("select")}
           />
+          {/* <ModelToolbarButton
+            tooltip="Selection (drag to select multiple)"
+            icon={<Square className="h-4 w-4" />}
+            className={
+              activeTool === "selection" ? ACTIVE_TOOL_CLASS : undefined
+            }
+            onClick={() => setActiveTool("selection")}
+          /> */}
           <ModelToolbarButton
             tooltip="Add Table (click canvas to place)"
             icon={<Table2 className="h-4 w-4" />}

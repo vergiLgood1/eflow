@@ -22,7 +22,7 @@ interface CanvasContextMenuProps {
 export function CanvasContextMenu({ children }: CanvasContextMenuProps) {
   const addNode = useCanvasStore((s) => s.addNode);
   const nodes = useCanvasStore((s) => s.nodes);
-  const removeNode = useCanvasStore((s) => s.removeNode);
+  const removeNodes = useCanvasStore((s) => s.removeNodes);
   const { screenToFlowPosition, fitView } = useReactFlow();
 
   // Capture the right-click position since ContextMenuItem onClick
@@ -61,9 +61,12 @@ export function CanvasContextMenu({ children }: CanvasContextMenuProps) {
   }, [addNode, screenToFlowPosition]);
 
   const handleDeleteSelected = useCallback(() => {
-    const selectedNodes = nodes.filter((n) => n.selected);
-    selectedNodes.forEach((node) => removeNode(node.id));
-  }, [nodes, removeNode]);
+    const selectedNodeIds = nodes
+      .filter((node) => node.selected)
+      .map((node) => node.id);
+
+    if (selectedNodeIds.length > 0) removeNodes(selectedNodeIds);
+  }, [nodes, removeNodes]);
 
   return (
     <ContextMenu>

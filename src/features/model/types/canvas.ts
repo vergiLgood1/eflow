@@ -141,6 +141,7 @@ export function isRelationshipEdge(edge: Edge): edge is RelationshipEdge {
 
 export type CanvasTool =
   | "select"
+  | "selection"
   | "table"
   | "view"
   | "note"

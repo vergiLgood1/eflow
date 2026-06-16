@@ -6,6 +6,7 @@ import {
   ConnectionMode,
   MiniMap,
   ReactFlow,
+  SelectionMode,
   useReactFlow,
   type Node,
   type Edge,
@@ -42,6 +43,7 @@ const edgeTypes = {
 
 const TOOL_CURSOR: Record<string, string> = {
   select: "default",
+  selection: "crosshair",
   table: "crosshair",
   view: "crosshair",
   note: "crosshair",
@@ -142,7 +144,7 @@ function ModelCanvasInner({
   // Handle pane click — place node at cursor when a tool is active
   const handlePaneClick = useCallback(
     (event: React.MouseEvent) => {
-      if (activeTool === "select") return;
+      if (activeTool === "select" || activeTool === "selection") return;
 
       const position = screenToFlowPosition({
         x: event.clientX,
@@ -245,22 +247,38 @@ function ModelCanvasInner({
     ],
   );
 
-  // Allow Escape to cancel the active tool
+  const handleNodeClick = useCanvasStore((s) => s.handleNodeClick);
+  const pendingSourceId = useCanvasStore((s) => s.pendingConnectionSourceId);
+  const updateNode = useCanvasStore((s) => s.updateNode);
+  const removeNodes = useCanvasStore((s) => s.removeNodes);
+  const enqueueOperation = useCanvasStore((s) => s.enqueueOperation);
+  const setDragOverGroupId = useCanvasStore((s) => s.setDragOverGroupId);
+
+  // Allow Escape to cancel the active tool and Delete to remove selected nodes.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isEditableElement(e.target)) return;
+
       if (e.key === "Escape" && activeTool !== "select") {
         setActiveTool("select");
+        return;
+      }
+
+      if (e.key === "Delete" || e.key === "Backspace") {
+        const selectedNodeIds = useCanvasStore
+          .getState()
+          .nodes.filter((node) => node.selected)
+          .map((node) => node.id);
+
+        if (selectedNodeIds.length > 0) {
+          e.preventDefault();
+          removeNodes(selectedNodeIds);
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeTool, setActiveTool]);
-
-  const handleNodeClick = useCanvasStore((s) => s.handleNodeClick);
-  const pendingSourceId = useCanvasStore((s) => s.pendingConnectionSourceId);
-  const updateNode = useCanvasStore((s) => s.updateNode);
-  const enqueueOperation = useCanvasStore((s) => s.enqueueOperation);
-  const setDragOverGroupId = useCanvasStore((s) => s.setDragOverGroupId);
+  }, [activeTool, removeNodes, setActiveTool]);
 
   const onNodeDrag = useCallback(
     (_event: React.MouseEvent, node: Node) => {
@@ -392,6 +410,11 @@ function ModelCanvasInner({
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           connectionMode={ConnectionMode.Loose}
+          elementsSelectable
+          nodesDraggable={activeTool !== "selection"}
+          panOnDrag={activeTool !== "selection"}
+          selectionMode={SelectionMode.Partial}
+          selectionOnDrag={activeTool === "selection"}
           fitView
           className="bg-dot-pattern"
           style={{ cursor: TOOL_CURSOR[activeTool] ?? "default" }}
@@ -403,6 +426,17 @@ function ModelCanvasInner({
         </ReactFlow>
       </CanvasContextMenu>
     </div>
+  );
+}
+
+function isEditableElement(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+
+  return (
+    target.isContentEditable ||
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement
   );
 }
 
