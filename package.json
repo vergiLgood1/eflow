@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "bun --bun next dev",
-    "build": "bun next build",
+    "build": "bunx prisma generate && bun --bun next build",
     "start": "bun --bun next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "bunx prisma generate",
+    "postinstall": "bunx prisma generate"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
