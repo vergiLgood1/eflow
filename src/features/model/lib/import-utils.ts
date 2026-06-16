@@ -141,7 +141,7 @@ export function dbmlToCanvas(dbml: string): {
             isUnique: field.unique,
             nullable: !field.not_null,
             defaultValue: field.dbdefault?.value,
-            notes: field.note,
+            notes: normalizeOptionalString(field.note),
             isAutoIncrement: field.increment,
           };
         });
@@ -162,7 +162,7 @@ export function dbmlToCanvas(dbml: string): {
             name: table.name,
             columns,
             indexes,
-            notes: table.note,
+            notes: normalizeOptionalString(table.note),
             color: table.headerColor || "#3b82f6",
             // Attach seed records if the DBML had a matching Records block
             ...(recordsMap[table.name]
@@ -212,7 +212,7 @@ export function dbmlToCanvas(dbml: string): {
           type: "relationship",
           data: {
             cardinality,
-            fkName: ref.name,
+            fkName: normalizeOptionalString(ref.name),
             onDelete: normalizeRefAction(ref.onDelete),
             onUpdate: normalizeRefAction(ref.onUpdate),
           },
@@ -275,28 +275,38 @@ export function syncCanvasData(
   newNodes: CanvasNode[],
   newEdges: RelationshipEdge[],
 ): { nodes: CanvasNode[]; edges: RelationshipEdge[] } {
+  const nodeIdMap = new Map<string, string>();
   const updatedNodes = newNodes.map((newNode) => {
     const existingNode = currentNodes.find(
       (n) => n.data.name === newNode.data.name,
     );
     if (existingNode) {
+      nodeIdMap.set(newNode.id, existingNode.id);
       return {
         ...newNode,
         id: existingNode.id, // Keep existing ID for React Flow stability
         position: existingNode.position, // Preserve position!
       };
     }
+
+    nodeIdMap.set(newNode.id, newNode.id);
     return newNode;
   });
 
-  // Handle edges: we need to map source/target names to the new IDs if they changed,
-  // but in our current import logic we use table names as IDs, so it might be fine.
-  // However, if we move to UUIDs, we'd need a mapping table here.
+  const updatedEdges = newEdges.map((edge) => ({
+    ...edge,
+    source: nodeIdMap.get(edge.source) ?? edge.source,
+    target: nodeIdMap.get(edge.target) ?? edge.target,
+  }));
 
-  return { nodes: updatedNodes, edges: newEdges };
+  return { nodes: updatedNodes, edges: updatedEdges };
 }
 
 type RefAction = "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION" | undefined;
+
+function normalizeOptionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
 
 function normalizeRefAction(action: string | undefined): RefAction | undefined {
   if (!action) return undefined;

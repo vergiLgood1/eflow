@@ -48,6 +48,7 @@ export interface CanvasSlice {
 
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
+  replaceCanvasData: (nodes: CanvasNode[], edges: RelationshipEdge[]) => void;
   setViewport: (viewport: Viewport) => void;
   setActiveTool: (tool: CanvasTool) => void;
   toggleAnimation: () => void;
@@ -285,6 +286,35 @@ export const createCanvasSlice: StateCreator<
 
   setNodes: (nodes) => set({ nodes }),
   setEdges: (edges) => set({ edges }),
+  replaceCanvasData: (nextNodes, nextEdges) => {
+    const currentNodes = get().nodes;
+    const currentEdges = get().edges;
+    const nextNodeIds = new Set(nextNodes.map((node) => node.id));
+    const nextEdgeIds = new Set(nextEdges.map((edge) => edge.id));
+
+    get().saveToHistory();
+    set({ nodes: nextNodes, edges: nextEdges, isDirty: true });
+
+    for (const edge of currentEdges) {
+      if (!nextEdgeIds.has(edge.id)) {
+        get().enqueueOperation({ type: "edge.delete", edgeId: edge.id });
+      }
+    }
+
+    for (const node of currentNodes) {
+      if (!nextNodeIds.has(node.id)) {
+        get().enqueueOperation({ type: "node.delete", nodeId: node.id });
+      }
+    }
+
+    for (const node of nextNodes) {
+      get().enqueueOperation({ type: "node.upsert", node });
+    }
+
+    for (const edge of nextEdges) {
+      get().enqueueOperation({ type: "edge.upsert", edge });
+    }
+  },
   setViewport: (v) => {
     const { viewport } = get();
     if (v.x === viewport.x && v.y === viewport.y && v.zoom === viewport.zoom)

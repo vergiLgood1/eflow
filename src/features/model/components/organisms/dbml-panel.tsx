@@ -11,7 +11,7 @@ import { CanvasNode, RelationshipEdge } from "../../types/canvas";
 import { DbmlEditor } from "./dbml-editor";
 
 export function DbmlPanel() {
-  const { nodes, edges, isDbmlModeOpen, toggleDbmlMode, setNodes, setEdges } =
+  const { nodes, edges, isDbmlModeOpen, toggleDbmlMode, replaceCanvasData } =
     useCanvasStore();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +19,7 @@ export function DbmlPanel() {
 
   const syncedCode = useMemo(() => {
     if (!isDbmlModeOpen) return "";
+    if (nodes.length === 0 && edges.length === 0) return "";
     return generateDBML(nodes as CanvasNode[], edges as RelationshipEdge[]);
   }, [nodes, edges, isDbmlModeOpen]);
 
@@ -35,8 +36,7 @@ export function DbmlPanel() {
           newEdges,
         );
 
-        setNodes(synced.nodes);
-        setEdges(synced.edges);
+        replaceCanvasData(synced.nodes, synced.edges);
         setIsDirty(false);
         setError(null);
         if (!silent) toast.success("Changes applied to diagram");
@@ -46,7 +46,7 @@ export function DbmlPanel() {
         setError(message);
       }
     },
-    [code, nodes, edges, setNodes, setEdges],
+    [code, nodes, edges, replaceCanvasData],
   );
 
   // Just-In-Time (JIT) Auto-apply with 800 ms debounce
