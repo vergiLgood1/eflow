@@ -14,7 +14,9 @@ import type {
   CanvasTool,
   ColumnData,
   ModelSettings,
+  RelationshipEdge,
   RelationshipEdgeData,
+  TableNode,
   TableNodeData,
 } from "../../types/canvas";
 import type { CanvasOperation } from "../../types/canvas-operation.schema";
@@ -373,7 +375,7 @@ export const createCanvasSlice: StateCreator<
       const targetPk = targetData?.columns.find((column) => column.isPk);
 
       // Create junction table
-      const junctionTable = {
+      const junctionTable: TableNode = {
         id: junctionId,
         type: "table",
         position: {
@@ -418,23 +420,23 @@ export const createCanvasSlice: StateCreator<
       };
 
       // Create edges: source → junction, target → junction
-      const edge1 = {
+      const edge1: RelationshipEdge = {
         id: crypto.randomUUID(),
         source: pendingConnectionSourceId,
         target: junctionId,
         sourceHandle: `${sourcePk?.id || ""}-source`,
         targetHandle: `${junctionTable.data.columns[1].id}-target`,
-        type: "relationship" as const,
-        data: { cardinality: "1:n" as const, fkName: sourceFkName },
+        type: "relationship",
+        data: { cardinality: "1:n", fkName: sourceFkName },
       };
-      const edge2 = {
+      const edge2: RelationshipEdge = {
         id: crypto.randomUUID(),
         source: id,
         target: junctionId,
         sourceHandle: `${targetPk?.id || ""}-source`,
         targetHandle: `${junctionTable.data.columns[2].id}-target`,
-        type: "relationship" as const,
-        data: { cardinality: "1:n" as const, fkName: targetFkName },
+        type: "relationship",
+        data: { cardinality: "1:n", fkName: targetFkName },
       };
 
       get().saveToHistory();
@@ -443,8 +445,13 @@ export const createCanvasSlice: StateCreator<
         nodes: [...nodes, junctionTable],
         pendingConnectionSourceId: null,
         activeTool: "select",
-        pendingEdges: [...get().pendingEdges, edge1 as Edge, edge2 as Edge],
+        pendingEdges: [...get().pendingEdges, edge1, edge2],
         isDirty: true,
+      });
+
+      get().enqueueOperation({
+        type: "node.upsert",
+        node: junctionTable,
       });
 
       return;
