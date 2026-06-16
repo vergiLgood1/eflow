@@ -12,7 +12,8 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
-import { Check, ChevronsUpDown, Plus, Search } from "lucide-react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import { Check, ChevronsUpDown, Plus, Search, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { getWorkspaces } from "../../applications/workspace.action";
@@ -104,12 +105,14 @@ interface WorkspaceSwitcherProps {
   slug?: string;
   className?: string;
   initialData: Workspace[];
+  subscriptionAccess?: SubscriptionAccess | null;
 }
 
 export function WorkspaceSwitcher({
   slug: currentSlug,
   className,
   initialData,
+  subscriptionAccess,
 }: WorkspaceSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -140,6 +143,9 @@ export function WorkspaceSwitcher({
   }, [debouncedSearch, initialData]);
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
+  const workspaceLimit = subscriptionAccess?.entitlements.maxWorkspaces ?? null;
+  const hasReachedWorkspaceLimit =
+    workspaceLimit !== null && initialData.length >= workspaceLimit;
 
   const handleWorkspaceSelect = (workspace: Workspace) => {
     setOpen(false);
@@ -196,19 +202,39 @@ export function WorkspaceSwitcher({
           </ScrollArea>
           <Separator />
           <div className="p-1">
-            <CreateWorkspaceDialog
-              open={isCreateDialogOpen}
-              onOpenChange={setIsCreateDialogOpen}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-primary hover:bg-primary/5 h-9 w-full justify-start gap-2 px-2 text-xs font-medium"
+            {hasReachedWorkspaceLimit ? (
+              <div className="space-y-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2">
+                <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                  Free plan includes 1 workspace.
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/5 h-8 w-full justify-start gap-2 px-2 text-xs font-medium"
+                  onClick={() => {
+                    setOpen(false);
+                    router.push("/account/billing");
+                  }}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Upgrade to create more
+                </Button>
+              </div>
+            ) : (
+              <CreateWorkspaceDialog
+                open={isCreateDialogOpen}
+                onOpenChange={setIsCreateDialogOpen}
               >
-                <Plus className="h-3.5 w-3.5" />
-                Create New Workspace
-              </Button>
-            </CreateWorkspaceDialog>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/5 h-9 w-full justify-start gap-2 px-2 text-xs font-medium"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Create New Workspace
+                </Button>
+              </CreateWorkspaceDialog>
+            )}
           </div>
         </PopoverContent>
       </Popover>

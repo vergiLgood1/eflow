@@ -12,6 +12,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { formatDistanceToNow } from "date-fns";
 import {
   Box,
@@ -20,6 +21,7 @@ import {
   MoreVertical,
   Plus,
   Search,
+  Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -29,6 +31,7 @@ import { CreateDiagramDialog } from "../organisms/create-diagram-dialog";
 interface DataModel {
   id: string;
   name: string;
+  isPublic?: boolean;
   updatedAt: Date;
 }
 
@@ -108,6 +111,7 @@ interface WorkspaceDataModelSelectorProps {
   modelId?: string;
   className?: string;
   initialData: DataModel[];
+  subscriptionAccess?: SubscriptionAccess | null;
 }
 
 export function WorkspaceDataModelSelector({
@@ -115,6 +119,7 @@ export function WorkspaceDataModelSelector({
   modelId,
   className,
   initialData,
+  subscriptionAccess,
 }: WorkspaceDataModelSelectorProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -127,6 +132,11 @@ export function WorkspaceDataModelSelector({
   const router = useRouter();
 
   const selectedModel = models.find((m) => m.id === modelId);
+  const publicModelLimit =
+    subscriptionAccess?.entitlements.maxPublicModels ?? null;
+  const hasReachedPublicModelLimit =
+    publicModelLimit !== null &&
+    initialData.filter((model) => model.isPublic).length >= publicModelLimit;
 
   React.useEffect(() => {
     const fetchModels = async () => {
@@ -202,19 +212,39 @@ export function WorkspaceDataModelSelector({
           </ScrollArea>
           <Separator />
           <div className="p-1">
-            <CreateDiagramDialog
-              open={isCreateDialogOpen}
-              onOpenChange={setIsCreateDialogOpen}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-primary hover:bg-primary/5 h-9 w-full justify-start gap-2 px-2 text-xs font-medium"
+            {hasReachedPublicModelLimit ? (
+              <div className="space-y-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2">
+                <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                  Free plan includes 3 public data models.
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/5 h-8 w-full justify-start gap-2 px-2 text-xs font-medium"
+                  onClick={() => {
+                    setOpen(false);
+                    router.push("/account/billing");
+                  }}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Upgrade to create more
+                </Button>
+              </div>
+            ) : (
+              <CreateDiagramDialog
+                open={isCreateDialogOpen}
+                onOpenChange={setIsCreateDialogOpen}
               >
-                <Plus className="h-3.5 w-3.5" />
-                Create New Data Model
-              </Button>
-            </CreateDiagramDialog>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/5 h-9 w-full justify-start gap-2 px-2 text-xs font-medium"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Create New Data Model
+                </Button>
+              </CreateDiagramDialog>
+            )}
           </div>
         </PopoverContent>
       </Popover>

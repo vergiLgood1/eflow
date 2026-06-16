@@ -11,12 +11,14 @@ import { ModelToolbar } from "../organisms/model-toolbar";
 import { DbmlPanel } from "../organisms/dbml-panel";
 import { WorkspaceChatPanel } from "@/features/workspace/components/organisms/workspace-chat-panel";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 
 interface ModelLayoutTemplateProps {
   children: React.ReactNode;
   userName: string;
   workspaces: Workspace[];
   models: DataModel[];
+  subscriptionAccess: SubscriptionAccess | null;
 }
 
 export function ModelLayoutTemplate({
@@ -24,6 +26,7 @@ export function ModelLayoutTemplate({
   userName,
   workspaces,
   models,
+  subscriptionAccess,
 }: ModelLayoutTemplateProps) {
   const { activeTabId, setActiveTab } = useWorkspaceStore();
 
@@ -34,6 +37,7 @@ export function ModelLayoutTemplate({
         workspaces={workspaces}
         models={models}
         userName={userName}
+        subscriptionAccess={subscriptionAccess}
       />
 
       <div className="flex flex-1 overflow-hidden">

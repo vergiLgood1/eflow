@@ -4,6 +4,7 @@ import { WorkspaceHeader } from "../organisms/workspace-header";
 import { WorkspaceSidebar } from "../organisms/workspace-sidebar";
 
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
 
 interface WorkspaceLayoutTemplateProps {
@@ -11,6 +12,7 @@ interface WorkspaceLayoutTemplateProps {
   userName: string;
   workspaces: Workspace[];
   models: DataModel[];
+  subscriptionAccess: SubscriptionAccess;
 }
 
 export function WorkspaceLayoutTemplate({
@@ -18,6 +20,7 @@ export function WorkspaceLayoutTemplate({
   userName,
   workspaces,
   models,
+  subscriptionAccess,
 }: WorkspaceLayoutTemplateProps) {
   return (
     <div className="bg-background flex h-screen min-w-0 flex-col overflow-hidden">
@@ -25,9 +28,13 @@ export function WorkspaceLayoutTemplate({
         userName={userName}
         workspaces={workspaces}
         models={models}
+        subscriptionAccess={subscriptionAccess}
       />
       <div className="flex flex-1 overflow-hidden">
-        <WorkspaceSidebar models={models} />
+        <WorkspaceSidebar
+          models={models}
+          subscriptionAccess={subscriptionAccess}
+        />
         <main className="relative min-w-0 flex-1">
           <ScrollArea className="h-full w-full">{children}</ScrollArea>
         </main>

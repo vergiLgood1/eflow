@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut } from "@/features/authentication/applications/auth.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -16,12 +17,10 @@ import {
   CreditCard,
   LifeBuoy,
   LogOut,
-  Moon,
   PanelRight,
   Settings,
   Sparkles,
-  Sun,
-  User as UserIcon,
+  User as UserIcon
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
@@ -40,12 +39,14 @@ interface WorkspaceHeaderProps {
   userName: string;
   workspaces: Workspace[];
   models: DataModel[];
+  subscriptionAccess?: SubscriptionAccess | null;
 }
 
 export function WorkspaceHeader({
   userName,
   workspaces,
   models,
+  subscriptionAccess,
 }: WorkspaceHeaderProps) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -54,6 +55,13 @@ export function WorkspaceHeader({
   const modelId = params?.id as string;
 
   const { toggleChat } = useWorkspaceStore();
+  const entitlements = subscriptionAccess?.entitlements;
+  const isPro = Boolean(entitlements?.isPro);
+  const publicModelCount = models.filter((model) => model.isPublic).length;
+  const publicModelLimit = entitlements?.maxPublicModels ?? null;
+  const usagePercent = publicModelLimit
+    ? Math.min(100, (publicModelCount / publicModelLimit) * 100)
+    : 0;
 
   const handleLogout = async () => {
     try {
@@ -92,17 +100,55 @@ export function WorkspaceHeader({
 
         <div className="bg-border mx-1 h-4 w-px" />
 
-        <WorkspaceSwitcher slug={slug} initialData={workspaces} />
+        <WorkspaceSwitcher
+          slug={slug}
+          initialData={workspaces}
+          subscriptionAccess={subscriptionAccess}
+        />
 
         <WorkspaceDataModelSelector
           slug={slug}
           modelId={modelId}
           initialData={models}
+          subscriptionAccess={subscriptionAccess}
         />
       </div>
 
       <div className="ml-auto flex items-center gap-2">
         <div className="mr-2 hidden items-center gap-1 lg:flex">
+          {/* {entitlements && (
+            <button
+              className={cn(
+                "mr-1 flex h-8 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-colors",
+                isPro
+                  ? "border-violet-500/30 bg-violet-500/10 text-violet-500 hover:bg-violet-500/15"
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-600 hover:bg-amber-500/15 dark:text-amber-300",
+              )}
+              onClick={() => handleNavigation(`/account/billing`)}
+              type="button"
+            >
+              {isPro ? (
+                <Crown className="h-3.5 w-3.5 fill-current" />
+              ) : (
+                <Sparkles className="h-3.5 w-3.5" />
+              )}
+              <span>{isPro ? "Pro" : "Free"}</span>
+              {!isPro && publicModelLimit !== null && (
+                <span className="flex items-center gap-1.5 text-[10px] font-medium opacity-90">
+                  <span>
+                    {publicModelCount}/{publicModelLimit} public
+                  </span>
+                  <span className="h-1 w-10 overflow-hidden rounded-full bg-current/20">
+                    <span
+                      className="block h-full rounded-full bg-current"
+                      style={{ width: `${usagePercent}%` }}
+                    />
+                  </span>
+                </span>
+              )}
+            </button>
+          )} */}
+
           <WorkspaceSupportDialog>
             <ModelToolbarButton
               tooltip="Contact Support / Report Bug"
@@ -136,7 +182,7 @@ export function WorkspaceHeader({
             onClick={() => handleNavigation(`/account/billing`)}
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Upgrade
+            {isPro ? "Billing" : "Upgrade"}
           </Button>
         </div>
 

@@ -1,16 +1,42 @@
 "use client";
 
 import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { Clock, Database, FileText, Layers, Link2 } from "lucide-react";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import {
+  Clock,
+  Crown,
+  Database,
+  FileText,
+  Layers,
+  Link2,
+  Sparkles,
+} from "lucide-react";
 import { WorkspaceSidebarItem } from "../molecules/workspace-sidebar-item";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import type { DataModel } from "../../../../../prisma/generated";
 
-export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
+export function WorkspaceSidebar({
+  models = [],
+  subscriptionAccess,
+}: {
+  models?: DataModel[];
+  subscriptionAccess?: SubscriptionAccess | null;
+}) {
   const params = useParams();
+  const router = useRouter();
   const slug = params?.slug as string;
+  const entitlements = subscriptionAccess?.entitlements;
+  const isPro = Boolean(entitlements?.isPro);
+  const publicModelLimit = entitlements?.maxPublicModels ?? null;
+  const publicModelCount = models.filter((model) => model.isPublic).length;
+  const usagePercent = publicModelLimit
+    ? Math.min(100, (publicModelCount / publicModelLimit) * 100)
+    : 0;
+  const hasReachedPublicModelLimit =
+    publicModelLimit !== null && publicModelCount >= publicModelLimit;
 
   // Pinned models from the current workspace (server-side truth)
   const pinnedModels = models.filter((m) => m.isPinned);
@@ -92,19 +118,66 @@ export function WorkspaceSidebar({ models = [] }: { models?: DataModel[] }) {
 
       {/* Sidebar Footer/Status */}
       <div className="border-border/50 border-t p-4">
-        <div className="bg-primary/5 border-primary/10 rounded-xl border p-3">
-          <div className="mb-2 flex items-center gap-2">
-            <div className="bg-primary h-2 w-2 animate-pulse rounded-full" />
-            <span className="text-primary text-[11px] font-semibold">
-              Free Plan
-            </span>
+        <div className="border-primary/10 bg-primary/5 rounded-xl border p-3">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/10 text-primary flex h-7 w-7 items-center justify-center rounded-lg">
+                {isPro ? (
+                  <Crown className="h-3.5 w-3.5 fill-current" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
+              </div>
+              <div>
+                <span className="text-foreground block text-[11px] font-semibold">
+                  {isPro ? "Pro Plan" : "Free Plan"}
+                </span>
+                <span className="text-muted-foreground text-[10px]">
+                  {isPro ? "Unlimited diagrams" : "Public diagram usage"}
+                </span>
+              </div>
+            </div>
+
+            {!isPro && publicModelLimit !== null && (
+              <Badge
+                variant={hasReachedPublicModelLimit ? "destructive" : "secondary"}
+                className="h-5 rounded-md px-1.5 text-[10px] font-bold"
+              >
+                {publicModelCount}/{publicModelLimit}
+              </Badge>
+            )}
           </div>
-          <div className="bg-primary/10 h-1 w-full overflow-hidden rounded-full">
-            <div className="bg-primary h-full w-[40%]" />
-          </div>
-          <p className="text-muted-foreground mt-2 text-[10px]">
-            4 of 10 diagrams used
-          </p>
+
+          {isPro ? (
+            <p className="text-muted-foreground text-[10px] leading-relaxed">
+              Private diagrams and unlimited creation are enabled for this
+              workspace.
+            </p>
+          ) : (
+            <>
+              {publicModelLimit !== null && (
+                <div className="bg-primary/10 h-1.5 w-full overflow-hidden rounded-full">
+                  <div
+                    className="bg-primary h-full rounded-full transition-all"
+                    style={{ width: `${usagePercent}%` }}
+                  />
+                </div>
+              )}
+              <p className="text-muted-foreground mt-2 text-[10px] leading-relaxed">
+                {hasReachedPublicModelLimit
+                  ? "Free limit reached. Upgrade to create more public or private diagrams."
+                  : "Free includes 3 public diagrams. Upgrade for private and unlimited diagrams."}
+              </p>
+              <Button
+                size="sm"
+                className="mt-3 h-8 w-full rounded-lg text-xs font-semibold"
+                onClick={() => router.push("/account/billing")}
+              >
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                {hasReachedPublicModelLimit ? "Upgrade Required" : "Upgrade"}
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </aside>

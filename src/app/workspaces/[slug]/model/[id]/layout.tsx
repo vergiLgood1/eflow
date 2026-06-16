@@ -5,6 +5,7 @@ import {
   getWorkspacesByCurrentUser,
 } from "@/features/workspace/applications/workspace.action";
 import { ModelLayoutTemplate } from "@/features/model/components/templates/model-layout-template";
+import { getCurrentUserSubscriptionAccess } from "@/features/subscription/applications/subscription.action";
 import { redirect, notFound } from "next/navigation";
 
 export default async function Layout({
@@ -28,12 +29,16 @@ export default async function Layout({
   const models = await getDataModelsBySlug(slug);
 
   const userName = session.data?.user?.name || "Guest";
+  const subscriptionAccess = session.data?.user
+    ? await getCurrentUserSubscriptionAccess()
+    : null;
 
   return (
     <ModelLayoutTemplate
       userName={userName}
       workspaces={workspaces}
       models={models}
+      subscriptionAccess={subscriptionAccess}
     >
       {children}
     </ModelLayoutTemplate>
