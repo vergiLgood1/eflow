@@ -3,6 +3,7 @@
 import { db } from "@/db/prisma";
 import { ActionResponse, handleActionError } from "@/shared/lib/error";
 import { createActivityLog } from "@/features/activity/applications/activity.action";
+import type { Prisma } from "../../../../prisma/generated";
 import {
   requireDataModelMember,
   requireProcedureMember,
@@ -26,8 +27,10 @@ type ProcedurePayload = {
   dataAccess: string;
   isDeterministic: boolean;
   body: string;
-  parameters?: Record<string, unknown> | unknown[];
+  parameters?: Prisma.InputJsonValue;
 };
+
+type ProcedureSnapshot = Prisma.InputJsonObject & ProcedurePayload;
 
 // ---------------------------------------------------------------------------
 // Trigger Actions
@@ -122,6 +125,21 @@ export async function updateTrigger(
   }
 }
 
+function createProcedureSnapshot(
+  payload: ProcedurePayload,
+): ProcedureSnapshot {
+  return {
+    name: payload.name,
+    description: payload.description,
+    language: payload.language,
+    securityType: payload.securityType,
+    dataAccess: payload.dataAccess,
+    isDeterministic: payload.isDeterministic,
+    body: payload.body,
+    parameters: payload.parameters,
+  };
+}
+
 export async function deleteTrigger(
   triggerId: string,
 ): Promise<ActionResponse> {
@@ -179,7 +197,7 @@ export async function createProcedure(
       data: {
         procedureId: procedure.id,
         version: 1,
-        snapshot: { ...payload },
+        snapshot: createProcedureSnapshot(payload),
         userId: user.id,
       },
     });
@@ -211,7 +229,16 @@ export async function updateProcedure(
 
     await db.procedure.update({
       where: { id: procedureId },
-      data: { ...payload },
+      data: {
+        name: payload.name,
+        description: payload.description,
+        language: payload.language,
+        securityType: payload.securityType,
+        dataAccess: payload.dataAccess,
+        isDeterministic: payload.isDeterministic,
+        body: payload.body,
+        parameters: payload.parameters,
+      },
     });
 
     // Create VersionHistory if body or name changed
@@ -223,7 +250,7 @@ export async function updateProcedure(
         data: {
           procedureId,
           version: versionCount + 1,
-          snapshot: { ...payload },
+          snapshot: createProcedureSnapshot(payload),
           userId: user.id,
         },
       });

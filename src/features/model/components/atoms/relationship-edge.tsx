@@ -1,5 +1,6 @@
 import {
   CardinalityType,
+  isRelationshipEdge,
   RelationshipEdgeData,
 } from "@/features/model/types/canvas";
 import {
@@ -9,12 +10,18 @@ import {
   getSmoothStepPath,
 } from "@xyflow/react";
 import { memo, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
 import { useCanvasStore } from "../../store/use-canvas-store";
 import {
   EdgeMarkerDefinitions,
   getCardinalityDescription,
   getEdgeMarkers,
 } from "./model-edge-markers";
+import { RelationshipEdgeContextMenu } from "./relationship-edge-context-menu";
 
 // EdgeProps (without generic) is compatible with EdgeTypes.
 // We narrow `data` inside the body: semantically safe because React Flow
@@ -36,10 +43,8 @@ export const RelationshipEdgeComponent = memo(
     const showFkName = useCanvasStore((s) => s.modelSettings.showFkName);
     const edges = useCanvasStore((s) => s.edges);
     const setEdges = useCanvasStore((s) => s.setEdges);
-    const [contextMenu, setContextMenu] = useState<{
-      x: number;
-      y: number;
-    } | null>(null);
+    const enqueueOperation = useCanvasStore((s) => s.enqueueOperation);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const [edgePath, labelX, labelY] = getSmoothStepPath({
       sourceX,
@@ -70,21 +75,36 @@ export const RelationshipEdgeComponent = memo(
     const handleEdgeContextMenu = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      setContextMenu({ x: e.clientX, y: e.clientY });
+      setIsMenuOpen(true);
+    };
+
+    const handleLabelClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsMenuOpen(true);
     };
 
     const handleChangeCardinality = (newCardinality: CardinalityType) => {
+      let updatedRelationshipEdge = null;
       const updatedEdges = edges.map((edge) =>
-        edge.id === id
-          ? { ...edge, data: { ...edge.data, cardinality: newCardinality } }
+        edge.id === id && isRelationshipEdge(edge)
+          ? (updatedRelationshipEdge = {
+              ...edge,
+              data: { ...edge.data, cardinality: newCardinality },
+            })
           : edge,
       );
+
       setEdges(updatedEdges);
+      if (updatedRelationshipEdge) {
+        enqueueOperation({ type: "edge.upsert", edge: updatedRelationshipEdge });
+      }
     };
 
     const handleDeleteEdge = () => {
       const updatedEdges = edges.filter((e) => e.id !== id);
       setEdges(updatedEdges);
+      enqueueOperation({ type: "edge.delete", edgeId: id });
     };
 
     return (
@@ -107,12 +127,35 @@ export const RelationshipEdgeComponent = memo(
             onContextMenu={handleEdgeContextMenu}
           >
             {data?.cardinality && showRelType && (
-              <div
-                className="bg-background border-border text-foreground cursor-context-menu rounded border px-1.5 py-0.5 text-[10px] font-semibold shadow-sm"
-                onContextMenu={handleEdgeContextMenu}
-              >
-                {getCardinalityDescription(data.cardinality as CardinalityType)}
-              </div>
+              <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    className="bg-background border-border text-foreground cursor-context-menu rounded border px-1.5 py-0.5 text-[10px] font-semibold shadow-sm"
+                    onClick={handleLabelClick}
+                    onContextMenu={handleEdgeContextMenu}
+                    type="button"
+                  >
+                    {getCardinalityDescription(
+                      data.cardinality as CardinalityType,
+                    )}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="border-border/50 w-56 p-0 shadow-xl"
+                  side="right"
+                  align="start"
+                  onClick={(e) => e.stopPropagation()}
+                  onContextMenu={(e) => e.stopPropagation()}
+                >
+                  <RelationshipEdgeContextMenu
+                    edgeId={id}
+                    currentCardinality={data.cardinality as CardinalityType}
+                    onChangeCardinality={handleChangeCardinality}
+                    onDelete={handleDeleteEdge}
+                    onClose={() => setIsMenuOpen(false)}
+                  />
+                </PopoverContent>
+              </Popover>
             )}
             {data?.fkName && showFkName && (
               <div
@@ -124,17 +167,6 @@ export const RelationshipEdgeComponent = memo(
             )}
           </div>
         </EdgeLabelRenderer>
-
-        {/* {contextMenu && data && (
-                <RelationshipEdgeContextMenu
-                    edgeId={id}
-                    currentCardinality={data.cardinality}
-                    position={contextMenu}
-                    onChangeCardinality={handleChangeCardinality}
-                    onDelete={handleDeleteEdge}
-                    onClose={() => setContextMenu(null)}
-                />
-            )} */}
       </>
     );
   },
