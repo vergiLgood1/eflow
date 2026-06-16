@@ -401,6 +401,56 @@ export async function deleteDataModel(id: string): Promise<ActionResponse> {
   }
 }
 
+export async function updateDataModelName(
+  id: string,
+  name: string,
+): Promise<ActionResponse> {
+  try {
+    const session = await auth.getSession();
+    const userId = session.data?.user?.id;
+
+    if (!userId) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) {
+      throw new AppError("Name must be at least 2 characters", 422);
+    }
+
+    const model = await db.dataModel.findUnique({
+      where: { id },
+      select: {
+        workspace: {
+          select: {
+            members: {
+              where: { userId },
+              select: { id: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!model) {
+      throw new AppError("Data model not found", 404);
+    }
+
+    if (model.workspace.members.length === 0) {
+      throw new AppError("Forbidden", 403);
+    }
+
+    await db.dataModel.update({
+      where: { id },
+      data: { name: trimmedName },
+    });
+
+    return { success: true, message: "Data model updated successfully" };
+  } catch (error) {
+    return handleActionError(error);
+  }
+}
+
 export async function updateDataModelTags(
   modelId: string,
   tags: string[],

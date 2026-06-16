@@ -1,6 +1,21 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 import { Input } from "@/shared/components/ui/input";
 import {
   Popover,
@@ -18,14 +33,21 @@ import {
   Box,
   Check,
   ChevronsUpDown,
+  Pencil,
   MoreVertical,
   Plus,
   Search,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { getDataModelsBySlug } from "../../applications/workspace.action";
+import { toast } from "sonner";
+import {
+  deleteDataModel,
+  getDataModelsBySlug,
+  updateDataModelName,
+} from "../../applications/workspace.action";
 import { CreateDiagramDialog } from "../organisms/create-diagram-dialog";
 
 interface DataModel {
@@ -39,9 +61,17 @@ interface ModelListProps {
   models: DataModel[];
   selectedId?: string;
   onSelect: (model: DataModel) => void;
+  onEdit: (model: DataModel) => void;
+  onDelete: (model: DataModel) => void;
 }
 
-function ModelList({ models, selectedId, onSelect }: ModelListProps) {
+function ModelList({
+  models,
+  selectedId,
+  onSelect,
+  onEdit,
+  onDelete,
+}: ModelListProps) {
   return (
     <div className="p-1">
       <p className="text-muted-foreground px-2 py-1.5 text-[10px] font-semibold tracking-wider uppercase">
@@ -71,13 +101,41 @@ function ModelList({ models, selectedId, onSelect }: ModelListProps) {
               </span>
             </div>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
-          >
-            <MoreVertical className="h-3.5 w-3.5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <MoreVertical className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-36 rounded-xl">
+              <DropdownMenuItem
+                className="cursor-pointer gap-2 text-xs"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onEdit(model);
+                }}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer gap-2 text-xs"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDelete(model);
+                }}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ))}
       {models.length === 0 && (
@@ -128,6 +186,12 @@ export function WorkspaceDataModelSelector({
   const [models, setModels] = React.useState<DataModel[]>(initialData);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
+  const [editingModel, setEditingModel] = React.useState<DataModel | null>(null);
+  const [deletingModel, setDeletingModel] = React.useState<DataModel | null>(
+    null,
+  );
+  const [editName, setEditName] = React.useState("");
+  const [isMutating, setIsMutating] = React.useState(false);
 
   const router = useRouter();
 
@@ -156,6 +220,56 @@ export function WorkspaceDataModelSelector({
 
     fetchModels();
   }, [slug, debouncedSearch, initialData]);
+
+  const openEditDialog = (model: DataModel) => {
+    setOpen(false);
+    setEditingModel(model);
+    setEditName(model.name);
+  };
+
+  const openDeleteDialog = (model: DataModel) => {
+    setOpen(false);
+    setDeletingModel(model);
+  };
+
+  const handleUpdateModel = async () => {
+    if (!editingModel) return;
+
+    setIsMutating(true);
+    const result = await updateDataModelName(editingModel.id, editName);
+    setIsMutating(false);
+
+    if (!result.success) {
+      toast.error(result.error);
+      return;
+    }
+
+    toast.success(result.message ?? "Data model updated");
+    setEditingModel(null);
+    router.refresh();
+  };
+
+  const handleDeleteModel = async () => {
+    if (!deletingModel) return;
+
+    setIsMutating(true);
+    const result = await deleteDataModel(deletingModel.id);
+    setIsMutating(false);
+
+    if (!result.success) {
+      toast.error(result.error);
+      return;
+    }
+
+    toast.success(result.message ?? "Data model deleted");
+    setDeletingModel(null);
+    if (deletingModel.id === modelId) {
+      router.push(`/workspaces/${slug}`);
+      return;
+    }
+
+    router.refresh();
+  };
 
   return (
     <>
@@ -207,6 +321,8 @@ export function WorkspaceDataModelSelector({
                   setOpen(false);
                   router.push(`/workspaces/${slug}/model/${model.id}`);
                 }}
+                onEdit={openEditDialog}
+                onDelete={openDeleteDialog}
               />
             )}
           </ScrollArea>
@@ -248,6 +364,64 @@ export function WorkspaceDataModelSelector({
           </div>
         </PopoverContent>
       </Popover>
+
+      <Dialog open={editingModel !== null} onOpenChange={() => setEditingModel(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Data Model</DialogTitle>
+            <DialogDescription>
+              Rename this data model. Existing tables and relationships are not
+              changed.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+            value={editName}
+            onChange={(event) => setEditName(event.target.value)}
+            placeholder="Data model name"
+            disabled={isMutating}
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              disabled={isMutating}
+              onClick={() => setEditingModel(null)}
+            >
+              Cancel
+            </Button>
+            <Button disabled={isMutating} onClick={handleUpdateModel}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deletingModel !== null} onOpenChange={() => setDeletingModel(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Data Model</DialogTitle>
+            <DialogDescription>
+              This will permanently delete &quot;{deletingModel?.name}&quot; and all of
+              its diagram data. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              disabled={isMutating}
+              onClick={() => setDeletingModel(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={isMutating}
+              onClick={handleDeleteModel}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
