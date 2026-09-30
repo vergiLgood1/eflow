@@ -66,12 +66,14 @@ export function WorkspaceHeader({
   const handleLogout = async () => {
     try {
       const result = await signOut();
-      if (result.success && result.redirectTo) {
-        router.push(result.redirectTo);
-        toast.success("Logged out successfully");
-      } else if (!result.success) {
+      if (!result.success) {
         toast.error(result.error || "Failed to log out");
+        return;
       }
+
+      // `replace` so the stale workspace shell cannot be restored with the back button.
+      router.replace(result.redirectTo || "/auth/sign-in");
+      toast.success("Logged out successfully");
     } catch (error) {
       toast.error("Failed to log out");
     }

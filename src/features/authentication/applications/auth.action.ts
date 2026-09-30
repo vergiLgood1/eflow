@@ -12,6 +12,7 @@ import {
   handleActionError,
 } from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
+import { revalidatePath } from "next/cache";
 import { auth } from "../lib/auth-server";
 import {
   forgotPasswordSchema,
@@ -100,8 +101,16 @@ export async function signInWithGithub(): Promise<ActionResponse> {
 
 export async function signOut(): Promise<ActionResponse> {
   try {
-    await auth.signOut();
-    return { success: true, redirectTo: "/" };
+    const { error } = await auth.signOut();
+
+    if (error) {
+      throw new AppError(error.message || "Failed to sign out. Try again", 400);
+    }
+
+    revalidatePath("/workspaces", "layout");
+    revalidatePath("/account", "layout");
+
+    return { success: true, redirectTo: "/auth/sign-in" };
   } catch (error) {
     return handleActionError(error);
   }
