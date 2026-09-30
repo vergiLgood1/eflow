@@ -66,7 +66,6 @@ export async function signUpWithEmail(
       id: authData.user.id,
       name: data.name,
       email: data.email,
-      password: data.password,
     });
 
     if (!userResult.success) {

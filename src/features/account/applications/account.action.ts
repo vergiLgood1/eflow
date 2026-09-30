@@ -8,8 +8,8 @@ import {
   handleActionError,
 } from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
-import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { USER_PUBLIC_SELECT } from "../lib/user-select";
 import {
   CreateUserSchema,
   createUserSchema,
@@ -31,9 +31,10 @@ export async function updateProfile(
     const updatedUser = await db.user.update({
       where: { id: session.data.user.id },
       data: validatedData,
+      select: USER_PUBLIC_SELECT,
     });
 
-    revalidatePath("/workspaces/account");
+    revalidatePath("/account", "layout");
 
     return {
       success: true,
@@ -75,21 +76,21 @@ export async function registerUser(
 
     const isEmailExists = await db.user.findUnique({
       where: { email: validatedData.email },
+      select: { id: true },
     });
 
     if (isEmailExists) {
       throw new AppError("Email already exists", 400);
     }
 
-    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
-
     const user = await db.user.create({
       data: {
         id: validatedData.id,
         name: validatedData.name,
         email: validatedData.email,
-        password: hashedPassword,
+        image: validatedData.image,
       },
+      select: USER_PUBLIC_SELECT,
     });
 
     return { success: true, data: user };
