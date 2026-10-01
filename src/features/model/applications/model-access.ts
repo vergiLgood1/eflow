@@ -34,6 +34,49 @@ export async function requireDataModelMember(dataModelId: string) {
   return { user, model };
 }
 
+/**
+ * Load a data model together with the columns every mutation needs, and prove
+ * in the same round trip that the current user is a member of the workspace
+ * that owns it.
+ *
+ * Mutation actions must resolve the model through this helper instead of
+ * `findUnique({ where: { id } })`: an id taken from a client argument is not
+ * evidence that the caller is allowed to touch that row.
+ *
+ * @throws {AppError} 401 without a session, 404 when the model is missing, 403
+ * when the caller is not a member of the owning workspace.
+ */
+export async function requireMutableDataModel(dataModelId: string) {
+  const user = await requireCurrentUser();
+
+  const model = await db.dataModel.findUnique({
+    where: { id: dataModelId },
+    select: {
+      id: true,
+      name: true,
+      isPublic: true,
+      isPinned: true,
+      workspaceId: true,
+      workspace: {
+        select: {
+          members: {
+            where: { userId: user.id },
+            select: { id: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!model) throw new AppError("Data model not found", 404);
+
+  if (model.workspace.members.length === 0) {
+    throw new AppError("Forbidden", 403);
+  }
+
+  return { user, model };
+}
+
 export async function requireTableMember(tableId: string) {
   const user = await requireCurrentUser();
 

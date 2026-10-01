@@ -11,20 +11,33 @@ export const createWorkspaceSchema = z.object({
     ),
 });
 
+/**
+ * Model name submitted on its own by the rename action.
+ *
+ * Shares the create-model rule so a rename cannot accept a value the original
+ * form would reject.
+ */
+export const dataModelNameSchema = z
+  .string()
+  .trim()
+  .min(2, "Name must be at least 2 characters");
+
+const dataModelTagSchema = z
+  .string()
+  .trim()
+  .min(1, "Tag must be at least 1 character")
+  .max(30, "Tag must not exceed 30 characters")
+  .transform((tag) => tag.toLowerCase());
+
+export const dataModelTagsSchema = z
+  .array(dataModelTagSchema)
+  .max(10, "A data model can have at most 10 tags");
+
 export const createDataModelSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: dataModelNameSchema,
   description: z.string().optional(),
   isPublic: z.boolean().default(true),
-  tags: z
-    .array(
-      z
-        .string()
-        .min(1, "Tag must be at least 1 character")
-        .max(30, "Tag must not exceed 30 characters")
-        .transform((tag) => tag.toLowerCase().trim()),
-    )
-    .max(10, "Maksimal 10 tag")
-    .optional(),
+  tags: dataModelTagsSchema.optional(),
   dbType: z.enum(["POSTGRESQL", "MYSQL", "ORACLE", "SQLSERVER", "SQLITE"], {
     message: "Please select a valid database type",
   }),

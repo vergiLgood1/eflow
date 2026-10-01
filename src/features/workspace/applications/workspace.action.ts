@@ -2,11 +2,13 @@
 
 import { db } from "@/db/prisma";
 import { auth } from "@/features/authentication/lib/auth-server";
+import { requireMutableDataModel } from "@/features/model/applications/model-access";
 import {
   ActionResponse,
   AppError,
   handleActionError,
 } from "@/shared/lib/error";
+import { Validation } from "@/shared/lib/validation";
 import { DataModel } from "../../../../prisma/generated";
 import {
   requireCanCreateDataModel,
@@ -16,6 +18,8 @@ import {
   CreateDataModelSchema,
   createDataModelSchema,
   createWorkspaceSchema,
+  dataModelNameSchema,
+  dataModelTagsSchema,
 } from "../types/workspace.schema";
 import { createActivityLog } from "@/features/activity/applications/activity.action";
 
@@ -306,38 +310,9 @@ export async function createDataModel(
 
 export async function deleteDataModel(id: string): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    const userId = session.data?.user?.id;
+    const { model } = await requireMutableDataModel(id);
 
-    if (!userId) {
-      throw new AppError("Unauthorized", 401);
-    }
-
-    const model = await db.dataModel.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        workspace: {
-          select: {
-            members: {
-              where: { userId },
-              select: { id: true },
-            },
-          },
-        },
-      },
-    });
-
-    if (!model) {
-      throw new AppError("Data model not found", 404);
-    }
-
-    if (model.workspace.members.length === 0) {
-      throw new AppError("Forbidden", 403);
-    }
-
-    await db.dataModel.delete({ where: { id } });
+    await db.dataModel.delete({ where: { id: model.id } });
 
     return {
       success: true,
@@ -353,43 +328,13 @@ export async function updateDataModelName(
   name: string,
 ): Promise<ActionResponse> {
   try {
-    const session = await auth.getSession();
-    const userId = session.data?.user?.id;
+    const { model } = await requireMutableDataModel(id);
 
-    if (!userId) {
-      throw new AppError("Unauthorized", 401);
-    }
-
-    const trimmedName = name.trim();
-    if (trimmedName.length < 2) {
-      throw new AppError("Name must be at least 2 characters", 422);
-    }
-
-    const model = await db.dataModel.findUnique({
-      where: { id },
-      select: {
-        workspace: {
-          select: {
-            members: {
-              where: { userId },
-              select: { id: true },
-            },
-          },
-        },
-      },
-    });
-
-    if (!model) {
-      throw new AppError("Data model not found", 404);
-    }
-
-    if (model.workspace.members.length === 0) {
-      throw new AppError("Forbidden", 403);
-    }
+    const validatedName = Validation.validate(dataModelNameSchema, name);
 
     await db.dataModel.update({
-      where: { id },
-      data: { name: trimmedName },
+      where: { id: model.id },
+      data: { name: validatedName },
     });
 
     return { success: true, message: "Data model updated successfully" };
@@ -398,21 +343,30 @@ export async function updateDataModelName(
   }
 }
 
+/**
+ * Replace the tag set of a data model.
+ *
+ * The caller must be a member of the workspace that owns the model; the id is
+ * client-supplied and therefore cannot be trusted on its own.
+ */
 export async function updateDataModelTags(
   modelId: string,
   tags: string[],
 ): Promise<ActionResponse> {
   try {
+    const validatedTags = Validation.validate(dataModelTagsSchema, tags);
+    const { model } = await requireMutableDataModel(modelId);
+
     await db.$transaction(async (tx) => {
       const existing = await tx.dataModelTag.findMany({
-        where: { dataModelId: modelId },
+        where: { dataModelId: model.id },
         include: { tag: true },
       });
 
       const existingNames = existing.map((t) => t.tag.name);
 
-      const toAdd = tags.filter((t) => !existingNames.includes(t));
-      const toRemove = existingNames.filter((t) => !tags.includes(t));
+      const toAdd = validatedTags.filter((t) => !existingNames.includes(t));
+      const toRemove = existingNames.filter((t) => !validatedTags.includes(t));
 
       if (toAdd.length) {
         const upserted = await Promise.all(
@@ -427,7 +381,7 @@ export async function updateDataModelTags(
 
         await tx.dataModelTag.createMany({
           data: upserted.map((tag) => ({
-            dataModelId: modelId,
+            dataModelId: model.id,
             tagId: tag.id,
           })),
           skipDuplicates: true,
@@ -444,7 +398,7 @@ export async function updateDataModelTags(
 
         await tx.dataModelTag.deleteMany({
           where: {
-            dataModelId: modelId,
+            dataModelId: model.id,
             tagId: {
               in: tagsToDelete.map((t) => t.id),
             },
@@ -467,9 +421,12 @@ export async function addDataModelTags(
   tags: string[],
 ): Promise<ActionResponse> {
   try {
+    const validatedTags = Validation.validate(dataModelTagsSchema, tags);
+    const { model } = await requireMutableDataModel(modelId);
+
     await db.$transaction(async (tx) => {
       const upserted = await Promise.all(
-        tags.map((name) =>
+        validatedTags.map((name) =>
           tx.tag.upsert({
             where: { name },
             update: {},
@@ -480,7 +437,7 @@ export async function addDataModelTags(
 
       await tx.dataModelTag.createMany({
         data: upserted.map((tag) => ({
-          dataModelId: modelId,
+          dataModelId: model.id,
           tagId: tag.id,
         })),
         skipDuplicates: true,
@@ -501,19 +458,22 @@ export async function deleteDataModelTags(
   tagNames: string[],
 ): Promise<ActionResponse> {
   try {
+    const validatedTagNames = Validation.validate(dataModelTagsSchema, tagNames);
+    const { model } = await requireMutableDataModel(modelId);
+
     await db.$transaction(async (tx) => {
-      if (!tagNames.length) return;
+      if (!validatedTagNames.length) return;
 
       const tags = await tx.tag.findMany({
         where: {
-          name: { in: tagNames },
+          name: { in: validatedTagNames },
         },
         select: { id: true },
       });
 
       await tx.dataModelTag.deleteMany({
         where: {
-          dataModelId: modelId,
+          dataModelId: model.id,
           tagId: {
             in: tags.map((t) => t.id),
           },
@@ -534,61 +494,51 @@ export async function togglePinDataModel(
   id: string,
 ): Promise<ActionResponse<DataModel>> {
   try {
-    const model = await db.dataModel.findUnique({ where: { id } });
-    if (!model) throw new AppError("Data model not found");
+    const { user, model } = await requireMutableDataModel(id);
 
     const updated = await db.dataModel.update({
-      where: { id },
+      where: { id: model.id },
       data: { isPinned: !model.isPinned },
     });
 
-    const session = await auth.getSession();
-    if (session.data?.user) {
-      await createActivityLog({
-        dataModelId: id,
-        userId: session.data.user.id,
-        action: `${updated.isPinned ? "Pinned" : "Unpinned"} data model "${model.name}"`,
-        details: {
-          type: "update",
-          category: "General",
-          target: model.name,
-        },
-      });
-    }
+    await createActivityLog({
+      dataModelId: model.id,
+      userId: user.id,
+      action: `${updated.isPinned ? "Pinned" : "Unpinned"} data model "${model.name}"`,
+      details: {
+        type: "update",
+        category: "General",
+        target: model.name,
+      },
+    });
 
     return { success: true, data: updated };
   } catch (error) {
     return handleActionError(error);
   }
 }
+
 export async function toggleVisibilityDataModel(
   id: string,
 ): Promise<ActionResponse<DataModel>> {
   try {
-    const session = await auth.getSession();
-    if (!session.data?.user) {
-      throw new AppError("Unauthorized", 401);
-    }
+    const { user, model } = await requireMutableDataModel(id);
 
-    const model = await db.dataModel.findUnique({ where: { id } });
-    if (!model) throw new AppError("Data model not found");
-
+    // Turning a public model private is what the paid entitlement gates, so
+    // the plan check still belongs here — but only after the caller has been
+    // proven to own the model.
     if (model.isPublic) {
-      await requireCanCreateDataModel(
-        session.data.user.id,
-        model.workspaceId,
-        false,
-      );
+      await requireCanCreateDataModel(user.id, model.workspaceId, false);
     }
 
     const updated = await db.dataModel.update({
-      where: { id },
+      where: { id: model.id },
       data: { isPublic: !model.isPublic },
     });
 
     await createActivityLog({
-      dataModelId: id,
-      userId: session.data.user.id,
+      dataModelId: model.id,
+      userId: user.id,
       action: `Changed visibility of data model "${model.name}" to ${updated.isPublic ? "Public" : "Private"}`,
       details: {
         type: "update",
