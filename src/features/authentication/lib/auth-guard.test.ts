@@ -2,9 +2,11 @@ import { expect, mock, test } from "bun:test";
 
 type SessionOutcome = { data: { user: { id: string; name: string } } | null };
 
-const getSessionMock = mock(async (): Promise<SessionOutcome> => ({
-  data: null,
-}));
+const getSessionMock = mock(
+  async (): Promise<SessionOutcome> => ({
+    data: null,
+  }),
+);
 
 mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
