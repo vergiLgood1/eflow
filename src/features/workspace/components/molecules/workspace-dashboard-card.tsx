@@ -7,6 +7,7 @@ interface WorkspaceDashboardCardProps {
   title: string;
   description: string;
   onClick?: () => void;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -15,17 +16,20 @@ export function WorkspaceDashboardCard({
   title,
   description,
   onClick,
+  disabled,
   className,
 }: WorkspaceDashboardCardProps) {
   return (
     <button
-      className="w-full text-left transition-all hover:scale-[1.02] active:scale-[0.98]"
+      className="w-full text-left transition-all hover:scale-[1.02] active:scale-[0.98] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
       onClick={onClick}
+      disabled={disabled}
       type="button"
     >
       <Card
         className={cn(
           "hover:border-primary/40 hover:bg-card/80 transition-colors",
+          disabled && "hover:border-border hover:bg-card",
           className,
         )}
       >

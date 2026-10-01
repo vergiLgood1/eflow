@@ -2,8 +2,6 @@ import { Button } from "@/shared/components/ui/button";
 import { FileCode, Link2, Plus, Sparkles, Upload } from "lucide-react";
 import { WorkspaceEmptyIllustration } from "../atoms/workspace-empty-illustration";
 import { WorkspaceDashboardCard } from "../molecules/workspace-dashboard-card";
-import { ImportSchemaDialog } from "@/shared/components/ui/import-schema-dialog";
-import { ConnectDbDialog } from "./connect-db-dialog";
 import { CreateDiagramDialog } from "./create-diagram-dialog";
 
 const TEMPLATES = ["E-commerce", "SaaS", "Blog", "CRM"];
@@ -39,27 +37,24 @@ export function WorkspaceDashboardEmptyState() {
         </div>
 
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-3">
-          <ImportSchemaDialog defaultMode="sql">
-            <WorkspaceDashboardCard
-              icon={<Upload className="h-6 w-6 text-blue-500" />}
-              title="Import SQL"
-              description="From .sql files"
-            />
-          </ImportSchemaDialog>
-          <ConnectDbDialog>
-            <WorkspaceDashboardCard
-              icon={<Link2 className="h-6 w-6 text-purple-500" />}
-              title="Connect DB"
-              description="PostgreSQL, MySQL"
-            />
-          </ConnectDbDialog>
-          <ImportSchemaDialog defaultMode="dbml">
-            <WorkspaceDashboardCard
-              icon={<FileCode className="h-6 w-6 text-emerald-500" />}
-              title="Import file"
-              description=".dbml, .sql"
-            />
-          </ImportSchemaDialog>
+          <WorkspaceDashboardCard
+            icon={<Upload className="h-6 w-6 text-blue-500" />}
+            title="Import SQL"
+            description="From .sql files"
+            disabled
+          />
+          <WorkspaceDashboardCard
+            icon={<Link2 className="h-6 w-6 text-purple-500" />}
+            title="Connect DB"
+            description="PostgreSQL, MySQL"
+            disabled
+          />
+          <WorkspaceDashboardCard
+            icon={<FileCode className="h-6 w-6 text-emerald-500" />}
+            title="Import file"
+            description=".dbml, .sql"
+            disabled
+          />
         </div>
 
         <div className="border-border/50 mt-16 border-t pt-10">
@@ -75,6 +70,7 @@ export function WorkspaceDashboardEmptyState() {
                 key={template}
                 variant="outline"
                 size="sm"
+                disabled
                 className="bg-card/50 border-border hover:border-primary/50 hover:bg-primary/5 h-10 rounded-xl px-6 backdrop-blur-sm transition-all"
               >
                 {template}
