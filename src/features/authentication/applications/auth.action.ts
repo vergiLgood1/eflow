@@ -1,6 +1,6 @@
 "use server";
 
-import { registerUser } from "@/features/account/applications/account.action";
+import { registerUser } from "@/features/account/applications/user-record";
 import {
   ResetPasswordSchema,
   SignInSchema,
@@ -62,15 +62,11 @@ export async function signUpWithEmail(
       );
     }
 
-    const userResult = await registerUser({
+    await registerUser({
       id: authData.user.id,
       name: data.name,
       email: data.email,
     });
-
-    if (!userResult.success) {
-      throw new AppError(userResult.error || "Failed to register user", 400);
-    }
 
     return { success: true, redirectTo: "/workspaces/onboarding" };
   } catch (error) {

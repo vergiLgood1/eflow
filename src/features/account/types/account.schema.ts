@@ -34,9 +34,16 @@ export const updateUserSchema = z
 
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
+/**
+ * The explicit email confirmation a user must type before deletion.
+ *
+ * `trim()` runs before the email check so pasting an address with surrounding
+ * whitespace from an email client does not look like a mismatched account.
+ */
 export const deleteAccountSchema = z.object({
   confirmEmail: z
     .string()
+    .trim()
     .email("Please enter a valid email to confirm deletion"),
 });
 
