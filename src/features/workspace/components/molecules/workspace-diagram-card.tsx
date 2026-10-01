@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/utils";
 import { Globe, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { ShareDiagramDialog } from "../organisms/share-diagram-dialog";
 import { useDiagramActions } from "../../hooks/use-diagram-actions";
 import { WorkspaceDiagramDropdown } from "./workspace-diagram-dropdown";

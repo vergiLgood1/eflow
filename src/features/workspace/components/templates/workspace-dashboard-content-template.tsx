@@ -3,7 +3,7 @@ import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { WorkspaceProUpsellCard } from "../molecules/workspace-pro-upsell-card";
 import { WorkspaceUpgradeBanner } from "../molecules/workspace-upgrade-banner";
 import { WorkspaceDashboardHeader } from "../organisms/workspace-dashboard-header";

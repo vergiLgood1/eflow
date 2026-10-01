@@ -8,7 +8,7 @@ import { Database, Star, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { EmptyDiagramState } from "../molecules/empty-diagram-state";
 import { WorkspaceDiagramCard } from "../molecules/workspace-diagram-card";
 import { ShareDiagramDialog } from "./share-diagram-dialog";

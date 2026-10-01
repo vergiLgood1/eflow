@@ -4,7 +4,7 @@ import { WorkspaceHeader } from "../organisms/workspace-header";
 import { WorkspaceSidebar } from "../organisms/workspace-sidebar";
 
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { WorkspaceChatPanel } from "../organisms/workspace-chat-panel";
 
 interface WorkspaceLayoutTemplateProps {

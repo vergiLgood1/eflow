@@ -9,7 +9,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import {
   activateDemoProSubscription,
   resetDemoFreeSubscription,

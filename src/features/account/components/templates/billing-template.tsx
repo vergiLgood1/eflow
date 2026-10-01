@@ -1,5 +1,5 @@
 import React from "react";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { BillingPlanList } from "../organisms/billing-plan-list";
 
 export function BillingTemplate({

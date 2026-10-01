@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "@/features/authentication/applications/auth.action";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,

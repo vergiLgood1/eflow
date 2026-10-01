@@ -27,7 +27,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebounceValue } from "@/shared/hooks/use-debounce-value";
 import { cn } from "@/shared/lib/utils";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import { formatDistanceToNow } from "date-fns";
 import {
   Box,

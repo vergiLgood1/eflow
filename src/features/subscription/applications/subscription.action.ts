@@ -1,126 +1,34 @@
 "use server";
 
 import { db } from "@/db/prisma";
-import { auth } from "@/features/authentication/lib/auth-server";
+import { requireUser } from "@/features/authentication/lib/auth-guard";
+import { handleActionError, type ActionResponse } from "@/shared/lib/error";
 import {
-  AppError,
-  handleActionError,
-  type ActionResponse,
-} from "@/shared/lib/error";
-import type { Subscription } from "../../../../prisma/generated";
-import {
-  getEntitlements,
-  type SubscriptionEntitlements,
-} from "./subscription-policy";
+  getUserSubscriptionAccess,
+  type SubscriptionAccess,
+} from "./subscription-access";
+import { ensureDemoBillingAllowed } from "./subscription-policy";
 
-export type SubscriptionAccess = {
-  subscription: Pick<
-    Subscription,
-    | "plan"
-    | "status"
-    | "cancelAtPeriodEnd"
-    | "currentPeriodEnd"
-    | "provider"
-  > | null;
-  entitlements: SubscriptionEntitlements;
-};
-
+/**
+ * The signed-in user's subscription state, for server components.
+ *
+ * Reads the id from the session so the caller cannot ask for someone else's
+ * plan; the lookup itself lives in `subscription-access.ts`, away from the
+ * network-reachable surface of this module.
+ */
 export async function getCurrentUserSubscriptionAccess(): Promise<SubscriptionAccess> {
-  const session = await auth.getSession();
-  const userId = session.data?.user?.id;
-
-  if (!userId) {
-    throw new AppError("Unauthorized", 401);
-  }
-
-  return getUserSubscriptionAccess(userId);
-}
-
-export async function getUserSubscriptionAccess(
-  userId: string,
-): Promise<SubscriptionAccess> {
-  const subscription = await db.subscription.findUnique({
-    where: { userId },
-    select: {
-      plan: true,
-      status: true,
-      cancelAtPeriodEnd: true,
-      currentPeriodEnd: true,
-      provider: true,
-    },
-  });
-
-  const plan = subscription?.plan ?? "FREE";
-  const status = subscription?.status ?? "ACTIVE";
-
-  return {
-    subscription,
-    entitlements: getEntitlements(plan, status),
-  };
-}
-
-export async function requireCanCreateWorkspace(userId: string): Promise<void> {
-  const { entitlements } = await getUserSubscriptionAccess(userId);
-  if (entitlements.maxWorkspaces === null) return;
-
-  const workspaceCount = await db.workspace.count({
-    where: { members: { some: { userId } } },
-  });
-
-  if (workspaceCount >= entitlements.maxWorkspaces) {
-    throw new AppError(
-      "Free plan is limited to 1 workspace. Upgrade to Pro to create more workspaces.",
-      403,
-      "SUBSCRIPTION_LIMIT_REACHED",
-      { limit: entitlements.maxWorkspaces, usage: workspaceCount },
-    );
-  }
-}
-
-export async function requireCanCreateDataModel(
-  userId: string,
-  workspaceId: string,
-  isPublic: boolean,
-): Promise<void> {
-  const { entitlements } = await getUserSubscriptionAccess(userId);
-
-  if (!isPublic && !entitlements.canCreatePrivateModels) {
-    throw new AppError(
-      "Free plan only supports public data models. Upgrade to Pro to create private models.",
-      403,
-      "SUBSCRIPTION_PRIVATE_MODEL_REQUIRED",
-    );
-  }
-
-  if (entitlements.maxPublicModels === null) return;
-
-  const publicModelCount = await db.dataModel.count({
-    where: { workspaceId, isPublic: true },
-  });
-
-  if (publicModelCount >= entitlements.maxPublicModels) {
-    throw new AppError(
-      "Free plan is limited to 3 public data models. Upgrade to Pro to create more models.",
-      403,
-      "SUBSCRIPTION_LIMIT_REACHED",
-      { limit: entitlements.maxPublicModels, usage: publicModelCount },
-    );
-  }
+  const user = await requireUser();
+  return getUserSubscriptionAccess(user.id);
 }
 
 export async function activateDemoProSubscription(): Promise<ActionResponse> {
   try {
     ensureDemoBillingAllowed();
 
-    const session = await auth.getSession();
-    const userId = session.data?.user?.id;
-
-    if (!userId) {
-      throw new AppError("Unauthorized", 401);
-    }
+    const user = await requireUser();
 
     await db.subscription.upsert({
-      where: { userId },
+      where: { userId: user.id },
       update: {
         plan: "PRO",
         status: "ACTIVE",
@@ -128,7 +36,7 @@ export async function activateDemoProSubscription(): Promise<ActionResponse> {
         provider: "demo",
       },
       create: {
-        userId,
+        userId: user.id,
         plan: "PRO",
         status: "ACTIVE",
         provider: "demo",
@@ -145,15 +53,10 @@ export async function resetDemoFreeSubscription(): Promise<ActionResponse> {
   try {
     ensureDemoBillingAllowed();
 
-    const session = await auth.getSession();
-    const userId = session.data?.user?.id;
-
-    if (!userId) {
-      throw new AppError("Unauthorized", 401);
-    }
+    const user = await requireUser();
 
     await db.subscription.upsert({
-      where: { userId },
+      where: { userId: user.id },
       update: {
         plan: "FREE",
         status: "ACTIVE",
@@ -161,7 +64,7 @@ export async function resetDemoFreeSubscription(): Promise<ActionResponse> {
         provider: "demo",
       },
       create: {
-        userId,
+        userId: user.id,
         plan: "FREE",
         status: "ACTIVE",
         provider: "demo",
@@ -171,11 +74,5 @@ export async function resetDemoFreeSubscription(): Promise<ActionResponse> {
     return { success: true, message: "Demo Free plan restored" };
   } catch (error) {
     return handleActionError(error);
-  }
-}
-
-function ensureDemoBillingAllowed(): void {
-  if (process.env.NODE_ENV === "production") {
-    throw new AppError("Demo billing actions are disabled in production", 403);
   }
 }

@@ -3,7 +3,7 @@
 import { Center } from "@/shared/components/layout/Center";
 import { Loader2 } from "lucide-react";
 import { Suspense, use } from "react";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
 import { WorkspaceDashboardEmptyState } from "../organisms/workspace-dashboard-empty-state";
 import { WorkspaceDashboardContentTemplate } from "./workspace-dashboard-content-template";

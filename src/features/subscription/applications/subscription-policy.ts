@@ -1,3 +1,4 @@
+import { AppError } from "@/shared/lib/error";
 import type {
   SubscriptionPlan,
   SubscriptionStatus,
@@ -30,4 +31,16 @@ export function getEntitlements(
     maxPublicModels: isPro ? null : FREE_PUBLIC_MODEL_LIMIT,
     canCreatePrivateModels: isPro,
   };
+}
+
+/**
+ * Refuse the demo plan switch outside development.
+ *
+ * The demo actions write a PRO subscription directly, so shipping them to
+ * production would hand anyone a paid plan for free.
+ */
+export function ensureDemoBillingAllowed(): void {
+  if (process.env.NODE_ENV === "production") {
+    throw new AppError("Demo billing actions are disabled in production", 403);
+  }
 }

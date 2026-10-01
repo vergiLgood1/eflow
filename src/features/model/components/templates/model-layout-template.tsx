@@ -11,7 +11,7 @@ import { ModelToolbar } from "../organisms/model-toolbar";
 import { DbmlPanel } from "../organisms/dbml-panel";
 import { WorkspaceChatPanel } from "@/features/workspace/components/organisms/workspace-chat-panel";
 import type { DataModel, Workspace } from "../../../../../prisma/generated";
-import type { SubscriptionAccess } from "@/features/subscription/applications/subscription.action";
+import type { SubscriptionAccess } from "@/features/subscription/applications/subscription-access";
 
 interface ModelLayoutTemplateProps {
   children: React.ReactNode;

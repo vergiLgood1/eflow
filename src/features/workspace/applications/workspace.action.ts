@@ -13,7 +13,7 @@ import { DataModel } from "../../../../prisma/generated";
 import {
   requireCanCreateDataModel,
   requireCanCreateWorkspace,
-} from "@/features/subscription/applications/subscription.action";
+} from "@/features/subscription/applications/subscription-access";
 import {
   CreateDataModelSchema,
   createDataModelSchema,
