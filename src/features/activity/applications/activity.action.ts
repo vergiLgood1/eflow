@@ -177,25 +177,3 @@ export async function getActivityStats(
     return { total: 0, creations: 0, updates: 0, deletions: 0 };
   }
 }
-
-export async function getVersionHistory(
-  objectId: string,
-  type: "view" | "trigger" | "procedure",
-) {
-  try {
-    const where: any = {};
-    if (type === "view") where.viewId = objectId;
-    if (type === "trigger") where.triggerId = objectId;
-    if (type === "procedure") where.procedureId = objectId;
-
-    return await db.versionHistory.findMany({
-      where,
-      orderBy: {
-        version: "desc",
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching version history:", error);
-    return [];
-  }
-}

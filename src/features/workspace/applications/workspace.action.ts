@@ -19,16 +19,6 @@ import {
 } from "../types/workspace.schema";
 import { createActivityLog } from "@/features/activity/applications/activity.action";
 
-export async function isWorkspaceSlugExists(slug: string): Promise<boolean> {
-  const workspace = await db.workspace.findUnique({
-    where: {
-      slug: slug,
-    },
-  });
-
-  return !!workspace;
-}
-
 export async function getWorkspaces(query?: string) {
   const session = await auth.getSession();
   if (!session.data?.user) return [];
@@ -74,34 +64,6 @@ export async function getWorkspacesByCurrentUser(query?: string) {
   });
 }
 
-export async function getWorkspaceBySlug(slug: string) {
-  return await db.workspace.findUnique({
-    where: { slug },
-    include: {
-      members: {
-        include: {
-          user: true,
-        },
-      },
-    },
-  });
-}
-
-export async function getDataModels(workspaceId: string, query?: string) {
-  return await db.dataModel.findMany({
-    where: {
-      workspaceId,
-      name: {
-        contains: query,
-        mode: "insensitive",
-      },
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-  });
-}
-
 export async function getDataModelsBySlug(slug: string, query?: string) {
   if (!slug) return [];
 
@@ -128,21 +90,6 @@ export async function getDataModelsBySlug(slug: string, query?: string) {
     },
     orderBy: {
       updatedAt: "desc",
-    },
-  });
-}
-
-// get count workspace by userId
-export async function getWorkspaceCountByUserId(
-  userId: string,
-): Promise<number> {
-  return await db.workspace.count({
-    where: {
-      members: {
-        some: {
-          userId: userId,
-        },
-      },
     },
   });
 }
