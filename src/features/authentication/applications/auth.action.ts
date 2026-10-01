@@ -14,6 +14,7 @@ import {
 import { Validation } from "@/shared/lib/validation";
 import { revalidatePath } from "next/cache";
 import { auth } from "../lib/auth-server";
+import { removeProviderUser } from "../lib/provider-user";
 import {
   forgotPasswordSchema,
   ForgotPasswordSchema,
@@ -62,11 +63,28 @@ export async function signUpWithEmail(
       );
     }
 
-    await registerUser({
-      id: authData.user.id,
-      name: data.name,
-      email: data.email,
-    });
+    // The provider accepted the identity; if the app-side half fails, roll it
+    // back here. Without compensation the email stays claimed at the provider
+    // with no local row, and every retry of sign-up is rejected forever.
+    try {
+      await registerUser({
+        id: authData.user.id,
+        name: data.name,
+        email: data.email,
+      });
+    } catch (registrationError) {
+      const cleanup = await removeProviderUser(authData.user.id);
+
+      if (cleanup.message) {
+        console.error(
+          `Sign-up compensation failed: provider user ${authData.user.id} is orphaned and must be removed manually (${cleanup.message}).`,
+        );
+      }
+
+      // Whatever the user needs to hear about is the original failure, not
+      // the rollback; removeProviderUser never throws by design.
+      throw registrationError;
+    }
 
     return { success: true, redirectTo: "/workspaces/onboarding" };
   } catch (error) {

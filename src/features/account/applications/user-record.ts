@@ -57,9 +57,11 @@ export async function registerUser(data: CreateUserSchema) {
  * Delete the signed-in user's app-side row after an explicit email confirmation.
  *
  * Dependent rows (workspace memberships, activity logs, subscription) cascade
- * with it. The Neon Auth session is not touched here: whoever exposes this as an
- * action must also sign the caller out, or the session cookie keeps
- * authenticating a user id that no longer resolves.
+ * with it. The Neon Auth half of the identity is not touched here: the
+ * `deleteAccount` action composes this with `endProviderSession()` and
+ * `removeProviderUser()`, and is the only network-reachable path to it —
+ * calling this helper on its own would leave the session cookie authenticating
+ * a user id that no longer resolves.
  */
 export async function deleteCurrentAccount(data: DeleteAccountSchema) {
   const user = await requireUser();
