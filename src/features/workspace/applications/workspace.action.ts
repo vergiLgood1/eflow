@@ -21,7 +21,7 @@ import {
   dataModelNameSchema,
   dataModelTagsSchema,
 } from "../types/workspace.schema";
-import { createActivityLog } from "@/features/activity/applications/activity.action";
+import { createActivityLog } from "@/features/activity/applications/activity-log";
 
 export async function getWorkspaces(query?: string) {
   const session = await auth.getSession();
@@ -458,7 +458,10 @@ export async function deleteDataModelTags(
   tagNames: string[],
 ): Promise<ActionResponse> {
   try {
-    const validatedTagNames = Validation.validate(dataModelTagsSchema, tagNames);
+    const validatedTagNames = Validation.validate(
+      dataModelTagsSchema,
+      tagNames,
+    );
     const { model } = await requireMutableDataModel(modelId);
 
     await db.$transaction(async (tx) => {

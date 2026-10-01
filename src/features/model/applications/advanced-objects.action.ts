@@ -2,7 +2,7 @@
 
 import { db } from "@/db/prisma";
 import { ActionResponse, handleActionError } from "@/shared/lib/error";
-import { createActivityLog } from "@/features/activity/applications/activity.action";
+import { createActivityLog } from "@/features/activity/applications/activity-log";
 import type { Prisma } from "../../../../prisma/generated";
 import {
   requireDataModelMember,

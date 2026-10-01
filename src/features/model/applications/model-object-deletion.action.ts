@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/prisma";
-import { createActivityLog } from "@/features/activity/applications/activity.action";
+import { createActivityLog } from "@/features/activity/applications/activity-log";
 import { ActionResponse, handleActionError } from "@/shared/lib/error";
 import {
   requireRelationshipMember,

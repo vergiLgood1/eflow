@@ -1,179 +1,148 @@
 "use server";
 
 import { db } from "@/db/prisma";
-import { auth } from "@/features/authentication/lib/auth-server";
-import { AppError, handleActionError } from "@/shared/lib/error";
+import { requireWorkspaceMemberBySlug } from "@/features/workspace/applications/workspace-access";
 import { ActivityItemData, ActivityStats } from "../types/activity";
 import { formatDistanceToNow, subDays } from "date-fns";
 import { enUS } from "date-fns/locale";
+import type { Prisma } from "../../../../prisma/generated";
+import type { ActivityType } from "../types/activity";
+import type { ActivityLogDetails } from "./activity-log";
+
+const ACTIVITY_TYPES: ActivityType[] = ["create", "update", "delete"];
+const ACTIVITY_FEED_LIMIT = 50;
 
 interface ActivityFilters {
   category?: string;
   time?: string;
 }
 
-export interface CreateActivityLogParams {
-  dataModelId: string;
-  userId: string;
-  action: string;
-  details: {
-    type: "create" | "update" | "delete";
-    category: string;
-    target: string;
-    changes?: { field: string; oldValue?: any; newValue: any }[];
+/**
+ * Narrow the untyped `details` jsonb column.
+ *
+ * Rows were written by older code paths, so the shape is not guaranteed; the
+ * feed treats a malformed payload as "no metadata" instead of trusting it.
+ */
+function readActivityDetails(
+  value: Prisma.JsonValue | null,
+): ActivityLogDetails | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+
+  const candidate = value as Record<string, unknown>;
+
+  if (!ACTIVITY_TYPES.includes(candidate.type as ActivityType)) return null;
+
+  return {
+    type: candidate.type as ActivityType,
+    category:
+      typeof candidate.category === "string" ? candidate.category : "General",
+    target: typeof candidate.target === "string" ? candidate.target : "",
+    changes: Array.isArray(candidate.changes)
+      ? (candidate.changes as ActivityLogDetails["changes"])
+      : undefined,
   };
 }
 
-export async function createActivityLog(
-  params: CreateActivityLogParams,
-): Promise<void> {
-  try {
-    await db.activityLog.create({
-      data: {
-        dataModelId: params.dataModelId,
-        userId: params.userId,
-        action: params.action,
-        details: params.details as any,
-      },
-    });
-  } catch (error) {
-    console.error("Error creating activity log:", error);
-    // We don't throw here to avoid failing the main action
+/**
+ * Shared filter for every workspace-scoped activity query.
+ */
+function buildActivityWhere(
+  workspaceId: string,
+  filters?: ActivityFilters,
+): Prisma.ActivityLogWhereInput {
+  const where: Prisma.ActivityLogWhereInput = {
+    dataModel: { workspaceId },
+  };
+
+  // The feed filters on the operation type stored inside the details jsonb.
+  if (filters?.category && filters.category !== "all") {
+    where.details = { path: ["type"], equals: filters.category };
   }
+
+  if (filters?.time && filters.time !== "max") {
+    const days = filters.time === "24h" ? 1 : filters.time === "7d" ? 7 : 30;
+    where.createdAt = { gte: subDays(new Date(), days) };
+  }
+
+  return where;
 }
 
+/**
+ * Latest activity entries for one workspace, for the activity page.
+ *
+ * Authorization is not optional here: the slug arrives through the URL, so
+ * without the membership check any signed-in user could read the full change
+ * history — table names, schema edits and who made them — of a workspace they
+ * do not belong to.
+ */
 export async function getActivityLogs(
   workspaceSlug: string,
   filters?: ActivityFilters,
 ): Promise<ActivityItemData[]> {
-  try {
-    const workspace = await db.workspace.findUnique({
-      where: { slug: workspaceSlug },
-      select: { id: true },
-    });
+  const { workspace } = await requireWorkspaceMemberBySlug(workspaceSlug);
 
-    if (!workspace) {
-      throw new AppError("Workspace not found", 404);
-    }
+  const logs = await db.activityLog.findMany({
+    where: buildActivityWhere(workspace.id, filters),
+    // The feed only renders the actor's display name, so only that column may
+    // leave the database. `include: { user: true }` shipped the whole user row
+    // — email and profile included — into the server component payload.
+    select: {
+      id: true,
+      action: true,
+      details: true,
+      createdAt: true,
+      user: { select: { name: true } },
+      dataModel: { select: { name: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: ACTIVITY_FEED_LIMIT,
+  });
 
-    const where: any = {
-      dataModel: {
-        workspaceId: workspace.id,
-      },
+  return logs.map((log) => {
+    const details = readActivityDetails(log.details);
+
+    return {
+      id: log.id,
+      user: log.user.name,
+      action: log.action,
+      category: details?.category || "General",
+      target: details?.target || log.dataModel.name,
+      type: details?.type || "update",
+      relativeTime: formatDistanceToNow(new Date(log.createdAt), {
+        addSuffix: true,
+        locale: enUS,
+      }),
+      timestamp: new Date(log.createdAt).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }),
+      changes: details?.changes || [],
     };
-
-    // Filter by category (which is stored as 'type' in details)
-    if (filters?.category && filters.category !== "all") {
-      where.details = {
-        path: ["type"],
-        equals: filters.category,
-      };
-    }
-
-    // Filter by timeframe
-    if (filters?.time && filters.time !== "max") {
-      let date = new Date();
-      if (filters.time === "24h") date = subDays(new Date(), 1);
-      if (filters.time === "7d") date = subDays(new Date(), 7);
-      if (filters.time === "30d") date = subDays(new Date(), 30);
-
-      where.createdAt = {
-        gte: date,
-      };
-    }
-
-    const logs = await db.activityLog.findMany({
-      where,
-      include: {
-        user: true,
-        dataModel: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 50, // Limit to latest 50
-    });
-
-    return logs.map((log) => {
-      const details = log.details as any;
-      return {
-        id: log.id,
-        user: log.user.name,
-        action: log.action,
-        category: details?.category || "General",
-        target: details?.target || log.dataModel.name,
-        type: (details?.type as any) || "update",
-        relativeTime: formatDistanceToNow(new Date(log.createdAt), {
-          addSuffix: true,
-          locale: enUS,
-        }),
-        timestamp: new Date(log.createdAt).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "2-digit",
-        }),
-        changes: details?.changes || [],
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching activity logs:", error);
-    return [];
-  }
+  });
 }
 
 export async function getActivityStats(
   workspaceSlug: string,
   filters?: ActivityFilters,
 ): Promise<ActivityStats> {
-  try {
-    const workspace = await db.workspace.findUnique({
-      where: { slug: workspaceSlug },
-      select: { id: true },
-    });
+  const { workspace } = await requireWorkspaceMemberBySlug(workspaceSlug);
 
-    if (!workspace) return { total: 0, creations: 0, updates: 0, deletions: 0 };
+  const logs = await db.activityLog.findMany({
+    where: buildActivityWhere(workspace.id, filters),
+    select: { details: true },
+  });
 
-    const where: any = {
-      dataModel: {
-        workspaceId: workspace.id,
-      },
-    };
+  // A row without parsable metadata is counted as an update, matching how the
+  // feed renders it, so stats and the list never disagree.
+  const types = logs.map((log) => readActivityDetails(log.details)?.type);
 
-    // Even for stats, we might want to filter by time
-    if (filters?.time && filters.time !== "max") {
-      let date = new Date();
-      if (filters.time === "24h") date = subDays(new Date(), 1);
-      if (filters.time === "7d") date = subDays(new Date(), 7);
-      if (filters.time === "30d") date = subDays(new Date(), 30);
-
-      where.createdAt = {
-        gte: date,
-      };
-    }
-
-    const logs = await db.activityLog.findMany({
-      where,
-      select: {
-        action: true,
-        details: true,
-      },
-    });
-
-    const stats: ActivityStats = {
-      total: logs.length,
-      creations: logs.filter((l) => (l.details as any)?.type === "create")
-        .length,
-      updates: logs.filter(
-        (l) => (l.details as any)?.type === "update" || !l.details,
-      ).length,
-      deletions: logs.filter((l) => (l.details as any)?.type === "delete")
-        .length,
-    };
-
-    return stats;
-  } catch (error) {
-    return { total: 0, creations: 0, updates: 0, deletions: 0 };
-  }
+  return {
+    total: logs.length,
+    creations: types.filter((type) => type === "create").length,
+    updates: types.filter((type) => type === "update" || !type).length,
+    deletions: types.filter((type) => type === "delete").length,
+  };
 }
