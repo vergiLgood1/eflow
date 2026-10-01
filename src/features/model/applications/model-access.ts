@@ -1,14 +1,9 @@
 import { db } from "@/db/prisma";
-import { auth } from "@/features/authentication/lib/auth-server";
+import { requireUser } from "@/features/authentication/lib/auth-guard";
 import { AppError } from "@/shared/lib/error";
 
 export async function requireCurrentUser() {
-  const session = await auth.getSession();
-  const user = session.data?.user;
-
-  if (!user) throw new AppError("Unauthorized", 401);
-
-  return user;
+  return requireUser();
 }
 
 export async function requireDataModelMember(dataModelId: string) {
