@@ -12,7 +12,8 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
 }));
 
-const { requireUser } = await import("./auth-guard");
+const { requireUser } =
+  await import("@/features/authentication/lib/auth-guard");
 
 test("returns the session user when a session exists", async () => {
   // Arrange

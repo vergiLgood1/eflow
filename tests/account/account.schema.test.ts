@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test";
 
-import { createUserSchema, updateUserSchema } from "./account.schema";
+import {
+  createUserSchema,
+  updateUserSchema,
+} from "@/features/account/types/account.schema";
 
 test("accepts a sign-up payload without any password field", () => {
   // Act

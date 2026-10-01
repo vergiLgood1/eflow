@@ -43,7 +43,8 @@ mock.module("@/db/prisma", () => ({
   db: { user: { delete: deleteMock } },
 }));
 
-const { deleteAccount } = await import("./account.action");
+const { deleteAccount } =
+  await import("@/features/account/applications/account.action");
 
 // Call history is process-wide for this file; each test asserts its own.
 beforeEach(() => {

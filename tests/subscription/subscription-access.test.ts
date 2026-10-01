@@ -18,7 +18,7 @@ mock.module("@/db/prisma", () => ({
 }));
 
 const { requireCanCreateDataModel, requireCanCreateWorkspace } =
-  await import("./subscription-access");
+  await import("@/features/subscription/applications/subscription-access");
 
 test("blocks a free plan user who already holds the one workspace", async () => {
   // Act

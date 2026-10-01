@@ -12,7 +12,8 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
 }));
 
-const { requireWorkspaceMemberBySlug } = await import("./workspace-access");
+const { requireWorkspaceMemberBySlug } =
+  await import("@/features/workspace/applications/workspace-access");
 
 test("rejects a caller without a session", async () => {
   // Arrange

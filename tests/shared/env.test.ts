@@ -6,7 +6,7 @@ process.env.DATABASE_URL ??= "postgresql://user:pass@localhost:5432/eflow-test";
 process.env.NEON_AUTH_BASE_URL ??= "https://auth.example.com";
 process.env.NEON_AUTH_COOKIE_SECRET ??= "a".repeat(32);
 
-const { parseEnv } = await import("./env");
+const { parseEnv } = await import("@/shared/lib/env");
 
 function buildValidEnv(overrides: Record<string, string | undefined> = {}) {
   return {

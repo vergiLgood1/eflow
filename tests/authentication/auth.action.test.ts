@@ -1,6 +1,6 @@
 import { beforeEach, expect, mock, spyOn, test } from "bun:test";
 
-import { Prisma } from "../../../../prisma/generated";
+import { Prisma } from "../../prisma/generated";
 
 // `revalidatePath` requires the Next.js request context, which is absent in unit tests.
 mock.module("next/cache", () => ({ revalidatePath: mock() }));
@@ -48,7 +48,8 @@ mock.module("@/db/prisma", () => ({
   db: { user: { create: createUserMock } },
 }));
 
-const { signUpWithEmail, signOut } = await import("./auth.action");
+const { signUpWithEmail, signOut } =
+  await import("@/features/authentication/applications/auth.action");
 
 const validSignUp = {
   name: "Di Yoan",

@@ -9,20 +9,37 @@ const findManyMock = mock(
   async (_query: ActivityQuery): Promise<unknown[]> => [],
 );
 
+const getSessionMock = mock(
+  async (): Promise<unknown> => ({
+    data: { user: { id: "user-1" } },
+  }),
+);
+
+const findWorkspaceMock = mock(
+  async (_args: unknown): Promise<unknown> => ({
+    id: "ws-1",
+    slug: "acme",
+    members: [{ id: "membership-1" }],
+  }),
+);
+
+// Mock only leaves — the session and the database — so the real
+// requireWorkspaceMemberBySlug runs against them. `mock.module` is
+// process-wide: faking the intermediate workspace-access module here would
+// leak into every later test file instead of staying scoped to this one.
 mock.module("@/db/prisma", () => ({
-  db: { activityLog: { findMany: findManyMock } },
+  db: {
+    activityLog: { findMany: findManyMock },
+    workspace: { findUnique: findWorkspaceMock },
+  },
 }));
 
-const requireMemberMock = mock(async (_slug: string) => ({
-  user: { id: "user-1" },
-  workspace: { id: "ws-1", slug: "acme" },
+mock.module("@/features/authentication/lib/auth-server", () => ({
+  auth: { getSession: getSessionMock },
 }));
 
-mock.module("@/features/workspace/applications/workspace-access", () => ({
-  requireWorkspaceMemberBySlug: requireMemberMock,
-}));
-
-const { getActivityLogs, getActivityStats } = await import("./activity.action");
+const { getActivityLogs, getActivityStats } =
+  await import("@/features/activity/applications/activity.action");
 
 test("selects only the actor name, never the whole user row", async () => {
   // Act
@@ -53,11 +70,18 @@ test("scopes both queries to the resolved workspace id", async () => {
 });
 
 test("fails closed when the caller is not a member of the workspace", async () => {
-  // Arrange
-  requireMemberMock.mockRejectedValueOnce(new Error("Forbidden"));
+  // Arrange: the workspace exists but has no membership for this caller, so
+  // the real guard throws 403 before any activity query runs.
+  findWorkspaceMock.mockResolvedValueOnce({
+    id: "ws-other",
+    slug: "other-workspace",
+    members: [],
+  });
 
   // Act & Assert: the read never reaches the database.
   const callsBefore = findManyMock.mock.calls.length;
-  await expect(getActivityLogs("other-workspace")).rejects.toThrow();
+  await expect(getActivityLogs("other-workspace")).rejects.toMatchObject({
+    statusCode: 403,
+  });
   expect(findManyMock.mock.calls.length).toBe(callsBefore);
 });

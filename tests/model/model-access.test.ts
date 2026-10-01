@@ -17,7 +17,8 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
 }));
 
-const { requireMutableDataModel } = await import("./model-access");
+const { requireMutableDataModel } =
+  await import("@/features/model/applications/model-access");
 
 test("rejects a caller without a session", async () => {
   // Arrange

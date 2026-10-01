@@ -1,6 +1,6 @@
 import { expect, mock, test } from "bun:test";
 
-import { Prisma } from "../../../../prisma/generated";
+import { Prisma } from "../../prisma/generated";
 
 type CreateArgs = { data?: unknown };
 
@@ -33,7 +33,8 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
 }));
 
-const { deleteCurrentAccount, registerUser } = await import("./user-record");
+const { deleteCurrentAccount, registerUser } =
+  await import("@/features/account/applications/user-record");
 
 test("creates the local row for an identity the provider accepted", async () => {
   // Act
