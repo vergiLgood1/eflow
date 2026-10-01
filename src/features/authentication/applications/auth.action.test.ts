@@ -23,8 +23,8 @@ const signUpEmailMock = mock(
   }),
 );
 
-const removeUserMock = mock(
-  async (_body: { userId: string }): Promise<Outcome> => ({
+const deleteUserMock = mock(
+  async (): Promise<Outcome> => ({
     data: null,
     error: null,
   }),
@@ -34,7 +34,7 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: {
     signOut: signOutMock,
     signUp: { email: signUpEmailMock },
-    admin: { removeUser: removeUserMock },
+    deleteUser: deleteUserMock,
   },
 }));
 
@@ -60,7 +60,7 @@ const validSignUp = {
 beforeEach(() => {
   signUpEmailMock.mockClear();
   createUserMock.mockClear();
-  removeUserMock.mockClear();
+  deleteUserMock.mockClear();
   signOutMock.mockClear();
 });
 
@@ -100,43 +100,62 @@ test("sign-up completes when the provider accepts and the local row lands", asyn
     redirectTo: "/workspaces/onboarding",
   });
   expect(createUserMock).toHaveBeenCalledTimes(1);
-  expect(removeUserMock).not.toHaveBeenCalled();
+  expect(deleteUserMock).not.toHaveBeenCalled();
 });
 
-test("rolls the provider user back when the local row insert fails", async () => {
+test("rolls the provider user back and hides raw database errors", async () => {
   // Arrange: the local write dies after the provider already minted an id.
   createUserMock.mockRejectedValueOnce(new Error("database unavailable"));
-
-  // Act
-  const result = await signUpWithEmail(validSignUp);
-
-  // Assert: cleanup runs, and the original failure is what the user sees.
-  expect(removeUserMock).toHaveBeenCalledWith({ userId: "usr_123" });
-  expect(result.success).toBe(false);
-  if (!result.success) {
-    expect(result.error).toBe("database unavailable");
-  }
-});
-
-test("keeps the original sign-up error when provider cleanup also fails", async () => {
-  // Arrange: local write fails, then the compensating delete fails too.
-  createUserMock.mockRejectedValueOnce(new Error("database unavailable"));
-  removeUserMock.mockRejectedValueOnce(new Error("provider unreachable"));
   const logSpy = spyOn(console, "error").mockImplementation(() => {});
 
   try {
     // Act
     const result = await signUpWithEmail(validSignUp);
 
-    // Assert: the orphan is logged for a human, never surfaced instead of
-    // the error that explains the actual sign-up failure.
+    // Assert: compensation runs, and the browser sees a message written for
+    // users — the driver's wording only reaches the server log.
+    expect(deleteUserMock).toHaveBeenCalledTimes(1);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error).toBe("database unavailable");
+      expect(result.error).toBe(
+        "Failed to create your account. Please try again.",
+      );
+      expect(result.statusCode).toBe(500);
+    }
+    expect(logSpy).toHaveBeenCalledWith(
+      "Sign-up failed while creating the local user row:",
+      expect.any(Error),
+    );
+  } finally {
+    logSpy.mockRestore();
+  }
+});
+
+test("keeps the safe sign-up message when provider cleanup also fails", async () => {
+  // Arrange: local write fails, then the compensating delete fails too.
+  createUserMock.mockRejectedValueOnce(new Error("database unavailable"));
+  deleteUserMock.mockRejectedValueOnce(new Error("provider unreachable"));
+  const logSpy = spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    // Act
+    const result = await signUpWithEmail(validSignUp);
+
+    // Assert: the orphan and both raw errors are logged for a human, while
+    // the response keeps the user-facing message.
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe(
+        "Failed to create your account. Please try again.",
+      );
     }
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("usr_123"));
     expect(logSpy).toHaveBeenCalledWith(
       expect.stringContaining("provider unreachable"),
+    );
+    expect(logSpy).toHaveBeenCalledWith(
+      "Sign-up failed while creating the local user row:",
+      expect.any(Error),
     );
   } finally {
     logSpy.mockRestore();
@@ -155,8 +174,8 @@ test("treats a duplicate-email race as a conflict and still cleans up", async ()
   // Act
   const result = await signUpWithEmail(validSignUp);
 
-  // Assert
-  expect(removeUserMock).toHaveBeenCalledWith({ userId: "usr_123" });
+  // Assert: the friendly AppError passes through untouched.
+  expect(deleteUserMock).toHaveBeenCalledTimes(1);
   expect(result.success).toBe(false);
   if (!result.success) {
     expect(result.error).toBe("Email already exists");
@@ -180,5 +199,5 @@ test("never touches the database when the provider rejects sign-up", async () =>
     expect(result.error).toBe("User already exists");
   }
   expect(createUserMock).not.toHaveBeenCalled();
-  expect(removeUserMock).not.toHaveBeenCalled();
+  expect(deleteUserMock).not.toHaveBeenCalled();
 });

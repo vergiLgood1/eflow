@@ -13,6 +13,7 @@ import {
 } from "@/shared/lib/error";
 import { Validation } from "@/shared/lib/validation";
 import { revalidatePath } from "next/cache";
+import { ZodError } from "zod";
 import { auth } from "../lib/auth-server";
 import { removeProviderUser } from "../lib/provider-user";
 import {
@@ -73,7 +74,7 @@ export async function signUpWithEmail(
         email: data.email,
       });
     } catch (registrationError) {
-      const cleanup = await removeProviderUser(authData.user.id);
+      const cleanup = await removeProviderUser();
 
       if (cleanup.message) {
         console.error(
@@ -81,9 +82,24 @@ export async function signUpWithEmail(
         );
       }
 
-      // Whatever the user needs to hear about is the original failure, not
-      // the rollback; removeProviderUser never throws by design.
-      throw registrationError;
+      // AppError and ZodError messages are written for users (the duplicate
+      // email race among them); anything else is driver/network detail that
+      // belongs in the server log, never in the response.
+      if (
+        registrationError instanceof AppError ||
+        registrationError instanceof ZodError
+      ) {
+        throw registrationError;
+      }
+
+      console.error(
+        "Sign-up failed while creating the local user row:",
+        registrationError,
+      );
+      throw new AppError(
+        "Failed to create your account. Please try again.",
+        500,
+      );
     }
 
     return { success: true, redirectTo: "/workspaces/onboarding" };

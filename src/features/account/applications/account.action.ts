@@ -51,11 +51,13 @@ export async function updateProfile(
  *
  * The order is deliberate. The local row is deleted first because the deletion
  * the user asked for — and any privacy obligation attached to it — must not
- * hinge on a provider round-trip. Sign-out comes second because the provider
- * validates that call against the session, which the admin removal would have
- * revoked. Provider cleanup comes last and only ever logs: a stale record
- * there is an operational footnote (id is in the log), not a reason to pretend
- * the account is still intact.
+ * hinge on a provider round-trip. Provider removal runs second through the
+ * caller's own still-valid session (Neon Auth's admin API is unreachable
+ * without an admin session, so the session-scoped `delete-user` is the only
+ * path). Sign-out comes last as a best-effort sweep of the browser's cookies.
+ * Neither provider step can undo the deletion: a stale record there is an
+ * operational footnote (the id is in the log), not a reason to pretend the
+ * account is still intact.
  */
 export async function deleteAccount(
   data: DeleteAccountSchema,
@@ -63,15 +65,15 @@ export async function deleteAccount(
   try {
     const { id } = await deleteCurrentAccount(data);
 
-    await endProviderSession();
-
-    const cleanup = await removeProviderUser(id);
+    const cleanup = await removeProviderUser();
 
     if (cleanup.message) {
       console.error(
         `Account deletion left provider user ${id} behind and it must be removed manually (${cleanup.message}).`,
       );
     }
+
+    await endProviderSession();
 
     revalidatePath("/workspaces", "layout");
     revalidatePath("/account", "layout");

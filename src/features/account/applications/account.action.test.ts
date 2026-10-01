@@ -9,11 +9,19 @@ const getSessionMock = mock(
   }),
 );
 
-const signOutMock = mock(async (): Promise<unknown> => ({ error: null }));
+// Order matters: provider removal only works while the session is still
+// valid, so it must run before the sign-out sweep.
+const callOrder: string[] = [];
 
-const removeUserMock = mock(
-  async (_body: { userId: string }): Promise<unknown> => ({ error: null }),
-);
+const signOutMock = mock(async (): Promise<unknown> => {
+  callOrder.push("signOut");
+  return { error: null };
+});
+
+const deleteUserMock = mock(async (): Promise<unknown> => {
+  callOrder.push("providerDelete");
+  return { error: null };
+});
 
 // Mock the leaf the SDK client lives in (the same leaf every guard test
 // mocks) so the real requireUser(), endProviderSession() and
@@ -22,15 +30,14 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: {
     getSession: getSessionMock,
     signOut: signOutMock,
-    admin: { removeUser: removeUserMock },
+    deleteUser: deleteUserMock,
   },
 }));
 
-const deleteMock = mock(
-  async (_args: unknown): Promise<unknown> => ({
-    id: "usr_123",
-  }),
-);
+const deleteMock = mock(async (_args: unknown): Promise<unknown> => {
+  callOrder.push("localDelete");
+  return { id: "usr_123" };
+});
 
 mock.module("@/db/prisma", () => ({
   db: { user: { delete: deleteMock } },
@@ -42,20 +49,23 @@ const { deleteAccount } = await import("./account.action");
 beforeEach(() => {
   deleteMock.mockClear();
   signOutMock.mockClear();
-  removeUserMock.mockClear();
+  deleteUserMock.mockClear();
   getSessionMock.mockClear();
+  callOrder.length = 0;
 });
 
-test("deletes locally, signs out, then removes the provider user", async () => {
+test("deletes locally, then removes the provider user before signing out", async () => {
   // Act
   const result = await deleteAccount({
     confirmEmail: "DiYoan@Example.com ",
   });
 
-  // Assert: local row first, provider housekeeping after it.
+  // Assert: local row first, provider removal while the session is still
+  // valid, cookie sweep last.
   expect(deleteMock).toHaveBeenCalledWith({ where: { id: "usr_123" } });
+  expect(deleteUserMock).toHaveBeenCalledTimes(1);
   expect(signOutMock).toHaveBeenCalledTimes(1);
-  expect(removeUserMock).toHaveBeenCalledWith({ userId: "usr_123" });
+  expect(callOrder).toEqual(["localDelete", "providerDelete", "signOut"]);
   expect(result).toEqual({
     success: true,
     message: "Account deleted successfully",
@@ -75,12 +85,12 @@ test("confirms the session email before touching either store", async () => {
     expect(result.error).toBe("Confirmation email does not match this account");
   }
   expect(deleteMock).not.toHaveBeenCalled();
-  expect(removeUserMock).not.toHaveBeenCalled();
+  expect(deleteUserMock).not.toHaveBeenCalled();
 });
 
 test("still reports success when provider cleanup fails", async () => {
-  // Arrange: local delete works, sign-out works, provider removal breaks.
-  removeUserMock.mockRejectedValueOnce(new Error("provider unreachable"));
+  // Arrange: local delete works, provider removal breaks.
+  deleteUserMock.mockRejectedValueOnce(new Error("provider unreachable"));
   const logSpy = spyOn(console, "error").mockImplementation(() => {});
 
   try {
