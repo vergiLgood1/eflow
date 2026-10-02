@@ -21,7 +21,21 @@ const envSchema = z.object({
   NEON_AUTH_COOKIE_SECRET: z
     .string()
     .min(32, "NEON_AUTH_COOKIE_SECRET must be at least 32 characters"),
-  NEXT_PUBLIC_APP_URL: z.url().optional(),
+  // Required (not optional) because transactional email builds absolute links:
+  // Neon Auth resolves a relative `redirectTo` against its own hosted domain,
+  // so password-reset and verification links would dead-end off-site.
+  NEXT_PUBLIC_APP_URL: z.url("NEXT_PUBLIC_APP_URL must be a valid URL"),
+  // Transactional email is delivered through Resend. Required rather than
+  // optional because Neon Auth treats `send.otp` / `send.magic_link` as
+  // *blocking*: if our webhook cannot deliver, the auth flow fails outright.
+  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  // Full "Name <address>" sender. Must use a domain verified in Resend.
+  EMAIL_FROM: z
+    .string()
+    .min(3, "EMAIL_FROM must be a valid sender address")
+    .refine((value) => /@/.test(value), {
+      message: "EMAIL_FROM must contain an email address",
+    }),
 });
 
 export type Env = z.infer<typeof envSchema>;

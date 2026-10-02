@@ -6,6 +6,8 @@ interface AuthTemplateProps {
   title: string;
   description: string;
   form: ReactNode;
+  /** Optional status message rendered above the form, e.g. post-verify. */
+  banner?: ReactNode;
   footer?: ReactNode;
 }
 
@@ -13,6 +15,7 @@ export function AuthTemplate({
   title,
   description,
   form,
+  banner,
   footer,
 }: AuthTemplateProps) {
   return (
@@ -21,6 +24,7 @@ export function AuthTemplate({
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         <p className="text-muted-foreground text-sm">{description}</p>
       </div>
+      {banner}
       <div className="grid gap-6">{form}</div>
       {footer && <div className="text-center">{footer}</div>}
     </div>

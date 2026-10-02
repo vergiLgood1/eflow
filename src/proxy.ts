@@ -2,6 +2,7 @@ import { db } from "@/db/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { auth } from "./features/authentication/lib/auth-server";
+import { CHECK_INBOX_PATH } from "./features/authentication/lib/auth-routes";
 
 export default async function middleware(request: NextRequest) {
   const session = await auth.getSession();
@@ -24,6 +25,14 @@ export default async function middleware(request: NextRequest) {
 
   if (!user) {
     return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+  }
+
+  // Neon Auth already refuses to issue a session to an unconfirmed address, so
+  // this is defence in depth: if a session ever exists without a verified email
+  // (OAuth provisioning, a manually flipped flag), keep the account out of the
+  // app rather than trusting the provider to have caught it.
+  if (session.data.user.emailVerified === false) {
+    return NextResponse.redirect(new URL(CHECK_INBOX_PATH, request.url));
   }
 
   if (pathname === "/") {

@@ -6,6 +6,8 @@ import {
 } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
+import { PENDING_VERIFICATION_EMAIL_KEY } from "@/features/authentication/lib/auth-client-storage";
+import { CHECK_INBOX_PATH } from "@/features/authentication/lib/auth-routes";
 import {
   signUpSchema,
   SignUpSchema,
@@ -37,12 +39,27 @@ export function SignUpForm() {
   const onSubmit = async (values: SignUpSchema) => {
     try {
       const result = await signUpWithEmail(values);
+
       if (!result.success) {
         toast.error(result.error);
-      } else if (result.redirectTo) {
+        return;
+      }
+
+      if (result.message) toast.success(result.message);
+
+      if (result.redirectTo) {
+        // Prefill the resend field on the interstitial. Cleared immediately so a
+        // later sign-up on the same tab never inherits a stale address.
+        if (result.redirectTo === CHECK_INBOX_PATH) {
+          window.sessionStorage.setItem(
+            PENDING_VERIFICATION_EMAIL_KEY,
+            values.email,
+          );
+        }
+
         router.push(result.redirectTo);
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred.");
     }
   };

@@ -32,4 +32,9 @@ export const resetPasswordSchema = z
   });
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
 
+export const emailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+export type EmailSchema = z.infer<typeof emailSchema>;
+
 export type SignUpSchema = z.infer<typeof signUpSchema>;
