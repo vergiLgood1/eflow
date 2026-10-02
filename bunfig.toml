@@ -1,0 +1,4 @@
+[test]
+# Pins a deterministic environment before any test file imports the app, so the
+# suite never depends on which variables happen to exist in a local `.env`.
+preload = ["./tests/setup.ts"]
