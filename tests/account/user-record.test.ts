@@ -14,9 +14,10 @@ const deleteMock = mock(
     id: "usr_123",
   }),
 );
+const findUniqueMock = mock(async (_args: CreateArgs): Promise<unknown> => null);
 
 mock.module("@/db/prisma", () => ({
-  db: { user: { create: createMock, delete: deleteMock } },
+  db: { user: { create: createMock, delete: deleteMock, findUnique: findUniqueMock } },
 }));
 
 // Mock the leaf the SDK client lives in, the same way every other guard test
@@ -33,8 +34,34 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: { getSession: getSessionMock },
 }));
 
-const { deleteCurrentAccount, registerUser } =
+const { assertEmailAvailable, deleteCurrentAccount, registerUser } =
   await import("@/features/account/applications/user-record");
+
+test("passes when no user holds the address", async () => {
+  // Act
+  await assertEmailAvailable("free@example.com");
+
+  // Assert
+  expect(findUniqueMock).toHaveBeenCalledWith({
+    where: { email: "free@example.com" },
+    select: { id: true },
+  });
+});
+
+test("reports the address as taken when a row already exists", async () => {
+  // Arrange
+  findUniqueMock.mockResolvedValueOnce({ id: "usr_existing" });
+
+  // Act
+  const attempt = assertEmailAvailable("taken@example.com");
+
+  // Assert: same conflict `registerUser` raises, so the user sees one message
+  // whether the clash was spotted up front or by the unique index.
+  await expect(attempt).rejects.toMatchObject({
+    message: "Email already exists",
+    statusCode: 400,
+  });
+});
 
 test("creates the local row for an identity the provider accepted", async () => {
   // Act

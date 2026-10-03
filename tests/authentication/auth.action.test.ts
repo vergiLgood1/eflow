@@ -63,8 +63,13 @@ const createUserMock = mock(
   }),
 );
 
+// Availability pre-check. `null` is the common case: the address is free.
+const findUserMock = mock(async (_args: unknown): Promise<unknown> => null);
+
 mock.module("@/db/prisma", () => ({
-  db: { user: { create: createUserMock } },
+  db: {
+    user: { create: createUserMock, findUnique: findUserMock },
+  },
 }));
 
 const {
@@ -93,6 +98,7 @@ beforeEach(() => {
   createUserMock.mockClear();
   deleteUserMock.mockClear();
   signOutMock.mockClear();
+  findUserMock.mockClear();
 });
 
 test("returns the sign-in route when signing out succeeds", async () => {
@@ -251,6 +257,26 @@ test("never touches the database when the provider rejects sign-up", async () =>
   if (!result.success) {
     expect(result.error).toBe("User already exists");
   }
+  expect(createUserMock).not.toHaveBeenCalled();
+  expect(deleteUserMock).not.toHaveBeenCalled();
+});
+
+test("refuses a duplicate sign-up before the provider is asked to mint an identity", async () => {
+  // Arrange: this app already holds a row for the address. Reaching Neon would
+  // accept the sign-up and leave an identity nothing can delete — the account
+  // has no session, so the compensating delete answers Unauthorized.
+  findUserMock.mockResolvedValueOnce({ id: "usr_existing" });
+
+  // Act
+  const result = await signUpWithEmail(validSignUp);
+
+  // Assert: no identity is minted, so there is nothing to orphan.
+  expect(result.success).toBe(false);
+  if (!result.success) {
+    expect(result.error).toBe("Email already exists");
+    expect(result.statusCode).toBe(400);
+  }
+  expect(signUpEmailMock).not.toHaveBeenCalled();
   expect(createUserMock).not.toHaveBeenCalled();
   expect(deleteUserMock).not.toHaveBeenCalled();
 });

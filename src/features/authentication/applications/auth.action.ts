@@ -1,6 +1,9 @@
 "use server";
 
-import { registerUser } from "@/features/account/applications/user-record";
+import {
+  assertEmailAvailable,
+  registerUser,
+} from "@/features/account/applications/user-record";
 import {
   EmailSchema,
   ResetPasswordSchema,
@@ -89,6 +92,13 @@ export async function signUpWithEmail(
 ): Promise<ActionResponse> {
   try {
     const data = Validation.validate(signUpSchema, req);
+
+    // Checked before the provider is involved. Neon Auth mints the identity
+    // first and this app's row second, and the identity cannot be rolled back
+    // (see `assertEmailAvailable`), so reaching the provider with an address we
+    // already hold is what strands an orphan. Genuine races fall through to the
+    // unique index and are compensated as before.
+    await assertEmailAvailable(data.email);
 
     const { error: authError, data: authData } = await auth.signUp.email({
       email: data.email,

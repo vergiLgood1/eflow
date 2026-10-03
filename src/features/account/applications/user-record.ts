@@ -15,6 +15,34 @@ import {
 const UNIQUE_CONSTRAINT_CODE = "P2002";
 
 /**
+ * Fail before the provider is asked to mint an identity for an address this app
+ * already holds a row for.
+ *
+ * Sign-up creates the Neon Auth identity first and the local row second, and the
+ * reverse roll-back is not reachable: provider deletion needs an authenticated
+ * session, which an account still awaiting email confirmation never has. So a
+ * duplicate sign-up used to strand an identity at the provider — the local write
+ * was rejected by the unique index *after* Neon had already accepted the
+ * address, and the compensating delete then answered Unauthorized.
+ *
+ * This closes that case without claiming to close the race: two concurrent
+ * sign-ups both pass the check here and are still arbitrated by the unique index
+ * in `registerUser`.
+ *
+ * @throws {AppError} 400 when a user row already exists for the address.
+ */
+export async function assertEmailAvailable(email: string): Promise<void> {
+  const existing = await db.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+
+  if (existing) {
+    throw new AppError("Email already exists", 400);
+  }
+}
+
+/**
  * Create the app-side row for an identity that Neon Auth has already accepted.
  *
  * The two stores are separate databases, so the caller owns the compensation
