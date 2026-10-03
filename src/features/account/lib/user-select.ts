@@ -11,7 +11,6 @@ export const USER_PUBLIC_SELECT = {
   id: true,
   name: true,
   email: true,
-  emailVerified: true,
   image: true,
   hasCompleteOnboarding: true,
   createdAt: true,
