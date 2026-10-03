@@ -1,4 +1,5 @@
 import { beforeEach, expect, mock, spyOn, test } from "bun:test";
+import { RAW_SQL_MOCKS } from "../support/raw-sql-mock";
 
 // `revalidatePath` requires the Next.js request context, absent in unit tests.
 mock.module("next/cache", () => ({ revalidatePath: mock() }));
@@ -40,7 +41,7 @@ const deleteMock = mock(async (_args: unknown): Promise<unknown> => {
 });
 
 mock.module("@/db/prisma", () => ({
-  db: { user: { delete: deleteMock } },
+  db: { ...RAW_SQL_MOCKS, user: { delete: deleteMock } },
 }));
 
 const { deleteAccount } =

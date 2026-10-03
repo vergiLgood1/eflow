@@ -1,6 +1,7 @@
 import { expect, mock, test } from "bun:test";
 
 import { Prisma } from "../../prisma/generated";
+import { RAW_SQL_MOCKS } from "../support/raw-sql-mock";
 
 type CreateArgs = { data?: unknown };
 
@@ -17,7 +18,9 @@ const deleteMock = mock(
 const findUniqueMock = mock(async (_args: CreateArgs): Promise<unknown> => null);
 
 mock.module("@/db/prisma", () => ({
-  db: { user: { create: createMock, delete: deleteMock, findUnique: findUniqueMock } },
+  db: { ...RAW_SQL_MOCKS,
+    user: { create: createMock, delete: deleteMock, findUnique: findUniqueMock },
+  },
 }));
 
 // Mock the leaf the SDK client lives in, the same way every other guard test

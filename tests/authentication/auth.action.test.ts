@@ -1,5 +1,6 @@
 import { beforeEach, expect, mock, spyOn, test } from "bun:test";
 
+import { RAW_SQL_MOCKS, queryRawMock } from "../support/raw-sql-mock";
 import { Prisma } from "../../prisma/generated";
 
 // `revalidatePath` requires the Next.js request context, which is absent in unit tests.
@@ -40,6 +41,13 @@ const sendVerificationEmailMock = mock(
   }),
 );
 
+const requestPasswordResetMock = mock(
+  async (_body: unknown): Promise<Outcome> => ({
+    data: { status: true },
+    error: null,
+  }),
+);
+
 const deleteUserMock = mock(
   async (): Promise<Outcome> => ({
     data: null,
@@ -53,6 +61,7 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
     signUp: { email: signUpEmailMock },
     signIn: { email: signInEmailMock },
     sendVerificationEmail: sendVerificationEmailMock,
+    requestPasswordReset: requestPasswordResetMock,
     deleteUser: deleteUserMock,
   },
 }));
@@ -66,13 +75,19 @@ const createUserMock = mock(
 // Availability pre-check. `null` is the common case: the address is free.
 const findUserMock = mock(async (_args: unknown): Promise<unknown> => null);
 
+// `@/shared/lib/rate-limit` is deliberately NOT mocked here: it is under test in
+// tests/shared/rate-limit.test.ts, and Bun's mock.module would replace it for
+// every other file in the process. Its counting goes through the shared raw-SQL
+// mock instead, so these tests exercise the real limiter.
 mock.module("@/db/prisma", () => ({
   db: {
+    ...RAW_SQL_MOCKS,
     user: { create: createUserMock, findUnique: findUserMock },
   },
 }));
 
 const {
+  forgotPassword,
   resendVerificationEmail,
   signUpWithEmail,
   signInWithEmail,
@@ -95,6 +110,8 @@ beforeEach(() => {
   signUpEmailMock.mockClear();
   signInEmailMock.mockClear();
   sendVerificationEmailMock.mockClear();
+  requestPasswordResetMock.mockClear();
+  queryRawMock.mockClear();
   createUserMock.mockClear();
   deleteUserMock.mockClear();
   signOutMock.mockClear();
@@ -371,3 +388,91 @@ test("does not re-send when the sign-in problem is the password", async () => {
   expect(sendVerificationEmailMock).not.toHaveBeenCalled();
 });
 
+/**
+ * Keys the limiter counted against, in call order. `$queryRaw` is a tagged
+ * template, so the interpolated key is the second argument.
+ */
+function countedKeys(): string[] {
+  return queryRawMock.mock.calls.map((args) => String(args[1]));
+}
+
+test("budgets a verification resend per address and per caller", async () => {
+  // Act
+  const result = await resendVerificationEmail({
+    email: "diyoan@example.com",
+  });
+
+  // Assert: two independent budgets, because they stop different attackers —
+  // the per-address one survives an attacker rotating source IPs, and the
+  // per-caller one is the only thing that sees a spray across many addresses.
+  expect(result.success).toBe(true);
+  expect(countedKeys()).toEqual([
+    // Hashed, so the throttle table never holds a raw address.
+    expect.stringMatching(/^verification-resend:address:[0-9a-f]{32}$/),
+    "verification-resend:caller:203.0.113.7",
+  ]);
+});
+
+test("spends nothing at the provider once a resend is over budget", async () => {
+  // Arrange: the counter comes back over the limit.
+  queryRawMock.mockResolvedValueOnce([{ count: 99 }]);
+
+  // Act
+  const result = await resendVerificationEmail({
+    email: "diyoan@example.com",
+  });
+
+  // Assert: the whole point is that a refused caller costs no Resend send.
+  expect(result.success).toBe(false);
+  if (!result.success) {
+    expect(result.statusCode).toBe(429);
+    expect(result.code).toBe("RATE_LIMITED");
+  }
+  expect(sendVerificationEmailMock).not.toHaveBeenCalled();
+});
+
+test("budgets a password reset the same way", async () => {
+  // Act
+  const result = await forgotPassword({ email: "diyoan@example.com" });
+
+  // Assert
+  expect(result.success).toBe(true);
+  expect(countedKeys()).toEqual([
+    expect.stringMatching(/^password-reset:address:[0-9a-f]{32}$/),
+    "password-reset:caller:203.0.113.7",
+  ]);
+});
+
+test("does not meter sign-in, which proves the password first", async () => {
+  // Act
+  const result = await signInWithEmail(validSignIn);
+
+  // Assert: only the unverified branch re-sends, and it is gated on a correct
+  // password, so this endpoint cannot be used to spray mail at an address whose
+  // password the caller does not know.
+  expect(result.success).toBe(true);
+  expect(queryRawMock).not.toHaveBeenCalled();
+  expect(sendVerificationEmailMock).not.toHaveBeenCalled();
+});
+
+test("reports an unavailable counter as a 503 rather than sending anyway", async () => {
+  // Arrange
+  const logSpy = spyOn(console, "error").mockImplementation(() => {});
+  queryRawMock.mockRejectedValueOnce(new Error("connection terminated"));
+
+  try {
+    // Act
+    const result = await resendVerificationEmail({
+      email: "diyoan@example.com",
+    });
+
+    // Assert: fail closed. An unmetered mail relay is worse than a failed reset.
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.statusCode).toBe(503);
+    }
+    expect(sendVerificationEmailMock).not.toHaveBeenCalled();
+  } finally {
+    logSpy.mockRestore();
+  }
+});

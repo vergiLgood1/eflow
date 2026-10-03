@@ -1,9 +1,10 @@
 import { expect, mock, test } from "bun:test";
+import { RAW_SQL_MOCKS } from "../support/raw-sql-mock";
 
 const findUniqueMock = mock(async (_args: unknown): Promise<unknown> => null);
 
 mock.module("@/db/prisma", () => ({
-  db: { workspace: { findUnique: findUniqueMock } },
+  db: { ...RAW_SQL_MOCKS, workspace: { findUnique: findUniqueMock } },
 }));
 
 const getSessionMock = mock(async (): Promise<unknown> => ({ data: null }));

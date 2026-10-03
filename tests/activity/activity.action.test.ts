@@ -1,4 +1,5 @@
 import { expect, mock, test } from "bun:test";
+import { RAW_SQL_MOCKS } from "../support/raw-sql-mock";
 
 type ActivityQuery = {
   where?: Record<string, unknown>;
@@ -28,7 +29,7 @@ const findWorkspaceMock = mock(
 // process-wide: faking the intermediate workspace-access module here would
 // leak into every later test file instead of staying scoped to this one.
 mock.module("@/db/prisma", () => ({
-  db: {
+  db: { ...RAW_SQL_MOCKS,
     activityLog: { findMany: findManyMock },
     workspace: { findUnique: findWorkspaceMock },
   },

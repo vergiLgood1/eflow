@@ -15,6 +15,11 @@ import {
   AppError,
   handleActionError,
 } from "@/shared/lib/error";
+import {
+  assertWithinRateLimit,
+  getCallerIp,
+  hashIdentifier,
+} from "@/shared/lib/rate-limit";
 import { Validation } from "@/shared/lib/validation";
 import { revalidatePath } from "next/cache";
 import { ZodError } from "zod";
@@ -49,6 +54,19 @@ const EMAIL_NOT_VERIFIED_CODE = "EMAIL_NOT_VERIFIED";
 
 /** Minimal shape of the `{ error }` branch returned by the auth client. */
 type AuthClientError = { code?: string | undefined; message?: string | undefined };
+
+/** Window every pre-authentication send budget is measured over. */
+const SEND_WINDOW_MS = 15 * 60 * 1000;
+
+/**
+ * Sends one address may trigger per window. Verification links expire after 15
+ * minutes, so anything beyond a handful inside a window is either impatience or
+ * a script.
+ */
+const ADDRESS_SEND_LIMIT = 3;
+
+/** Sends one caller may trigger per window, across all addresses. */
+const CALLER_SEND_LIMIT = 10;
 
 export async function signInWithEmail(
   req: SignInSchema,
@@ -190,6 +208,8 @@ export async function forgotPassword(
   try {
     const data = Validation.validate(forgotPasswordSchema, req);
 
+    await limitEmailSending(data.email, "password-reset");
+
     const { error } = await auth.requestPasswordReset({
       email: data.email,
       // Must be absolute. Neon resolves a relative redirectTo against its own
@@ -244,12 +264,18 @@ export async function resetPassword(
  * Always reports success even when the address is unknown: this action is
  * reachable pre-authentication, so distinguishing "no such user" from "sent"
  * would turn it into an account-enumeration endpoint.
+ *
+ * The rate limit is deliberately *not* masked as success. It counts attempts
+ * before the address is looked at, so a registered and an unregistered address
+ * exhaust the budget identically and the 429 leaks nothing about which exists.
  */
 export async function resendVerificationEmail(
   req: EmailSchema,
 ): Promise<ActionResponse> {
   try {
     const data = Validation.validate(emailSchema, req);
+
+    await limitEmailSending(data.email, "verification-resend");
 
     await dispatchVerificationEmail(data.email);
 
@@ -260,6 +286,41 @@ export async function resendVerificationEmail(
   } catch (error) {
     return handleActionError(error);
   }
+}
+
+/**
+ * Caps how fast a pre-authentication screen can put mail in a real inbox.
+ *
+ * Two independent budgets, because they defend against different attackers:
+ *
+ * - **per address** stops one target being flooded. Rotating the source IP does
+ *   not help, which is the entire point — an attacker cannot reach the provider
+ *   cheaply by moving around.
+ * - **per caller** stops one source spraying many addresses, which the per-address
+ *   budget cannot see at all.
+ *
+ * Both are checked before the provider is called, so a rejected caller never
+ * costs a Resend send.
+ *
+ * @throws {AppError} 429 when either budget is exhausted.
+ */
+async function limitEmailSending(
+  email: string,
+  scope: "verification-resend" | "password-reset",
+): Promise<void> {
+  await assertWithinRateLimit({
+    scope: `${scope}:address`,
+    identifier: hashIdentifier(email),
+    limit: ADDRESS_SEND_LIMIT,
+    windowMs: SEND_WINDOW_MS,
+  });
+
+  await assertWithinRateLimit({
+    scope: `${scope}:caller`,
+    identifier: await getCallerIp(),
+    limit: CALLER_SEND_LIMIT,
+    windowMs: SEND_WINDOW_MS,
+  });
 }
 
 /**

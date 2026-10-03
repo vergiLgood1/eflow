@@ -57,6 +57,18 @@ model User {
   @@map("users")
 }
 
+// One row per throttle key: the window it belongs to and how many attempts that
+// window has seen. Keys are hashes or addresses, never raw email addresses —
+// this table is the one place an operator could dump every address an attacker
+// has probed.
+model RateLimit {
+  key         String   @id
+  windowStart DateTime
+  count       Int      @default(0)
+
+  @@map("rate_limits")
+}
+
 model Subscription {
   id String @id @default(uuid())
 

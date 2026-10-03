@@ -1,4 +1,5 @@
 import { expect, mock, test } from "bun:test";
+import { RAW_SQL_MOCKS } from "../support/raw-sql-mock";
 
 const findUniqueMock = mock(
   async (_args: { where?: unknown }): Promise<unknown> => ({
@@ -10,7 +11,7 @@ const workspaceCountMock = mock(async (_args: { where?: unknown }) => 1);
 const dataModelCountMock = mock(async (_args: { where?: unknown }) => 0);
 
 mock.module("@/db/prisma", () => ({
-  db: {
+  db: { ...RAW_SQL_MOCKS,
     subscription: { findUnique: findUniqueMock },
     workspace: { count: workspaceCountMock },
     dataModel: { count: dataModelCountMock },
