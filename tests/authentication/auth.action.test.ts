@@ -5,7 +5,10 @@ import { Prisma } from "../../prisma/generated";
 // `revalidatePath` requires the Next.js request context, which is absent in unit tests.
 mock.module("next/cache", () => ({ revalidatePath: mock() }));
 
-type Outcome<T = unknown> = { data: T; error: { message: string } | null };
+type Outcome<T = unknown> = {
+  data: T;
+  error: { code?: string; message: string } | null;
+};
 
 const signOutMock = mock(
   async (): Promise<Outcome> => ({
@@ -17,8 +20,22 @@ const signOutMock = mock(
 const signUpEmailMock = mock(
   async (
     _body: unknown,
-  ): Promise<Outcome<{ user: { id: string } } | null>> => ({
+  ): Promise<Outcome<{ user: { id: string; emailVerified: boolean } } | null>> => ({
+    data: { user: { id: "usr_123", emailVerified: true } },
+    error: null,
+  }),
+);
+
+const signInEmailMock = mock(
+  async (_body: unknown): Promise<Outcome> => ({
     data: { user: { id: "usr_123" } },
+    error: null,
+  }),
+);
+
+const sendVerificationEmailMock = mock(
+  async (_body: unknown): Promise<Outcome> => ({
+    data: null,
     error: null,
   }),
 );
@@ -34,6 +51,8 @@ mock.module("@/features/authentication/lib/auth-server", () => ({
   auth: {
     signOut: signOutMock,
     signUp: { email: signUpEmailMock },
+    signIn: { email: signInEmailMock },
+    sendVerificationEmail: sendVerificationEmailMock,
     deleteUser: deleteUserMock,
   },
 }));
@@ -48,8 +67,12 @@ mock.module("@/db/prisma", () => ({
   db: { user: { create: createUserMock } },
 }));
 
-const { signUpWithEmail, signOut } =
-  await import("@/features/authentication/applications/auth.action");
+const {
+  resendVerificationEmail,
+  signUpWithEmail,
+  signInWithEmail,
+  signOut,
+} = await import("@/features/authentication/applications/auth.action");
 
 const validSignUp = {
   name: "Di Yoan",
@@ -57,9 +80,16 @@ const validSignUp = {
   password: "supersecret",
 };
 
+const validSignIn = {
+  email: "diyoan@example.com",
+  password: "supersecret",
+};
+
 // Call history is process-wide for this file; each test asserts its own.
 beforeEach(() => {
   signUpEmailMock.mockClear();
+  signInEmailMock.mockClear();
+  sendVerificationEmailMock.mockClear();
   createUserMock.mockClear();
   deleteUserMock.mockClear();
   signOutMock.mockClear();
@@ -100,6 +130,28 @@ test("sign-up completes when the provider accepts and the local row lands", asyn
     success: true,
     redirectTo: "/workspaces/onboarding",
   });
+  expect(createUserMock).toHaveBeenCalledTimes(1);
+  expect(deleteUserMock).not.toHaveBeenCalled();
+});
+
+test("routes to check-inbox when Neon withholds the session pending verification", async () => {
+  // Arrange: verification is required, so sign-up succeeds with no session.
+  // Neon signals this in the payload, never as an error.
+  signUpEmailMock.mockResolvedValueOnce({
+    data: { user: { id: "usr_123", emailVerified: false } },
+    error: null,
+  });
+
+  // Act
+  const result = await signUpWithEmail(validSignUp);
+
+  // Assert: onboarding would bounce straight back to sign-in with no session.
+  expect(result).toEqual({
+    success: true,
+    message: "Account created. Check your inbox to verify your email.",
+    redirectTo: "/auth/check-inbox",
+  });
+  // The local row still lands, so the address is not retried as new forever.
   expect(createUserMock).toHaveBeenCalledTimes(1);
   expect(deleteUserMock).not.toHaveBeenCalled();
 });
@@ -202,3 +254,74 @@ test("never touches the database when the provider rejects sign-up", async () =>
   expect(createUserMock).not.toHaveBeenCalled();
   expect(deleteUserMock).not.toHaveBeenCalled();
 });
+
+test("sends an unconfirmed sign-in back to check-inbox and re-sends the link", async () => {
+  // Arrange: the provider recognises the account but withholds the session.
+  // Neon only re-sends on its own when its `sendOnSignIn` option is enabled,
+  // which this app cannot observe.
+  signInEmailMock.mockResolvedValueOnce({
+    data: null,
+    error: { code: "EMAIL_NOT_VERIFIED", message: "Email not verified" },
+  });
+
+  // Act
+  const result = await signInWithEmail(validSignIn);
+
+  // Assert: a dead end for the user, not a rejection.
+  expect(result).toEqual({
+    success: true,
+    message: "Please verify your email address before signing in.",
+    redirectTo: "/auth/check-inbox",
+  });
+  expect(sendVerificationEmailMock).toHaveBeenCalledTimes(1);
+  expect(sendVerificationEmailMock).toHaveBeenCalledWith(
+    expect.objectContaining({ email: "diyoan@example.com" }),
+  );
+});
+
+test("still redirects to check-inbox when the re-send itself fails", async () => {
+  // Arrange
+  signInEmailMock.mockResolvedValueOnce({
+    data: null,
+    error: { code: "EMAIL_NOT_VERIFIED", message: "Email not verified" },
+  });
+  sendVerificationEmailMock.mockResolvedValueOnce({
+    data: null,
+    error: { message: "smtp unavailable" },
+  });
+  const logSpy = spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    // Act
+    const result = await signInWithEmail(validSignIn);
+
+    // Assert: delivery trouble is not the user's problem, and the screen they
+    // land on still has a manual resend button.
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.redirectTo).toBe("/auth/check-inbox");
+    }
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining("smtp unavailable"),
+    );
+  } finally {
+    logSpy.mockRestore();
+  }
+});
+
+test("does not re-send when the sign-in problem is the password", async () => {
+  // Arrange: a wrong password must never trigger a verification email, or the
+  // action becomes a mail gun pointed at addresses an attacker supplies.
+  signInEmailMock.mockResolvedValueOnce({
+    data: null,
+    error: { code: "INVALID_EMAIL_OR_PASSWORD", message: "Invalid email or password" },
+  });
+
+  // Act
+  const result = await signInWithEmail(validSignIn);
+
+  // Assert
+  expect(result.success).toBe(false);
+  expect(sendVerificationEmailMock).not.toHaveBeenCalled();
+});
+

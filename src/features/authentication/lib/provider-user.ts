@@ -13,6 +13,11 @@ import { auth } from "./auth-server";
  * carries (when none is present the provider answers Unauthorized and the
  * orphaned id is logged for manual cleanup instead).
  *
+ * That leaves sign-up compensation reachable only for the narrow case where the
+ * local write failed after the provider accepted the address: a known duplicate
+ * is refused up front by `assertEmailAvailable`, and an account awaiting email
+ * confirmation has no session to delete with either way.
+ *
  * Failures are reported, never thrown: compensation runs while an original
  * error is already on its way to the caller, and a cleanup that goes wrong
  * must not mask the one message the user needs to see. The caller logs the

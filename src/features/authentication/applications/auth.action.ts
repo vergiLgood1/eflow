@@ -34,7 +34,13 @@ import {
 
 /**
  * Neon Auth's error code for "identity exists but the email is unconfirmed".
- * Returned by both sign-up and sign-in once email verification is required.
+ *
+ * Only `signIn.email` returns it — `signUp.email` reports the same condition
+ * through the success payload (`emailVerified: false`), which is what made a new
+ * account fall through to onboarding and bounce back to sign-in. The code is
+ * also not declared by Neon: better-call derives it from the error message
+ * ("Email not verified" → "EMAIL_NOT_VERIFIED"), so compare `code` and not the
+ * human-facing `message`.
  */
 const EMAIL_NOT_VERIFIED_CODE = "EMAIL_NOT_VERIFIED";
 
@@ -56,6 +62,11 @@ export async function signInWithEmail(
     // resend screen instead of showing "invalid credentials", which would be
     // both confusing and an account-existence oracle.
     if (isEmailNotVerified(error)) {
+      // Re-send on the way out rather than making the user ask again. Neon
+      // re-sends on sign-in only if its own `sendOnSignIn` option is enabled,
+      // which this app cannot observe, so it asks explicitly instead.
+      await dispatchVerificationEmail(data.email);
+
       return {
         success: true,
         message: "Please verify your email address before signing in.",
@@ -83,21 +94,28 @@ export async function signUpWithEmail(
       email: data.email,
       password: data.password,
       name: data.name,
+      // Absolute for the same reason as forgotPassword below. This is the
+      // fallback used only when the `send.magic_link` webhook is not subscribed
+      // and Neon falls back to its own delivery.
+      callbackURL: buildAppUrl(VERIFY_EMAIL_REDIRECT_PATH),
     });
 
-    // When email verification is required, Neon creates the user but withholds
-    // the session and reports EMAIL_NOT_VERIFIED. Treating that as a failure
-    // would skip the local row and orphan the identity at the provider, making
-    // every retry of this email fail as "already exists" forever.
-    const isPendingVerification = isEmailNotVerified(authError);
     const providerUser = authData?.user;
 
-    if (!providerUser || (!isPendingVerification && authError)) {
+    if (authError || !providerUser) {
       throw new AppError(
         authError?.message || "Failed to sign up. Try again",
         400,
       );
     }
+
+    // A pending confirmation arrives as a **success**, not as an error: Neon has
+    // created the identity but mints no session and returns
+    // `emailVerified: false` with a null token. `EMAIL_NOT_VERIFIED` only comes
+    // back from `signIn.email` later, when the unverified user tries to return.
+    // Skipping the local row here would orphan the identity at the provider and
+    // make every retry of this email fail as "already exists" forever.
+    const isPendingVerification = providerUser.emailVerified === false;
 
     await createLocalUserOrCompensate({
       id: providerUser.id,
@@ -223,20 +241,7 @@ export async function resendVerificationEmail(
   try {
     const data = Validation.validate(emailSchema, req);
 
-    const { error } = await auth.sendVerificationEmail({
-      email: data.email,
-      // Absolute for the same reason as forgotPassword above. When the
-      // `send.magic_link` webhook is active this is ignored in favour of the
-      // branded link built from the raw token, but it is the fallback whenever
-      // the webhook is not subscribed.
-      callbackURL: buildAppUrl(VERIFY_EMAIL_REDIRECT_PATH),
-    });
-
-    if (error) {
-      console.error(
-        `Resend verification email failed for ${data.email}: ${error.message ?? "unknown error"}`,
-      );
-    }
+    await dispatchVerificationEmail(data.email);
 
     return {
       success: true,
@@ -245,6 +250,35 @@ export async function resendVerificationEmail(
   } catch (error) {
     return handleActionError(error);
   }
+}
+
+/**
+ * Ask Neon to (re)send a confirmation link for an address.
+ *
+ * Best-effort by contract: a delivery failure must never become the caller's
+ * error, because both call sites have already reached a conclusion the user
+ * needs to hear (the redirect out of sign-in, or the resend confirmation).
+ * Failures are logged and the check-inbox screen keeps its manual button for
+ * exactly this case.
+ */
+async function dispatchVerificationEmail(email: string): Promise<boolean> {
+  const { error } = await auth.sendVerificationEmail({
+    email,
+    // Absolute for the same reason as forgotPassword above. When the
+    // `send.magic_link` webhook is active this is ignored in favour of the
+    // branded link built from the raw token, but it is the fallback whenever
+    // the webhook is not subscribed.
+    callbackURL: buildAppUrl(VERIFY_EMAIL_REDIRECT_PATH),
+  });
+
+  if (error) {
+    console.error(
+      `Verification email dispatch failed for ${email}: ${error.message ?? "unknown error"}`,
+    );
+    return false;
+  }
+
+  return true;
 }
 
 function isEmailNotVerified(error: AuthClientError | null): boolean {

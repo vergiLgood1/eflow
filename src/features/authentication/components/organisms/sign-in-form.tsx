@@ -6,6 +6,8 @@ import {
 } from "@/features/authentication/applications/auth.action";
 import { SocialButton } from "@/features/authentication/components/atoms/social-button";
 import { AuthField } from "@/features/authentication/components/molecules/auth-field";
+import { PENDING_VERIFICATION_EMAIL_KEY } from "@/features/authentication/lib/auth-client-storage";
+import { CHECK_INBOX_PATH } from "@/features/authentication/lib/auth-routes";
 import {
   signInSchema,
   SignInSchema,
@@ -39,10 +41,28 @@ export function SignInForm() {
       const result = await signInWithEmail(values);
       if (!result.success) {
         toast.error(result.error);
-      } else if (result.redirectTo) {
-        toast.success("Signed in successfully!");
-        router.push(result.redirectTo);
+        return;
       }
+
+      if (!result.redirectTo) return;
+
+      if (result.redirectTo === CHECK_INBOX_PATH) {
+        // The address was recognised but is still unconfirmed, so no sign-in
+        // happened. Claiming otherwise immediately before the verification
+        // screen reads as a broken redirect; prefill the resend field so the
+        // user does not retype what they just submitted.
+        window.sessionStorage.setItem(
+          PENDING_VERIFICATION_EMAIL_KEY,
+          values.email,
+        );
+        toast.info(
+          result.message || "Please verify your email address to continue.",
+        );
+      } else {
+        toast.success("Signed in successfully!");
+      }
+
+      router.push(result.redirectTo);
     } catch (err) {
       toast.error("An unexpected error occurred.");
     }
