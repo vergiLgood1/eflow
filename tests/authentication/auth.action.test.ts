@@ -281,6 +281,26 @@ test("refuses a duplicate sign-up before the provider is asked to mint an identi
   expect(deleteUserMock).not.toHaveBeenCalled();
 });
 
+test("looks the address up in the same form it stores it", async () => {
+  // Act
+  await signUpWithEmail({
+    ...validSignUp,
+    email: "  DiYoan@Example.com ",
+  });
+
+  // Assert: the pre-check and the write must agree, or a differently-cased retry
+  // would sail past the check and mint a second row for one Neon identity.
+  expect(findUserMock).toHaveBeenCalledWith({
+    where: { email: "diyoan@example.com" },
+    select: { id: true },
+  });
+  expect(createUserMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      data: expect.objectContaining({ email: "diyoan@example.com" }),
+    }),
+  );
+});
+
 test("sends an unconfirmed sign-in back to check-inbox and re-sends the link", async () => {
   // Arrange: the provider recognises the account but withholds the session.
   // Neon only re-sends on its own when its `sendOnSignIn` option is enabled,
