@@ -68,7 +68,7 @@ export function CheckInboxForm() {
           <div className="grid gap-4">
             <AuthField
               autoComplete="email"
-              disabled={isSubmitting}
+              disabled
               error={errors.email}
               id="email"
               label="Resend to"
